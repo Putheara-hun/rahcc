@@ -80,6 +80,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--done); mar
 .st-head h3 { font-size: 21px; letter-spacing: .01em; }
 .st-head p { margin: 4px 0 0; color: var(--ink2); max-width: 70ch; }
 .st-meta { text-align: right; font: 500 12.5px var(--f-mono); color: var(--ink2); white-space: nowrap; }
+.st-meta .ph { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border: 1.2px solid var(--accent); color: var(--accent); font: 600 12px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; }
 .st-meta label { display: inline-flex; gap: 6px; align-items: center; margin-top: 8px; font: 600 12.5px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
 .st-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .st-body > section { padding: 12px 16px 14px; min-width: 0; border-top: 1px solid var(--rule); }
@@ -123,6 +124,14 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
   <section class="panel">
     <h2>Before any work on site<small>Tick these off first. Progress is saved in this browser only.</small></h2>
     <div class="before" id="before"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Two phases<small>So the house can be paid for in two steps</small></h2>
+    <div class="note">
+      <p style="margin-top:0"><b>Phase 1 (now, about $26,000 with economy finishes):</b> stages 1–4, then the ground floor parts of stages 8–16. You get the complete ground floor to live in: guest bedroom used as the main bedroom, living room, dining, kitchen with laundry, and bathroom. The first floor slab is the roof for now: it is waterproofed, drains through four downpipes, and the column steel is left sticking up so the first floor can be added later. The stair goes up to a lockable metal cover.</p>
+      <p style="margin-bottom:0"><b>Phase 2 (later, when you have the money):</b> stages 5–7 and the first floor parts of stages 8–15: the first floor rooms, roof terrace and stair house, then the carport, fish pond, fence and gates, and the upgrades (ceilings, porcelain, cladding, timber door, kitchen cabinets). See the <a href="Metersaillist.html#phase1">Phase 1 material list</a>.</p>
+    </div>
   </section>
 
   <section class="panel" aria-labelledby="tl-h">
@@ -205,7 +214,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       mistakes: ['Pouring the slab first and cutting it later for pipes', 'Soft, uncompacted fill, which cracks the floor later'] },
     { t: 'Ground floor columns, first floor beams, slab and stair', w: [5.5, 3],
       what: 'Cast the ground floor columns, then build the formwork for the first floor beams, slab S1 and the first two stair flights, and pour them together. Electrical conduits and ceiling boxes are cast into the slab.',
-      steps: ['Cast the columns C1 and C2 up to the beam soffit', 'Build formwork and props for beams B1–B3, slab S1, the balcony set-down S2, and the stair', 'Fix the steel; place conduits and boxes; leave the stair void 1950 × 3200', 'Pour beams, slab and stair in one day; cure for 7 days'],
+      steps: ['Cast the columns C1 and C2 up to the beam soffit', 'Build formwork and props for beams B1–B3, slab S1, the balcony set-down S2, and the stair', 'Fix the steel; place conduits and boxes; leave the stair void 1950 × 3200', 'Pour beams, slab and stair in one day; cure for 7 days', 'Phase 1 only: leave the column starter bars 900 mm above the slab, coat and cap them; screed the slab to four outlets and waterproof it; fit downpipes and a lockable metal cover over the stair opening'],
       qty: [['Concrete C25', f1(vFF) + ' m³'], ['Steel (approx.)', f0(steel(vFF)) + ' kg'], ['Slab area', f1(slabA) + ' m²']],
       order: ['Bricks and cement for the ground floor walls (can start after props are removed)', 'Steel and formwork for the roof'],
       hold: ['Steel inspection before the pour, especially at the 5.8 m B1 beams', 'Props stay for 14 days (21 days under the 5.8 m beams)'],
@@ -286,6 +295,9 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       qty: [], order: [], hold: ['All snags fixed before the final payment'], mistakes: [] }
   ];
 
+  const PHASE = ['1', '1', '1', '1', '2', '2', '2', '1 + 2', '1 + 2', '1 + 2', '1 + 2', '1 + 2', '1 + 2', '1 + 2', '1 + 2', '1 + 2'];
+  STAGES.forEach((s, i) => { s.ph = PHASE[i]; });
+
   /* ---------- progress (per browser) ---------- */
   const KEY = 'house7x15-guide-v1';
   let done = {};
@@ -330,7 +342,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       <div class="st-head">
         <div class="st-no">${String(i + 1).padStart(2, '0')}</div>
         <div><h3>${esc(s.t)}</h3><p>${esc(s.what)}</p></div>
-        <div class="st-meta">weeks ${s.w[0]}–${s.w[0] + s.w[1]}<br>${s.w[1]} week${s.w[1] === 1 ? '' : 's'}<br><label for="s${i}"><input type="checkbox" id="s${i}" data-k="s${i}"${done['s' + i] ? ' checked' : ''}>Done</label></div>
+        <div class="st-meta"><span class="ph">Phase ${s.ph}</span><br>weeks ${s.w[0]}–${s.w[0] + s.w[1]}<br>${s.w[1]} week${s.w[1] === 1 ? '' : 's'}<br><label for="s${i}"><input type="checkbox" id="s${i}" data-k="s${i}"${done['s' + i] ? ' checked' : ''}>Done</label></div>
       </div>
       <div class="st-body">
         <section><h4>Steps, in order</h4>${list(s.steps, 'ol')}</section>

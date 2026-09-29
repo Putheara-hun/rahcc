@@ -117,6 +117,7 @@ body.walking #layers, body.walking #title dl { display: none; }
 <div class="card" id="views" role="toolbar" aria-label="Views">
   <button data-v="walk" class="alt" aria-pressed="false">Walk inside</button>
   <button data-v="spin" class="alt" aria-pressed="false">Rotate 360°</button>
+  <button data-v="ph1" class="alt" aria-pressed="false">Phase 1</button>
   <button data-v="front" aria-pressed="true">Street</button>
   <button data-v="rear" aria-pressed="false">Rear</button>
   <button data-v="terrace" aria-pressed="false">Roof terrace</button>
@@ -238,6 +239,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   }
   const group = name => { const g = new THREE.Group(); g.name = name; scene.add(g); return g; };
   const G = { gf: group('gf'), ff: group('ff'), roof: group('roof'), site: group('site'), labGF: group('labGF'), labFF: group('labFF'), labRF: group('labRF'), struct: group('struct') };
+  G.ffslab = group('ffslab'); G.extras = group('extras'); G.ph1 = group('ph1'); G.kitchenUp = group('kitchenUp');
   const outIndex = { '+x': 0, '-x': 1, '-y': 4, '+y': 5 };
 
   /* ---------- walls with openings ---------- */
@@ -306,7 +308,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   const slabWithVoid = (top, th, mat, grp) => [[-0.09, 5.89, -0.09, 4.75], [-0.09, 5.89, 7.95, 11.09], [-0.09, 0.1, 4.75, 7.95], [2.05, 5.89, 4.75, 7.95]]
     .forEach(r => box(r[0], r[1], r[2], r[3], top - th, top, mat, grp));
   box(-0.09, 5.89, -0.09, 11.09, 0, LV.gf - 0.005, MAT.plinth, G.gf);
-  slabWithVoid(LV.ff - 0.005, 0.17, MAT.render, G.ff);
+  slabWithVoid(LV.ff - 0.005, 0.17, MAT.render, G.ffslab);
   slabWithVoid(LV.ring, 0.15, MAT.render, G.roof);
   const grpOf = lv => (lv === 'gf' ? G.gf : lv === 'ff' ? G.ff : G.roof);
   H.rooms.forEach(rm => {
@@ -318,7 +320,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     });
   });
   const beamBox = (b, bot, top, mat, grp) => (b.o === 'h' ? box(b.s - 0.1, b.e + 0.1, b.c - b.b / 2, b.c + b.b / 2, bot, top, mat, grp) : box(b.c - b.b / 2, b.c + b.b / 2, b.s - 0.1, b.e + 0.1, bot, top, mat, grp));
-  H.S.floorBeams.filter(b => b.m !== 'LB1').forEach(b => beamBox(b, b.top - b.d, b.top - 0.12, MAT.render, G.ff));
+  H.S.floorBeams.filter(b => b.m !== 'LB1').forEach(b => beamBox(b, b.top - b.d, b.top - 0.12, MAT.render, G.ffslab));
   H.S.roofBeams.filter(b => b.m !== 'LB2').forEach(b => beamBox(b, b.top - b.d, b.top - 0.15, MAT.render, G.ff));
   // stair-house roof slab
   const shs = H.S.slabs.sh; box(shs.x0 + 0.01, shs.x1 - 0.01, shs.y0 + 0.01, shs.y1 - 0.01, LV.shSlab - shs.th, LV.shSlab, MAT.render, G.roof);
@@ -343,6 +345,19 @@ body.walking #layers, body.walking #title dl { display: none; }
   box(0.1, 1.0, 4.72, 4.78, LV.roof + 1.0, LV.roof + 1.04, MAT.timber, G.roof);
   box(1.03, 1.07, 4.75, 7.0, LV.ring, LV.roof + 1.0, MAT.glass, G.roof, { cast: false });
 
+  /* ---------- Phase 1: starter bars and the temporary stair cover ---------- */
+  (function () {
+    const bar = std({ color: 0x6b4a2e, roughness: 0.6, metalness: 0.5 });
+    H.S.columns.filter(c => c.z0 < LV.ffSlabTop && c.z1 > LV.ffSlabTop).forEach(c => [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
+      const x = c.x + sx * (c.b / 2 - 0.05), y = c.y + sy * (c.d / 2 - 0.05);
+      box(x - 0.01, x + 0.01, y - 0.01, y + 0.01, LV.ff, LV.ff + 0.9, bar, G.ph1, { cast: false });
+    }));
+    const v = H.stair.void, sheet = std({ color: 0x5f666d, roughness: 0.5, metalness: 0.5 });
+    box(v.x0, v.x1, v.y0, v.y1, LV.ff + 2.0, LV.ff + 2.06, sheet, G.ph1);
+    [[v.x0, v.x0 + 0.04], [v.x1 - 0.04, v.x1]].forEach(([a, b]) => box(a, b, v.y0, v.y1, LV.ff, LV.ff + 2.0, sheet, G.ph1));
+    box(v.x0, v.x1, v.y1 - 0.04, v.y1, LV.ff, LV.ff + 2.0, sheet, G.ph1);
+  })();
+
   /* ---------- stair: GF -> FF -> roof ---------- */
   (function () {
     const s = H.stair;
@@ -363,6 +378,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     const stone = std({ color: 0xe9e6df, roughness: 0.25 }), black = std({ color: 0x15181b, roughness: 0.3, metalness: 0.2 }), steel = std({ color: 0xc9cdd1, roughness: 0.3, metalness: 0.7 });
     const screen = std({ color: 0x0c1a2a, roughness: 0.15, emissive: 0x0a2a4a }), splash = std({ map: T.wet, roughness: 0.2 });
     H.furniture.filter(f => f.lv === 'gf').forEach(f => {
+      const K = ['island', 'stool', 'pendant', 'upper', 'hood'].includes(f.k) ? G.kitchenUp : G.kitchen;
       const [x0, y0, x1, y1] = f.r, zb = z0 + (f.z || 0), zt = zb + f.h;
       switch (f.k) {
         case 'counter':
@@ -414,7 +430,8 @@ body.walking #layers, body.walking #title dl { display: none; }
     box(lx, lx + W, ly, ly + D, 0, LV.yard, MAT.grass, G.site, { cast: false, tile: 2 });
     const pv = (r, m) => box(r.x0, r.x1, r.y0, r.y1, LV.yard, LV.yard + 0.012, m, G.site, { cast: false });
     pv(si.path, MAT.pave);
-    box(si.carpark.x0, si.carpark.x1, si.carpark.y0, si.carpark.y1, LV.yard, LV.yard + 0.02, MAT.conc, G.site, { cast: false });
+    box(si.carpark.x0, si.carpark.x1, si.carpark.y0, si.carpark.y1, LV.yard, LV.yard + 0.02, MAT.conc, G.extras, { cast: false });
+    box(si.carpark.x0, si.carpark.x1, si.carpark.y0, si.carpark.y1, LV.yard, LV.yard + 0.015, MAT.gravel, G.ph1, { cast: false });   // Phase 1: gravel parking
     pv(si.gravel, MAT.gravel);
     pv({ x0: lx, x1: lx + W, y0: 11.1, y1: ly + D }, MAT.pave);
     pv(si.bedFront, MAT.soil);
@@ -436,13 +453,13 @@ body.walking #layers, body.walking #title dl { display: none; }
     [[1.2, 2.2, 0.5], [-1.1, 2.3, -0.6], [0.5, 2.0, -1.0], [-0.6, 2.1, 0.9], [1.4, 2.6, -0.4], [-1.5, 2.5, 0.2], [0.1, 1.95, 1.3]].forEach(([dx, h, dy]) => { const f = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), mfruit); f.scale.set(1, 1.35, 1); f.position.set(mg.x + dx, LV.yard + h, -(mg.y + dy)); G.site.add(f); });
     // front fence, pedestrian gate and sliding car gate
     const fence = std({ color: 0x2b2f33, roughness: 0.5, metalness: 0.4 });
-    [[lx, si.walkGate.x0], [si.walkGate.x1, si.carGate.x0]].forEach(([a, b]) => { box(a, b, ly, ly + 0.15, 0, 0.6, MAT.nwall, G.site); for (let x = a + 0.06; x < b; x += 0.12) box(x - 0.015, x + 0.015, ly + 0.05, ly + 0.1, 0.6, 1.5, fence, G.site); });
-    box(si.walkGate.x0 + 0.05, si.walkGate.x1 - 0.05, ly + 0.04, ly + 0.1, 0.05, 1.5, fence, G.site);
-    for (let x = si.carGate.x0 + 0.1; x < si.carGate.x1; x += 0.14) box(x - 0.02, x + 0.02, ly + 0.02, ly + 0.08, 0.05, 1.6, fence, G.site);
-    box(si.carGate.x0, si.carGate.x1, ly + 0.02, ly + 0.08, 1.55, 1.62, fence, G.site);
+    [[lx, si.walkGate.x0], [si.walkGate.x1, si.carGate.x0]].forEach(([a, b]) => { box(a, b, ly, ly + 0.15, 0, 0.6, MAT.nwall, G.extras); for (let x = a + 0.06; x < b; x += 0.12) box(x - 0.015, x + 0.015, ly + 0.05, ly + 0.1, 0.6, 1.5, fence, G.extras); });
+    box(si.walkGate.x0 + 0.05, si.walkGate.x1 - 0.05, ly + 0.04, ly + 0.1, 0.05, 1.5, fence, G.extras);
+    for (let x = si.carGate.x0 + 0.1; x < si.carGate.x1; x += 0.14) box(x - 0.02, x + 0.02, ly + 0.02, ly + 0.08, 0.05, 1.6, fence, G.extras);
+    box(si.carGate.x0, si.carGate.x1, ly + 0.02, ly + 0.08, 1.55, 1.62, fence, G.extras);
     // carport: four posts and a flat metal roof
-    const cp = si.carport; cp.posts.forEach(([x, y]) => box(x - 0.06, x + 0.06, y - 0.06, y + 0.06, LV.yard, cp.z, fence, G.site));
-    box(cp.x0, cp.x1, cp.y0, cp.y1, cp.z, cp.z + 0.12, MAT.fascia, G.site); box(cp.x0 + 0.05, cp.x1 - 0.05, cp.y0 + 0.05, cp.y1 - 0.05, cp.z - 0.01, cp.z, MAT.soffit, G.site, { cast: false });
+    const cp = si.carport; cp.posts.forEach(([x, y]) => box(x - 0.06, x + 0.06, y - 0.06, y + 0.06, LV.yard, cp.z, fence, G.extras));
+    box(cp.x0, cp.x1, cp.y0, cp.y1, cp.z, cp.z + 0.12, MAT.fascia, G.extras); box(cp.x0 + 0.05, cp.x1 - 0.05, cp.y0 + 0.05, cp.y1 - 0.05, cp.z - 0.01, cp.z, MAT.soffit, G.extras, { cast: false });
     // parked car
     const car = si.car, paint = std({ color: 0x8c1f24, roughness: 0.35, metalness: 0.5 }), tyre = std({ color: 0x151515, roughness: 0.9 });
     box(car.x0, car.x1, car.y0, car.y1, LV.yard + 0.3, LV.yard + 0.95, paint, G.site);
@@ -451,16 +468,16 @@ body.walking #layers, body.walking #title dl { display: none; }
     [[car.y0 + 0.75], [car.y1 - 0.75]].forEach(([y]) => [car.x0 + 0.02, car.x1 - 0.02].forEach(x => { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.22, 18), tyre); w.rotation.z = Math.PI / 2; w.position.set(x, LV.yard + 0.32, -y); w.castShadow = true; G.site.add(w); }));
     // koi fish pond: stone coping, water and fish
     const pd = si.pond, stone = std({ color: 0x8f8a80, roughness: 0.9 });
-    box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y0 - 0.25, pd.y0, LV.yard, LV.yard + 0.3, stone, G.site); box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y1, pd.y1 + 0.25, LV.yard, LV.yard + 0.3, stone, G.site);
-    box(pd.x0 - 0.25, pd.x0, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.site); box(pd.x1, pd.x1 + 0.25, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.site);
-    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard - pd.depth, LV.yard - 0.7, std({ color: 0x2f4a3a }), G.site, { cast: false });
-    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard + 0.1, LV.yard + 0.12, std({ color: 0x2c7a8c, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.55, depthWrite: false }), G.site, { cast: false });
+    box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y0 - 0.25, pd.y0, LV.yard, LV.yard + 0.3, stone, G.extras); box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y1, pd.y1 + 0.25, LV.yard, LV.yard + 0.3, stone, G.extras);
+    box(pd.x0 - 0.25, pd.x0, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.extras); box(pd.x1, pd.x1 + 0.25, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.extras);
+    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard - pd.depth, LV.yard - 0.7, std({ color: 0x2f4a3a }), G.extras, { cast: false });
+    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard + 0.1, LV.yard + 0.12, std({ color: 0x2c7a8c, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.55, depthWrite: false }), G.extras, { cast: false });
     const koi = [0xff7a1a, 0xffffff, 0xff5a1f, 0xf2c14a, 0xff7a1a];
-    koi.forEach((c, i) => { const f = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.08), std({ color: c, roughness: 0.4 })); f.userData = { r: 0.35 + i * 0.12, s: 0.35 + i * 0.07, p: i * 1.3 }; G.site.add(f); FISH.push(f); });
-    [[pd.x0 - 0.1, pd.y0 + 0.4], [pd.x1 + 0.1, pd.y1 - 0.3]].forEach(([x, y]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), MAT.plant); s.position.set(x, LV.yard + 0.5, -y); G.site.add(s); });
-    box(si.pump.x - 0.2, si.pump.x + 0.2, si.pump.y - 0.15, si.pump.y + 0.15, LV.yard, LV.yard + 0.45, MAT.nwall, G.site); // pump box
-    box(si.meterW.x - 0.15, si.meterW.x + 0.15, si.meterW.y, si.meterW.y + 0.25, LV.yard, LV.yard + 0.9, MAT.conc, G.site);
-    box(si.meterE.x - 0.1, si.meterE.x + 0.3, si.meterE.y, si.meterE.y + 0.3, LV.yard, LV.yard + 1.6, MAT.conc, G.site);
+    koi.forEach((c, i) => { const f = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.08), std({ color: c, roughness: 0.4 })); f.userData = { r: 0.35 + i * 0.12, s: 0.35 + i * 0.07, p: i * 1.3 }; G.extras.add(f); FISH.push(f); });
+    [[pd.x0 - 0.1, pd.y0 + 0.4], [pd.x1 + 0.1, pd.y1 - 0.3]].forEach(([x, y]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), MAT.plant); s.position.set(x, LV.yard + 0.5, -y); G.extras.add(s); });
+    box(si.pump.x - 0.2, si.pump.x + 0.2, si.pump.y - 0.15, si.pump.y + 0.15, LV.yard, LV.yard + 0.45, MAT.nwall, G.extras); // pump box
+    box(si.meterW.x - 0.15, si.meterW.x + 0.15, si.meterW.y, si.meterW.y + 0.25, LV.yard, LV.yard + 0.9, MAT.conc, G.extras);
+    box(si.meterE.x - 0.1, si.meterE.x + 0.3, si.meterE.y, si.meterE.y + 0.3, LV.yard, LV.yard + 1.6, MAT.conc, G.extras);
   })();
 
   /* ---------- structure ---------- */
@@ -541,10 +558,14 @@ body.walking #layers, body.walking #title dl { display: none; }
 
   /* ---------- layers + views ---------- */
   const ui = id => document.getElementById(id);
-  const state = { roof: true, ff: true, site: true, lab: false, str: false, svc: false };
+  const state = { roof: true, ff: true, site: true, lab: false, str: false, svc: false, ph1: false };
+  const ECO = [[MAT.clad, MAT.clad.map], [MAT.timber, MAT.timber.map]];
   function apply() {
     const arch = !state.str;
-    G.gf.visible = arch; G.kitchen.visible = arch; G.ff.visible = arch && state.ff; G.roof.visible = arch && state.ff && state.roof;
+    G.gf.visible = arch; G.kitchen.visible = arch;
+    const p1 = state.ph1 && arch;
+    G.kitchenUp.visible = arch && !p1; G.extras.visible = state.site && !p1; G.ph1.visible = p1;
+    ECO.forEach(([m, map]) => { m.map = p1 ? null : map; m.color.set(p1 ? 0xe4e2dc : 0xffffff); m.needsUpdate = true; }); G.ff.visible = arch && state.ff && !state.ph1; G.roof.visible = arch && state.ff && state.roof && !state.ph1; G.ffslab.visible = arch && (state.ff || state.ph1);
     G.site.visible = state.site; G.struct.visible = state.str; G.svc.visible = state.svc; ui('svcKey').hidden = !state.svc;
     [MAT.s_beam, MAT.s_col, MAT.s_ftg].forEach(m => { m.transparent = state.svc; m.opacity = state.svc ? 0.28 : 1; m.depthWrite = !state.svc; m.needsUpdate = true; });
     G.labFF.visible = arch && state.lab && state.ff && !state.roof;
@@ -556,15 +577,16 @@ body.walking #layers, body.walking #title dl { display: none; }
 
   const C = (x, y, z) => new THREE.Vector3(x, z, -y);
   const VIEWS = {
-    front: { pos: C(-4.5, -16.5, 5.2), tgt: C(3.8, 1.0, 3.2), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    rear: { pos: C(13.5, 29, 9.5), tgt: C(4.0, 6.0, 3.0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    ff: { pos: C(3.2, -7.5, 16.5), tgt: C(2.9, 5.2, 3.2), st: { roof: false, ff: true, str: false, lab: true, site: true } },
-    gf: { pos: C(3.2, -7.0, 14.5), tgt: C(2.9, 5.2, 0.4), st: { roof: true, ff: false, str: false, lab: true, site: true } },
-    struct: { pos: C(-8.5, -9.5, 9.5), tgt: C(2.9, 5.5, 1.8), st: { str: true, lab: false, site: false, svc: false } },
-    svc: { pos: C(-9.5, -11.5, 11.5), tgt: C(2.9, 5.0, 2.8), st: { str: true, lab: false, site: false, svc: true } },
-    top: { pos: C(4.85, 3.98, 38), tgt: C(4.85, 4.0, 0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    spin: { pos: C(-9.5, -17.5, 9.5), tgt: C(4.3, 3.5, 3.0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    terrace: { pos: C(7.5, -6.5, 14.0), tgt: C(2.9, 5.5, 7.2), st: { roof: true, ff: true, str: false, lab: true, site: true } }
+    ph1: { pos: C(-4.5, -16.5, 5.2), tgt: C(3.8, 1.0, 2.6), st: { ph1: true, roof: true, ff: true, str: false, lab: false, site: true, svc: false } },
+    front: { pos: C(-4.5, -16.5, 5.2), tgt: C(3.8, 1.0, 3.2), st: { ph1: false, roof: true, ff: true, str: false, lab: false, site: true } },
+    rear: { pos: C(13.5, 29, 9.5), tgt: C(4.0, 6.0, 3.0), st: { ph1: false, roof: true, ff: true, str: false, lab: false, site: true } },
+    ff: { pos: C(3.2, -7.5, 16.5), tgt: C(2.9, 5.2, 3.2), st: { ph1: false, roof: false, ff: true, str: false, lab: true, site: true } },
+    gf: { pos: C(3.2, -7.0, 14.5), tgt: C(2.9, 5.2, 0.4), st: { ph1: false, roof: true, ff: false, str: false, lab: true, site: true } },
+    struct: { pos: C(-8.5, -9.5, 9.5), tgt: C(2.9, 5.5, 1.8), st: { ph1: false, str: true, lab: false, site: false, svc: false } },
+    svc: { pos: C(-9.5, -11.5, 11.5), tgt: C(2.9, 5.0, 2.8), st: { ph1: false, str: true, lab: false, site: false, svc: true } },
+    top: { pos: C(4.85, 3.98, 38), tgt: C(4.85, 4.0, 0), st: { ph1: false, roof: true, ff: true, str: false, lab: false, site: true } },
+    spin: { pos: C(-9.5, -17.5, 9.5), tgt: C(4.3, 3.5, 3.0), st: { ph1: false, roof: true, ff: true, str: false, lab: false, site: true } },
+    terrace: { pos: C(7.5, -6.5, 14.0), tgt: C(2.9, 5.5, 7.2), st: { ph1: false, roof: true, ff: true, str: false, lab: true, site: true } }
   };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let anim = null, pendingSpin = false, walking = false;
