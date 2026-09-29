@@ -65,6 +65,17 @@ tfoot td { font-weight: 600; border-bottom: 0; }
 .notes { padding: 12px 16px 16px; }
 .notes li { margin: 4px 0; max-width: 75ch; font-size: 14px; }
 #copied { font: 500 13px var(--f-cond); color: var(--accent); }
+td.ph { width: 76px; padding: 6px 6px 6px 10px; }
+td.ph button { display: block; padding: 0; border: 1px solid var(--rule); background: var(--paper); cursor: zoom-in; width: 64px; height: 48px; }
+td.ph img { display: block; width: 62px; height: 46px; object-fit: cover; }
+td.ph .none { display: grid; place-items: center; width: 64px; height: 48px; border: 1px dashed var(--rule); color: var(--ink3); font: 500 11px var(--f-cond); }
+dialog#photo { border: 1.5px solid var(--ink); padding: 0; background: var(--sheet); color: var(--ink); max-width: min(92vw, 560px); }
+dialog#photo::backdrop { background: rgba(10, 14, 18, .6); }
+dialog#photo img { display: block; width: 100%; height: auto; }
+dialog#photo p { margin: 0; padding: 10px 14px; font-size: 13px; color: var(--ink2); }
+dialog#photo button { position: absolute; top: 8px; right: 8px; }
+.credits { padding: 12px 16px 16px; columns: 2 320px; column-gap: 28px; font-size: 12.5px; color: var(--ink2); }
+.credits p { margin: 0 0 6px; break-inside: avoid; }
 textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-top: 8px; }
 @media (max-width: 860px) {
   header .wrap { grid-template-columns: 1fr; }
@@ -111,6 +122,12 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   <div id="cats" style="display:grid;gap:22px"></div>
 
   <section class="panel">
+    <h2>Photo credits</h2>
+    <p style="margin:0;padding:12px 16px 0;color:var(--ink2);font-size:14px">The photos show the type of material. They are examples, not a specific brand or supplier. All come from Wikimedia Commons under the licences listed. Tap a photo in the tables to see it larger.</p>
+    <div class="credits" id="credits"></div>
+  </section>
+
+  <section class="panel">
     <h2>How the quantities are calculated</h2>
     <ul class="notes">
       <li>Concrete is the net volume of each element from the structure data. Beam volumes exclude the part inside the slab. The stair is measured as waist, steps and landing.</li>
@@ -122,8 +139,10 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     </ul>
   </section>
 </main>
+<dialog id="photo" aria-label="Material photo"><button class="btn" type="button">Close</button><img alt=""><p></p></dialog>
 
 <script src="house-data.js"></script>
+<script src="img/credits.js"></script>
 <script>
 (function () {
   const H = window.HOUSE, LV = H.LV;
@@ -194,7 +213,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const intPaint = Math.max(0, plasterA - (extRender + cladA + timberA) - wallTile);
   const extPaint = extRender * 1.08 + 18;
   const ceilPaint = c1 + c2 + soffit;
-  const wpA = sum(wet.map(r => H.roomArea(r) + perim(r) * 0.15)) + 3 * 2 * 1.0 * 1.8 + 3.24 + 7.8 * 0.15;
+  const wpA = sum(wet.map(r => H.roomArea(r) + perim(r) * 0.15)) + H.furniture.filter(x => x.k === 'shower').length * 2 * 1.0 * 1.8 + 3.24 + 7.8 * 0.15;
 
   /* ================= ROOF ================= */
   const terraceA = H.roomArea(H.rooms.find(x => x.id === 'R-01'));
@@ -273,7 +292,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Entry canopy', 'Steel frame 50 × 100 + metal sheet, ' + f(canopyA, 1) + ' m²', 'm²', ceil(canopyA), 45]    ] },
     { id: 'dw', name: 'Doors and windows', items: Object.entries(H.types).map(([code, t]) => {
       const n = H.openings.filter(o => o.t === code).length;
-      const rate = t.kind === 'door' ? { D01: 480, D02: 130, D03: 95, D05: 180, D06: 220 }[code] : Math.round(winArea(code) * (t.kind === 'slider' ? 88 : t.kind === 'louvre' ? 70 : 75));
+      const rate = t.kind === 'door' ? { D01: 480, D02: 130, D03: 95, D04: 110, D05: 180, D06: 220 }[code] : Math.round(winArea(code) * (t.kind === 'slider' ? 88 : t.kind === 'louvre' ? 70 : 75));
       return [code + ' ' + t.name, Math.round(t.w * 1000) + ' × ' + Math.round((t.head - t.sill) * 1000) + '. ' + t.spec, 'no.', n, rate];
     }).concat([['Ironmongery allowance', 'Hinges, closers, stops for internal doors', 'set', 7, 18]]) },
     { id: 'fin', name: 'Floor, wall and ceiling finishes', items: [
@@ -305,7 +324,9 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Basin and mixer', 'Wall-hung or vanity, with waste and trap', 'no.', count('basin'), 75],
       ['Shower set', 'Mixer, rail, head, glass screen allowance', 'no.', count('shower'), 55],
       ['Kitchen sink and tap', 'Stainless double bowl with mixer', 'no.', 1, 90],
-      ['Floor drains', '3 bathrooms + balcony + laundry', 'no.', 5, 6],
+      ['Kitchen cabinets and island', 'Base and wall cabinets, 1.2 × 0.8 m island, quartz or granite tops, laundry wall cabinet', 'lot', 1, 1800],
+      ['Cooker hood', 'Chimney hood 600 mm, ducted to outside', 'no.', 1, 150],
+      ['Floor drains', '2 bathrooms + balcony + laundry', 'no.', 4, 6],
       ['Electric water heater', '3.5 kW instant, with RCD', 'no.', el.H, 95],
       ['Underground water tank', 'Reinforced concrete 2.0 × 1.1 × 1.0 m (~2.2 m³), waterproof render inside, 600 × 600 access lid', 'no.', 1, 450],
       ['Booster pump', 'Automatic pressure pump 250 W with pressure tank, in a ventilated box beside the tank', 'no.', 1, 190],
@@ -316,7 +337,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['uPVC 50 waste pipe', 'Showers, basins, kitchen; measured ' + f(wasteLen, 1) + ' m', 'm', ceil(wasteLen * 1.15), 2.5],
       ['Septic tank', '2-chamber, 2.5 m³, precast or PE', 'no.', 1, 450],
       ['Inspection chambers', '450 × 450 with covers', 'no.', 3, 35],
-      ['Laundry point', 'Washing machine tap and trapped drain, rear yard', 'no.', 1, 25]
+      ['Laundry point', 'Washing machine tap and trapped standpipe in the kitchen laundry corner', 'no.', 1, 25]
     ] },
     { id: 'ele', name: 'Electrical', items: [
       ['Main distribution board', '12-way, 63 A main switch, 30 mA RCBOs', 'no.', 1, 220],
@@ -346,6 +367,26 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     ] }
   ];
 
+  /* ================= PHOTOS (Wikimedia Commons, see credits at the bottom) ================= */
+  const PHOTO_RULES = [
+    [/^Excavation/, 'excavation'], [/^Sand blinding|^Sand$/, 'sand'], [/^Cement/, 'cement'], [/^Gravel$/, 'gravel'],
+    [/bars$/, 'rebar'], [/^Tie wire/, 'tiewire'], [/^Plywood/, 'plywood'], [/^Formwork timber/, 'timber'], [/^Concrete spacers/, 'concrete'],
+    [/^Skim coat/, 'plaster'], [/PU waterproofing|^Waterproofing membrane/, 'membrane'], [/^XPS/, 'xps'], [/^Deck tiles|pedestals/, 'deck'],
+    [/^Steel railing/, 'railing'], [/^Roof outlets|scuppers/, 'roofdrain'], [/^Downpipes/, 'downpipe'], [/^Entry canopy/, 'canopy'],
+    [/^D01/, 'door'], [/^SD0|^W\d/, 'slider'], [/^F[123] /, 'tile'], [/^F4 /, 'woodtile'], [/^Skirting/, 'tile'], [/^W2 wall tiles/, 'walltile'],
+    [/^C[123] /, 'gypsum'], [/paint|^Primer/, 'paint'], [/^Fibre-cement/, 'fibrecement'], [/^Timber-look WPC/, 'wpc'], [/^Glass balustrade/, 'glassbal'],
+    [/^WC$/, 'wc'], [/^Basin/, 'basin'], [/^Shower set/, 'shower'], [/^Kitchen sink/, 'ksink'], [/water heater/i, 'heater'],
+    [/^Underground water tank/, 'tank'], [/^Booster pump/, 'pump'], [/^PPR/, 'ppr'], [/^uPVC|^Storm drain pipe/, 'upvc'], [/^Septic/, 'septic'],
+    [/^Cable|^Data cable/, 'cable'], [/conduit/i, 'conduit'], [/^Main distribution board/, 'db'], [/^Light points/, 'light'],
+    [/^Socket|^Switches/, 'socket'], [/^Air-conditioner/, 'ac'], [/^Exhaust fans/, 'fan'], [/^Paving/, 'paver'], [/^Gravel passage/, 'gravelyard'], [/^Lawn turf/, 'turf']
+  ];
+  const CREDITS = window.PHOTO_CREDITS || {};
+  const photoFor = name => { const r = PHOTO_RULES.find(([re]) => re.test(name)); return r && CREDITS[r[1]] ? r[1] : null; };
+  const photoCell = name => {
+    const k = photoFor(name);
+    return k ? `<td class="ph"><button type="button" data-photo="${k}" aria-label="Show photo: ${esc(name)}"><img src="img/${k}.jpg" alt="" loading="lazy" width="62" height="46"></button></td>` : '<td class="ph"><span class="none">—</span></td>';
+  };
+
   /* ================= RATES (editable, remembered in this browser) ================= */
   const KEY = 'house7x15-rates-v1';
   let saved = {};
@@ -362,8 +403,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     <section class="panel" id="cat-${c.id}">
       <h2>${esc(c.name)}<small id="sub-${c.id}"></small></h2>
       <div class="tbl"><table>
-        <thead><tr><th>Item</th><th>Specification</th><th>Unit</th><th class="n">Qty</th><th class="n">Rate USD</th><th class="n">Amount</th></tr></thead>
-        <tbody>${c.items.map((it, i) => `<tr><td class="item">${esc(it[0])}</td><td class="spec">${esc(it[1])}</td><td>${it[2]}</td><td class="n">${f(it[3], it[3] % 1 ? 1 : 0)}</td><td class="n"><input type="number" min="0" step="0.01" id="r-${c.id}-${i}" data-c="${c.id}" data-i="${i}" value="${rateOf(c, i)}" aria-label="Rate for ${esc(it[0])}"></td><td class="n" id="a-${c.id}-${i}"></td></tr>`).join('')}</tbody>
+        <thead><tr><th>Photo</th><th>Item</th><th>Specification</th><th>Unit</th><th class="n">Qty</th><th class="n">Rate USD</th><th class="n">Amount</th></tr></thead>
+        <tbody>${c.items.map((it, i) => `<tr>${photoCell(it[0])}<td class="item">${esc(it[0])}</td><td class="spec">${esc(it[1])}</td><td>${it[2]}</td><td class="n">${f(it[3], it[3] % 1 ? 1 : 0)}</td><td class="n"><input type="number" min="0" step="0.01" id="r-${c.id}-${i}" data-c="${c.id}" data-i="${i}" value="${rateOf(c, i)}" aria-label="Rate for ${esc(it[0])}"></td><td class="n" id="a-${c.id}-${i}"></td></tr>`).join('')}</tbody>
       </table></div>
     </section>`).join('');
 
@@ -415,6 +456,17 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     try { navigator.clipboard.writeText(text).then(() => { msg.textContent = 'Copied. Paste it into Excel or Google Sheets.'; ta.hidden = true; }, fallback); } catch (e) { fallback(); }
   });
   recalc();
+
+  const dlg = document.getElementById('photo');
+  catsEl.addEventListener('click', e => {
+    const b = e.target.closest('button[data-photo]'); if (!b) return;
+    const k = b.dataset.photo, c = CREDITS[k] || {};
+    dlg.querySelector('img').src = 'img/' + k + '.jpg';
+    dlg.querySelector('p').innerHTML = esc(b.getAttribute('aria-label').replace('Show photo: ', '')) + ' · example photo · ' + esc(c.artist || 'unknown') + ', ' + esc(c.license || '') + ' · <a href="' + esc(c.page || '#') + '" target="_blank" rel="noopener">source</a>';
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('button')) dlg.close(); });
+  document.getElementById('credits').innerHTML = Object.entries(CREDITS).map(([k, c]) => `<p><b>${esc(k)}</b>: ${esc(c.title)} · ${esc(c.artist || 'unknown')} · ${esc(c.license || '')} · <a href="${esc(c.page)}" target="_blank" rel="noopener">Wikimedia Commons</a></p>`).join('');
 })();
 </script>
 </body>

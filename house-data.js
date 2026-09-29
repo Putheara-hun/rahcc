@@ -94,6 +94,7 @@
     D01: { kind: 'door', w: 1.00, sill: 0, head: 2.40, name: 'Main entry door', spec: 'Solid engineered timber (merbau/teak veneer), 50 mm, stainless pivot or 3 hinges, multi-point lock, weather seal' },
     D02: { kind: 'door', w: 0.80, sill: 0, head: 2.10, name: 'Bedroom door', spec: 'Solid-core flush timber, 40 mm, painted/laminate, hardwood frame, lever lockset' },
     D03: { kind: 'door', w: 0.70, sill: 0, head: 2.10, name: 'Bathroom door', spec: 'WPC or aluminium frame door, moisture-proof, privacy lock, 20 mm threshold' },
+    D04: { kind: 'door', w: 0.70, sill: 0, head: 2.10, name: 'Wardrobe door', spec: 'Solid-core flush timber, 40 mm, painted, hardwood frame, passage lever' },
     D05: { kind: 'door', w: 0.80, sill: 0, head: 2.10, name: 'Rear service door', spec: 'Powder-coated aluminium, lower solid panel, upper frosted glass, security bar' },
     SD01: { kind: 'slider', w: 1.60, sill: 0, head: 2.40, name: 'Living sliding door', spec: '2-panel black aluminium slider, 8 mm toughened clear glass, flyscreen, key lock' },
     SD02: { kind: 'slider', w: 2.10, sill: 0, head: 2.40, name: 'Lounge-to-balcony slider', spec: '2-panel black aluminium slider, 8 mm toughened clear glass, raised weather sill' },
@@ -127,11 +128,11 @@
     { t: 'W05', lv: 'ff', o: 'h', c: 0.0, s: 3.80, e: 5.60 },
     { t: 'W07', lv: 'ff', o: 'v', c: 5.8, s: 1.80, e: 3.00 },
     { t: 'D02', lv: 'ff', o: 'v', c: 2.7, s: 2.80, e: 3.60, swing: '+x', hinge: 'e' },
-    { t: 'D03', lv: 'ff', o: 'v', c: 3.3, s: 4.90, e: 5.60, swing: '+x', hinge: 's' },
+    { t: 'D03', lv: 'ff', o: 'h', c: 5.9, s: 3.40, e: 4.05, swing: '-y', hinge: 's' },
     { t: 'W08', lv: 'ff', o: 'v', c: 5.8, s: 4.40, e: 5.20 },
     { t: 'W08', lv: 'ff', o: 'v', c: 5.8, s: 6.60, e: 7.40 },
     { t: 'D02', lv: 'ff', o: 'h', c: 8.0, s: 2.30, e: 3.10, swing: '+y', hinge: 's' },
-    { t: 'D03', lv: 'ff', o: 'h', c: 8.0, s: 4.40, e: 5.10, swing: '-y', hinge: 'e' },
+    { t: 'D04', lv: 'ff', o: 'h', c: 8.0, s: 4.40, e: 5.10, swing: '-y', hinge: 'e' },
     { t: 'W07', lv: 'ff', o: 'v', c: 5.8, s: 9.20, e: 10.40 },
     { t: 'W09', lv: 'ff', o: 'h', c: 11.0, s: 1.60, e: 3.80 },
 
@@ -176,8 +177,8 @@
     { id: 'F-03', lv: 'ff', name: 'Bedroom 2', r: [[2.7, 0, 5.8, 3.8]], lab: [4.4, 0.95], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 4, AC: 1 } },
     { id: 'F-04', lv: 'ff', name: 'Landing', r: [[0, 3.8, 2.1, 8.0]], lab: [0.55, 4.35], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 1, S: 0 } },
     { id: 'F-05', lv: 'ff', name: 'Hall', r: [[2.1, 3.8, 3.3, 8.0]], lab: [2.7, 6.9], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 1 } },
-    { id: 'F-06', lv: 'ff', name: 'Bathroom 2', r: [[3.3, 3.8, 5.8, 5.9]], fl: 'F2', wl: 'W2', cl: 'C2', wet: true, elec: { L: 1, S: 0, F: 1, H: 1 } },
-    { id: 'F-07', lv: 'ff', name: 'Ensuite', r: [[3.3, 5.9, 5.8, 8.0]], fl: 'F2', wl: 'W2', cl: 'C2', wet: true, elec: { L: 1, S: 0, F: 1, H: 1 } },
+    { id: 'F-06', lv: 'ff', name: 'Master Bathroom', r: [[3.3, 3.8, 5.8, 5.9]], fl: 'F2', wl: 'W2', cl: 'C2', wet: true, elec: { L: 1, S: 0, F: 1, H: 1 } },
+    { id: 'F-07', lv: 'ff', name: 'Walk-in Wardrobe', r: [[3.3, 5.9, 5.8, 8.0]], lab: [4.55, 7.35], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 1, S: 1 } },
     { id: 'F-08', lv: 'ff', name: 'Master Bedroom', r: [[0, 8.0, 5.8, 11.0]], lab: [3.9, 9.35], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 3, S: 5, AC: 1, D: 1 } },
 
     { id: 'R-01', lv: 'rf', name: 'Roof Terrace', r: [[2.1, 0, 5.8, 11.0], [0, 0, 2.1, 3.8], [0, 8.0, 2.1, 11.0]], lab: [3.95, 5.6], fl: 'F6', wl: 'W3', cl: '—', out: true, elec: { L: 4, S: 2 } },
@@ -191,12 +192,27 @@
     { lv: 'gf', k: 'shower', r: [0.15, 9.95, 1.05, 10.90], h: 0.05 },
     { lv: 'gf', k: 'wc', r: [0.15, 8.65, 0.85, 9.05], h: 0.8 },
     { lv: 'gf', k: 'basin', r: [1.50, 10.25, 2.05, 10.75], h: 0.85 },
+    // kitchen fit-out, laundry corner and TV (z = height above floor where the item starts)
+    { lv: 'gf', k: 'fridge', r: [5.10, 7.20, 5.75, 7.85], h: 1.85 },
+    { lv: 'gf', k: 'upper', r: [5.40, 7.90, 5.75, 8.55], z: 1.45, h: 0.75 },
+    { lv: 'gf', k: 'hood', r: [5.30, 8.60, 5.75, 9.20], z: 1.60, h: 0.55 },
+    { lv: 'gf', k: 'upper', r: [5.40, 9.25, 5.75, 9.90], z: 1.45, h: 0.75 },
+    { lv: 'gf', k: 'island', r: [3.00, 8.60, 4.20, 9.40], h: 0.9 },
+    { lv: 'gf', k: 'stool', r: [3.15, 8.15, 3.45, 8.45], h: 0.65 },
+    { lv: 'gf', k: 'stool', r: [3.45, 8.15, 3.75, 8.45], h: 0.65 },
+    { lv: 'gf', k: 'stool', r: [3.75, 8.15, 4.05, 8.45], h: 0.65 },
+    { lv: 'gf', k: 'pendant', r: [3.25, 8.90, 3.45, 9.10], z: 1.9, h: 0.25 },
+    { lv: 'gf', k: 'pendant', r: [3.75, 8.90, 3.95, 9.10], z: 1.9, h: 0.25 },
+    { lv: 'gf', k: 'washer', r: [2.15, 10.25, 2.80, 10.90], h: 0.85 },
+    { lv: 'gf', k: 'dryer', r: [2.15, 10.25, 2.80, 10.90], z: 0.85, h: 0.85 },
+    { lv: 'gf', k: 'upper', r: [2.15, 10.30, 2.80, 10.90], z: 1.85, h: 0.6 },
+    { lv: 'gf', k: 'tvwall', r: [2.15, 9.15, 2.20, 10.15], z: 1.25, h: 0.58 },
     { lv: 'ff', k: 'shower', r: [4.55, 3.85, 5.75, 4.95], h: 0.05 },
     { lv: 'ff', k: 'wc', r: [5.05, 5.10, 5.75, 5.50], h: 0.8 },
     { lv: 'ff', k: 'basin', r: [4.10, 5.40, 4.70, 5.85], h: 0.85 },
-    { lv: 'ff', k: 'shower', r: [3.35, 5.95, 4.35, 6.95], h: 0.05 },
-    { lv: 'ff', k: 'wc', r: [5.05, 6.30, 5.75, 6.70], h: 0.8 },
-    { lv: 'ff', k: 'basin', r: [3.35, 7.10, 3.85, 7.70], h: 0.85 }
+    { lv: 'ff', k: 'wardrobe', r: [5.15, 5.95, 5.75, 6.55], h: 2.2 },
+    { lv: 'ff', k: 'wardrobe', r: [5.15, 7.45, 5.75, 7.95], h: 2.2 },
+    { lv: 'ff', k: 'wardrobe', r: [3.35, 6.60, 3.95, 7.95], h: 2.2 }
   ];
 
   /* U-stair, GF -> FF -> roof. Each storey: 20 risers x 165 = 3300, going 250, clear width ~900–950 */
@@ -314,17 +330,13 @@
   const roomArea = rm => rm.r.reduce((a, r) => a + rectArea(r), 0);
   const wallLen = w => w.e - w.s;
   const openingsOn = w => openings.filter(o => o.lv === w.lv && o.o === w.o && Math.abs(o.c - w.c) < 1e-6 && o.s >= w.s - 1e-6 && o.e <= w.e + 1e-6);
-
-  /* ================= SERVICES: plumbing and electrical routes (schematic, plan x, y + height z) =================
-     sys: cw cold water · hw hot water · ww waste/soil · sw rainwater.  lv: which plan sheet shows the run.  */
   const pipes = [];
   const pipe = (sys, lv, dia, pts) => pipes.push({ sys, lv, dia, pts });
-  const Zg = LV.gfCeil + 0.15;          // services void above the ground floor ceiling
-  const Zw = LV.ff + 0.30;              // first floor water runs in wall chases
-  const Zd = LV.gfCeil + 0.25;          // first floor drains run in the ground floor ceiling void, falling to the stack
-  // cold water, all concealed: meter -> underground main -> underground tank -> pump -> under the ground slab -> up inside walls
-  const Zu = -0.4, Zs = 0.2;            // Zu: buried 550 below the yard · Zs: in the fill under the ground floor slab
-  pipe('cw', 'site', 0.025, [[6.55, -2.8, 0.9], [6.55, -2.8, Zu], [2.75, -2.8, Zu], [2.75, -2.05, Zu], [2.6, -2.05, -0.3]]);   // meter -> tank
+  const Zg = LV.gfCeil + 0.15;  
+  const Zw = LV.ff + 0.30;      
+  const Zd = LV.gfCeil + 0.25;  
+  const Zu = -0.4, Zs = 0.2;    
+  pipe('cw', 'site', 0.025, [[6.55, -2.8, 0.9], [6.55, -2.8, Zu], [2.75, -2.8, Zu], [2.75, -2.05, Zu], [2.6, -2.05, -0.3]]);  
   pipe('cw', 'site', 0.025, [[2.3, -1.7, -0.9], [2.3, -1.7, -0.3], [2.3, -1.3, -0.3], [2.3, -1.3, 0.3]]);                        // tank -> pump
   pipe('cw', 'gf', 0.025, [[2.3, -1.3, 0.3], [2.3, -1.3, Zu], [2.4, -1.3, Zu], [2.4, -0.1, Zs], [2.4, 9.6, Zs], [0.25, 9.6, Zs]]); // pump -> under slab
   pipe('cw', 'gf', 0.02, [[2.4, 9.6, Zs], [3.7, 9.6, Zs], [3.7, 10.92, Zs], [3.7, 10.92, LV.gf + 0.95]]);                        // kitchen sink, up in rear wall
@@ -333,31 +345,27 @@
   pipe('cw', 'gf', 0.02, [[1.95, 9.6, Zs], [2.06, 9.6, Zs], [2.06, 10.5, Zs], [2.06, 10.5, LV.gf + 0.55]]);                     // basin, up in wall
   pipe('cw', 'gf', 0.025, [[3.7, 9.6, Zs], [5.72, 9.6, Zs], [5.72, 5.9, Zs], [5.72, 5.9, Zw]]);                                  // riser inside external wall
   pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [5.72, 4.4, Zw], [5.72, 4.4, LV.ff + 1.9]]);                                          // bath 2 WC + shower heater
-  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [5.72, 6.5, Zw]]);                                                                    // ensuite WC
-  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [3.35, 5.9, Zw], [3.35, 7.4, Zw], [3.35, 7.4, LV.ff + 0.55]]);                        // along bath walls to ensuite basin
+  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [4.4, 5.9, Zw]]);                                                                     // along the bathroom wall to the basin
   pipe('cw', 'ff', 0.02, [[4.4, 5.9, Zw], [4.4, 5.9, LV.ff + 0.55]]);                                                            // bath 2 basin
-  pipe('cw', 'ff', 0.02, [[3.35, 6.45, Zw], [3.35, 6.45, LV.ff + 1.9]]);                                                         // ensuite shower heater
   pipe('cw', 'rf', 0.02, [[5.72, 5.9, Zw], [5.72, 5.9, LV.deck + 0.6]]);                                                         // terrace tap, up in wall
   // hot water: instant heater -> shower mixer
   pipe('hw', 'gf', 0.02, [[0.35, 10.4, LV.gf + 1.85], [0.35, 10.4, LV.gf + 1.0]]);
   pipe('hw', 'ff', 0.02, [[5.6, 4.4, LV.ff + 1.85], [5.6, 4.4, LV.ff + 1.0]]);
-  pipe('hw', 'ff', 0.02, [[3.5, 6.45, LV.ff + 1.85], [3.5, 6.45, LV.ff + 1.0]]);
   // waste and soil
   pipe('ww', 'gf', 0.1, [[0.5, 8.85, LV.gf], [0.6, 8.85, 0.2], [0.6, 11.3, -0.1], [1.0, 11.3, -0.15]]);
   pipe('ww', 'gf', 0.05, [[1.8, 10.5, LV.gf + 0.4], [1.8, 10.5, 0.2], [0.6, 10.5, 0.2]]);
   pipe('ww', 'gf', 0.05, [[0.6, 10.4, LV.gf], [0.6, 10.4, 0.2]]);
   pipe('ww', 'gf', 0.05, [[3.7, 10.6, LV.gf + 0.5], [3.7, 10.6, 0.2], [3.7, 11.3, -0.15]]);
+  pipe('cw', 'gf', 0.02, [[2.4, 9.6, 0.2], [2.4, 10.92, 0.2], [2.4, 10.92, LV.gf + 1.0]]);                     // washing machine tap, up in rear wall
+  pipe('ww', 'gf', 0.05, [[2.6, 10.85, LV.gf + 0.6], [2.6, 10.85, 0.2], [2.6, 11.3, -0.15]]);                  // washing machine standpipe and trap
   pipe('ww', 'site', 0.1, [[1.0, 11.3, -0.15], [6.35, 11.3, -0.3], [6.35, -1.85, -0.6], [5.6, -1.85, -0.6]]);   // sewer to septic
   pipe('ww', 'site', 0.1, [[5.6, -2.35, -0.6], [5.6, -3.6, -0.7]]);                                              // septic overflow
   pipe('ww', 'ff', 0.1, [[6.35, 5.9, -0.35], [6.0, 5.9, -0.3], [6.0, 5.9, LV.parapet + 0.6]]);                   // soil stack + vent
-  pipe('ww', 'ff', 0.1, [[5.5, 4.4, Zd], [5.5, 6.5, Zd]]);
+  pipe('ww', 'ff', 0.1, [[5.5, 4.4, Zd], [5.5, 5.9, Zd]]);
   pipe('ww', 'ff', 0.1, [[5.5, 5.9, Zd], [6.0, 5.9, Zd]]);
   pipe('ww', 'ff', 0.05, [[5.15, 4.4, LV.ff], [5.15, 4.4, Zd], [5.5, 4.4, Zd]]);
   pipe('ww', 'ff', 0.1, [[5.4, 5.3, LV.ff], [5.4, 5.3, Zd], [5.5, 5.3, Zd]]);
   pipe('ww', 'ff', 0.05, [[4.4, 5.6, LV.ff + 0.4], [4.4, 5.6, Zd], [5.5, 5.6, Zd]]);
-  pipe('ww', 'ff', 0.1, [[5.4, 6.5, LV.ff], [5.4, 6.5, Zd], [5.5, 6.5, Zd]]);
-  pipe('ww', 'ff', 0.05, [[3.85, 6.45, LV.ff], [3.85, 6.45, Zd], [5.5, 6.45, Zd]]);
-  pipe('ww', 'ff', 0.05, [[3.6, 7.4, LV.ff + 0.4], [3.6, 7.4, Zd], [3.85, 7.4, Zd], [3.85, 6.45, Zd]]);
   // rainwater: roof outlets -> downpipes -> underground to the street drain
   const RZ = LV.ring + 0.05;
   pipe('sw', 'rf', 0.09, [[5.45, 0.35, RZ], [6.0, 0.35, RZ], [6.0, 0.35, LV.yard]]);
@@ -372,8 +380,8 @@
   const fixtures = [
     { k: 'pump', lv: 'site', x: 2.3, y: -1.3, z: 0.3 }, { k: 'tank', lv: 'site', x: 1.6, y: -2.05, z: -0.6 },
     { k: 'septic', lv: 'site', x: 5.6, y: -1.85, z: -0.6 }, { k: 'meter', lv: 'site', x: 6.55, y: -2.8, z: 0.9 },
-    { k: 'heater', lv: 'gf', x: 0.3, y: 10.4, z: LV.gf + 1.9 }, { k: 'heater', lv: 'ff', x: 5.65, y: 4.4, z: LV.ff + 1.9 }, { k: 'heater', lv: 'ff', x: 3.45, y: 6.45, z: LV.ff + 1.9 },
-    { k: 'fd', lv: 'gf', x: 0.6, y: 10.4, z: LV.gf }, { k: 'fd', lv: 'ff', x: 5.15, y: 4.4, z: LV.ff }, { k: 'fd', lv: 'ff', x: 3.85, y: 6.45, z: LV.ff },
+    { k: 'heater', lv: 'gf', x: 0.3, y: 10.4, z: LV.gf + 1.9 }, { k: 'heater', lv: 'ff', x: 5.65, y: 4.4, z: LV.ff + 1.9 },
+    { k: 'fd', lv: 'gf', x: 0.6, y: 10.4, z: LV.gf }, { k: 'fd', lv: 'ff', x: 5.15, y: 4.4, z: LV.ff },
     { k: 'tap', lv: 'rf', x: 5.62, y: 5.9, z: LV.deck + 0.6 }, { k: 'ic', lv: 'site', x: 1.0, y: 11.3, z: -0.15 }
   ];
 

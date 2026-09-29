@@ -90,7 +90,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     <dt>Building</dt><dd>6.00 × 11.20 m, 2 storeys</dd>
     <dt>Floor to floor</dt><dd>3.30 m</dd>
     <dt>Highest point</dt><dd id="ridge"></dd>
-    <dt>Rooms</dt><dd>3 bed · 3 bath · roof terrace</dd>
+    <dt>Rooms</dt><dd>3 bed · 2 bath · roof terrace</dd>
   </dl>
   <div class="lk"><a id="toDraw" href="drawings.html">Drawings</a><a href="Metersaillist.html">Material list</a><a href="guide.html">Build guide</a></div>
   <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
@@ -356,6 +356,44 @@ body.walking #layers, body.walking #title dl { display: none; }
     down(s.f4, G.ff);
   })();
 
+  /* ---------- kitchen fit-out, laundry corner and TV ---------- */
+  G.kitchen = group('kitchen');
+  (function () {
+    const K = G.kitchen, z0 = LV.gf, wood = std({ map: T.wood, roughness: 0.5 }), white = std({ color: 0xf4f2ee, roughness: 0.35 });
+    const stone = std({ color: 0xe9e6df, roughness: 0.25 }), black = std({ color: 0x15181b, roughness: 0.3, metalness: 0.2 }), steel = std({ color: 0xc9cdd1, roughness: 0.3, metalness: 0.7 });
+    const screen = std({ color: 0x0c1a2a, roughness: 0.15, emissive: 0x0a2a4a }), splash = std({ map: T.wet, roughness: 0.2 });
+    H.furniture.filter(f => f.lv === 'gf').forEach(f => {
+      const [x0, y0, x1, y1] = f.r, zb = z0 + (f.z || 0), zt = zb + f.h;
+      switch (f.k) {
+        case 'counter':
+          box(x0, x1, y0, y1, zb, zb + 0.1, black, K); box(x0, x1, y0, y1, zb + 0.1, zb + 0.86, wood, K);
+          box(x0 - 0.02, x1 + 0.02, y0 - 0.02, y1 + 0.02, zb + 0.86, zb + 0.9, stone, K);
+          if (f.sink) box((x0 + x1) / 2 - 0.4, (x0 + x1) / 2 + 0.4, y0 + 0.1, y1 - 0.1, zb + 0.9, zb + 0.905, steel, K);
+          if (f.hob) box(x0 + 0.05, x1 - 0.05, 8.6, 9.2, zb + 0.9, zb + 0.905, black, K);
+          break;
+        case 'fridge': box(x0, x1, y0, y1, zb, zt, steel, K); break;
+        case 'upper': box(x0, x1, y0, y1, zb, zt, wood, K); break;
+        case 'hood': box(x0, x1, y0, y1, zb, zb + 0.12, steel, K); box(x0 + 0.15, x1, y0 + 0.2, y1 - 0.2, zb + 0.12, zt + 0.3, steel, K); break;
+        case 'island':
+          box(x0 + 0.05, x1 - 0.05, y0 + 0.05, y1 - 0.05, zb, zb + 0.86, white, K);
+          box(x0 - 0.05, x1 + 0.05, y0 - 0.1, y1 + 0.05, zb + 0.86, zb + 0.9, stone, K);
+          break;
+        case 'stool': { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2; box(cx - 0.02, cx + 0.02, cy - 0.02, cy + 0.02, zb, zt - 0.05, black, K); box(x0, x1, y0, y1, zt - 0.05, zt, wood, K); break; }
+        case 'pendant': { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2; box(cx - 0.005, cx + 0.005, cy - 0.005, cy + 0.005, zt, LV.gfCeil, black, K);
+          const s = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), std({ color: 0xfff1d0, emissive: 0x806020 })); s.position.set(cx, zb + 0.12, -cy); K.add(s); break; }
+        case 'washer': case 'dryer':
+          box(x0, x1, y0, y1, zb, zt - 0.01, white, K);
+          { const d = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.02, 24), black); d.rotation.z = Math.PI / 2; d.position.set(x1 + 0.005, (zb + zt) / 2, -(y0 + y1) / 2); K.add(d); }
+          break;
+        case 'tvwall': box(x0, x1, y0, y1, zb, zt, screen, K); box(x0 - 0.01, x0 + 0.005, y0 - 0.02, y1 + 0.02, zb - 0.02, zt + 0.02, black, K); break;
+      }
+    });
+    box(2.9, 4.55, 10.9, 10.935, z0 + 0.9, z0 + 1.5, splash, K);        // tiled splashback behind the sink
+    box(5.715, 5.75, 7.9, 9.9, z0 + 0.9, z0 + 1.45, splash, K);         // splashback behind the hob
+    const pot = std({ color: 0x3b3b3b }); box(3.95, 4.1, 9.05, 9.2, z0 + 0.9, z0 + 1.05, pot, K);
+    const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 10), MAT.plant); leaf.position.set(4.02, z0 + 1.18, -9.12); K.add(leaf);
+  })();
+
   /* ---------- entrance canopy ---------- */
   (function () {
     const c = H.canopy, depth = c.y1 - c.y0, drop = c.hWall - c.hEdge, ang = Math.atan2(drop, depth);
@@ -474,7 +512,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   const state = { roof: true, ff: true, site: true, lab: false, str: false, svc: false };
   function apply() {
     const arch = !state.str;
-    G.gf.visible = arch; G.ff.visible = arch && state.ff; G.roof.visible = arch && state.ff && state.roof;
+    G.gf.visible = arch; G.kitchen.visible = arch; G.ff.visible = arch && state.ff; G.roof.visible = arch && state.ff && state.roof;
     G.site.visible = state.site; G.struct.visible = state.str; G.svc.visible = state.svc; ui('svcKey').hidden = !state.svc;
     [MAT.s_beam, MAT.s_col, MAT.s_ftg].forEach(m => { m.transparent = state.svc; m.opacity = state.svc ? 0.28 : 1; m.depthWrite = !state.svc; m.needsUpdate = true; });
     G.labFF.visible = arch && state.lab && state.ff && !state.roof;
@@ -518,6 +556,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     segs.forEach(([p, q]) => lvs.forEach(lv => (w.o === 'h' ? addB(lv, p, q, w.c - w.t / 2, w.c + w.t / 2) : addB(lv, w.c - w.t / 2, w.c + w.t / 2, p, q))));
   });
   addB('gf', 5.66, 5.94, -0.14, 0.14);                       // porch column
+  H.furniture.filter(f => f.lv === 'gf' && ['counter', 'fridge', 'island', 'washer'].includes(f.k)).forEach(f => addB('gf', f.r[0], f.r[2], f.r[1], f.r[3]));
   addB('rf', 0.1, 1.0, 4.72, 4.78);                          // roof-level balustrade over flight 3
   addB('ff', 0.05, 2.65, -0.06, 0.03);                       // balcony glass
   const lot = { x0: -H.site.ox + RAD, x1: -H.site.ox + H.site.w - RAD, y0: -H.site.oy - 1.2, y1: -H.site.oy + H.site.d - RAD };

@@ -240,7 +240,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
       <div class="eyebrow">Drawing set · Rev A · 29 Sep 2026 · Issued for review and builder pricing</div>
       <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
       <h1>Two-Storey House<br>on a 7 × 15 m Lot</h1>
-      <p class="sub">Three bedrooms, three bathrooms, open living and kitchen, upstairs lounge with a front balcony. Reinforced concrete frame, brick infill, charcoal weatherboard and timber-look cladding, flat concrete roof with a roof terrace and stair house. The drawings, the 3D model and the material list all read from one data file, so they match each other.</p>
+      <p class="sub">Three bedrooms, two bathrooms (one on each floor), open living and kitchen, upstairs lounge with a front balcony. Reinforced concrete frame, brick infill, charcoal weatherboard and timber-look cladding, flat concrete roof with a roof terrace and stair house. The drawings, the 3D model and the material list all read from one data file, so they match each other.</p>
     </div>
     <div class="links">
       <a class="btn" id="to3d" href="index.html">Open 3D model →</a>
@@ -353,7 +353,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     ['7.0 × 15.0 m', 'Lot · 105 m²'],
     [gfaGross.toFixed(1) + ' m²', 'Gross floor area'],
     [terrace.toFixed(0) + ' m²', 'Roof terrace'],
-    ['3 · 3', 'Bedrooms · Baths'],
+    ['3 · 2', 'Bedrooms · Baths'],
     ['3.30 m', 'Floor to floor'],
     [LV.shTop.toFixed(2) + ' m', 'Highest point']
   ];
@@ -441,6 +441,12 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
           break;
         }
         case 'fridge': s += R(x0, y0, x1, y1, 'furn') + Tx(cx, cy - 0.05, 'REF', 'ra'); break;
+        case 'upper': case 'hood': s += R(x0, y0, x1, y1, 'std') + (f.k === 'hood' ? Tx(cx, cy - 0.05, 'HOOD', 'ra') : ''); break;
+        case 'island': s += R(x0, y0, x1, y1, 'furn') + Tx(cx, cy - 0.05, 'ISLAND', 'ra'); break;
+        case 'stool': s += Ci(cx, cy, 0.14, 'furl'); break;
+        case 'washer': s += R(x0, y0, x1, y1, 'furn') + Ci(cx, cy, 0.2, 'furl') + Tx(cx, y0 - 0.12, 'WM + DRYER', 'ra'); break;
+        case 'tvwall': s += R(x0, y0, x1 + 0.03, y1, 'glh') + Tx(x1 + 0.22, cy - 0.05, 'TV', 'ra'); break;
+        case 'dryer': case 'pendant': break;
         case 'shower': s += R(x0, y0, x1, y1, 'furn') + Ln(x0, y0, x1, y1, 'furl') + Ln(x0, y1, x1, y0, 'furl') + Ci(cx, cy, 0.05, 'furl'); break;
         case 'wc': {
           const alongX = w > d, atMin = alongX ? x0 < 1.0 || x0 < 3.0 && x1 < 3.0 : y0 < 1;
@@ -994,7 +1000,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
 
   sheet('a101', 'A-101', 'Site plan', 'Lot 7.00 × 15.00 m. Front setback 2800, rear 1000, right passage 950, party wall on the left boundary. Septic tank, water tank, meters and sewer route shown.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['fp', 'Building footprint']] });
   sheet('a102', 'A-102', 'Ground floor plan', 'FFL ' + lvl(LV.gf) + '. Guest bedroom, open living, dining and kitchen, bathroom, stair with store under. Tags on openings refer to the door and window schedule.', planSheet('gf'), { narrow: true });
-  sheet('a103', 'A-103', 'First floor plan', 'FFL ' + lvl(LV.ff) + '. Family lounge opening to the front balcony, bedroom 2, master bedroom with ensuite, shared bathroom.', planSheet('ff'), { narrow: true });
+  sheet('a103', 'A-103', 'First floor plan', 'FFL ' + lvl(LV.ff) + '. Family lounge opening to the front balcony, bedroom 2, and a master suite: bedroom, walk-in wardrobe and a private bathroom reached through the wardrobe.', planSheet('ff'), { narrow: true });
   sheet('a104', 'A-104', 'Roof terrace plan', 'Flat roof terrace at deck ' + lvl(LV.deck) + ', parapet and steel railing, stair house with door D06, falls 1:100 to four roof outlets (RO) and 90 mm downpipes.', planSheet('rf'), { narrow: true });
   ['front', 'rear', 'right', 'left'].forEach((d, i) => {
     const e = elevationSheet(d);
@@ -1073,7 +1079,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
           <li>The stair-house roof (S4) falls 1 : 50 to a scupper that discharges onto the terrace, with the same membrane.</li>
         </ul></section>
         <section><h3>Plumbing and drainage</h3><ul>
-          <li>Water: meter at the front boundary, then a buried 25 mm PPR main (550 mm cover, in sand, with marker tape) to the 2.2 m³ underground concrete tank under the front lawn. The booster pump sits in a small box beside the tank. From the pump the main runs underground into the house and through the fill under the ground slab. Every branch rises to its fixture inside a wall chase, so no pipe is exposed. Hot water is supplied to the 3 showers by electric heaters.</li>
+          <li>Water: meter at the front boundary, then a buried 25 mm PPR main (550 mm cover, in sand, with marker tape) to the 2.2 m³ underground concrete tank under the front lawn. The booster pump sits in a small box beside the tank. From the pump the main runs underground into the house and through the fill under the ground slab. Every branch rises to its fixture inside a wall chase, so no pipe is exposed. Hot water is supplied to the 2 showers by electric heaters.</li>
           <li>Sleeve every pipe that passes through a footing, ground beam or slab. Pressure test all supply pipes at 10 bar for 2 hours before the chases are plastered and the slab is poured.</li>
           <li>Soil: 100 mm uPVC at 1 : 50 minimum to the 2.5 m³ two-chamber septic tank. Overflow to the public drain as the permit requires. Vent pipes rise 600 mm above the terrace deck, next to a parapet.</li>
           <li>Grey water (basins, showers, kitchen) goes in 50/75 mm uPVC with traps, to an inspection chamber and then the street drain.</li>
@@ -1081,7 +1087,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
         </ul></section>
         <section><h3>Electrical</h3><ul>
           <li>Single-phase supply. The main board is in the lobby under the stair, with a 63 A main switch and a 30 mA RCBO on every circuit.</li>
-          <li>Circuits: 3 lighting, 4 general sockets, 1 kitchen, 3 air-conditioners (20 A each), 3 water heaters (20 A each), 1 pump and 1 outdoor circuit.</li>
+          <li>Circuits: 3 lighting, 4 general sockets, 1 kitchen, 3 air-conditioners (20 A each), 2 water heaters (20 A each), 1 pump and 1 outdoor circuit.</li>
           <li>Cables are copper THW in PVC conduit, cast into slabs or chased into walls. Earth rod to be 10 Ω or less.</li>
           <li>Point counts are in the room schedule. External: 8 eave downlights, 3 garden lights and 1 gate light.</li>
         </ul></section>
