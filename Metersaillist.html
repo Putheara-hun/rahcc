@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Chhim Putheara">
+<title>7×15 House Materials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a bill of quantities — summary band, cost controls, then one table per trade. */
+:root {
+  --paper: #eef0ec; --sheet: #fbfbf8; --ink: #1b242e; --ink2: #56616d; --ink3: #9aa3ab; --rule: #d6dad4;
+  --accent: #1f5c9e; --warn: #9a5a00; --warnbg: #fbf1df; --field: #ffffff;
+  --f-cond: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b; --accent: #7fb0e8; --warn: #f0b35a; --warnbg: #2b2213; --field: #0f1418; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b; --accent: #7fb0e8; --warn: #f0b35a; --warnbg: #2b2213; --field: #0f1418; color-scheme: dark }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; }
+h1, h2, h3 { font-family: var(--f-cond); margin: 0; text-wrap: balance; }
+a { color: var(--accent); }
+header { background: var(--sheet); border-bottom: 2px solid var(--ink); }
+header .wrap { padding-block: 26px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: end; }
+.eb { font: 600 12px var(--f-cond); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
+h1 { font-size: clamp(28px, 4.6vw, 46px); line-height: 1.04; margin-top: 6px; }
+.sub { color: var(--ink2); max-width: 64ch; margin: 10px 0 0; }
+.links { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; padding: 9px 13px; border: 1.5px solid var(--ink); background: var(--sheet); color: var(--ink); text-decoration: none; font: 600 13px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.btn:hover { background: var(--ink); color: var(--sheet); }
+.btn:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sum { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.sum div { padding: 12px 14px; border-right: 1px solid var(--rule); min-width: 0; }
+.sum div:last-child { border-right: 0; }
+.sum b { display: block; font: 600 22px var(--f-cond); font-variant-numeric: tabular-nums; }
+.sum span { font: 500 11px var(--f-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
+.sum .tot b { color: var(--accent); }
+main { padding-block: 22px 60px; display: grid; gap: 22px; }
+.panel { background: var(--sheet); border: 1.5px solid var(--ink); }
+.panel > h2 { font-size: 18px; letter-spacing: .06em; text-transform: uppercase; padding: 12px 16px; border-bottom: 1.5px solid var(--ink); display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.panel > h2 small { font: 500 14px var(--f-mono); letter-spacing: 0; text-transform: none; color: var(--ink2); white-space: nowrap; }
+.warn { border: 1.5px solid var(--warn); background: var(--warnbg); padding: 14px 16px; }
+.warn b { color: var(--warn); }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 26px; padding: 14px 16px; align-items: end; }
+.controls label { display: grid; gap: 4px; font: 600 12px var(--f-cond); letter-spacing: .08em; text-transform: uppercase; color: var(--ink2); }
+.controls input { width: 96px; }
+input[type=number] { font: 500 13px var(--f-mono); padding: 5px 7px; border: 1px solid var(--ink3); background: var(--field); color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { padding: 7px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+th { font: 600 11.5px var(--f-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); border-bottom: 1.5px solid var(--ink); white-space: nowrap; }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.item { font-weight: 600; min-width: 180px; }
+td.spec { color: var(--ink2); min-width: 240px; }
+td input { width: 84px; }
+tfoot td { font-weight: 600; border-bottom: 0; }
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.notes { padding: 12px 16px 16px; }
+.notes li { margin: 4px 0; max-width: 75ch; font-size: 14px; }
+#copied { font: 500 13px var(--f-cond); color: var(--accent); }
+textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-top: 8px; }
+@media (max-width: 860px) {
+  header .wrap { grid-template-columns: 1fr; }
+  .sum { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sum div:nth-child(3) { border-right: 0; } .sum div:nth-child(-n+3) { border-bottom: 1px solid var(--rule); }
+  .split { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <div class="eb">Material list and cost estimate · Rev A · 29 Sep 2026 · Concept idea and drawing by Chhim Putheara</div>
+      <h1>Two-Storey House on a 7 × 15 m Lot</h1>
+      <p class="sub">Quantities are calculated from the same geometry as the drawings and include normal waste. The rates are examples in US dollars. Replace them with your builder's and suppliers' quotes, and the totals update.</p>
+    </div>
+    <div class="links"><a class="btn" id="toDraw" href="drawings.html">Drawings</a><a class="btn" id="to3d" href="./">3D model</a></div>
+  </div>
+  <div class="wrap"><div class="sum" id="sum"></div></div>
+</header>
+
+<main class="wrap">
+  <div class="warn"><b>Before ordering:</b> the structural quantities (concrete and steel) follow the preliminary member sizes. Once the engineer finalises them, check the steel against the engineer's bar-bending schedule and order to that. Measure on site before cutting anything.</div>
+
+  <section class="panel">
+    <h2>Estimate settings</h2>
+    <div class="controls">
+      <label for="labour">Labour, % of materials<input type="number" id="labour" min="0" max="200" step="1" value="35"></label>
+      <label for="cont">Contingency, %<input type="number" id="cont" min="0" max="50" step="1" value="10"></label>
+      <button class="btn" id="reset" type="button">Reset rates</button>
+      <button class="btn" id="csv" type="button">Copy as CSV</button>
+      <span id="copied" aria-live="polite"></span>
+    </div>
+    <div class="tbl" style="border-top:1px solid var(--rule)"><table><tbody id="totals"></tbody></table></div>
+    <textarea id="csvOut" hidden readonly aria-label="CSV text"></textarea>
+  </section>
+
+  <div class="split">
+    <section class="panel"><h2>Concrete by element</h2><div class="tbl"><table id="concTbl"></table></div></section>
+    <section class="panel"><h2>Cement use</h2><div class="tbl"><table id="cemTbl"></table></div></section>
+  </div>
+
+  <div id="cats" style="display:grid;gap:22px"></div>
+
+  <section class="panel">
+    <h2>How the quantities are calculated</h2>
+    <ul class="notes">
+      <li>Concrete is the net volume of each element from the structure data. Beam volumes exclude the part inside the slab. The stair is measured as waist, steps and landing.</li>
+      <li>Site-mixed C25 is 1 : 1.5 : 3, which uses about 7.5 bags of cement, 0.45 m³ of sand and 0.85 m³ of gravel per m³. Lean C15 is 1 : 3 : 6. If you buy ready-mix instead, drop the cement, sand and gravel for concrete and price the m³ from the concrete table.</li>
+      <li>Reinforcement uses typical kg/m³ ratios for each element, split by bar size, plus 5% laps and waste. Bars are 12 m long.</li>
+      <li>Brickwork is the net wall area (length × height between slab and beam, minus openings). It assumes 80 × 80 × 180 mm hollow clay bricks at 58 per m² per skin, plus 5% waste.</li>
+      <li>Plaster covers both faces of every wall plus 8% for columns and beams, with 15 mm of 1 : 4 mortar at 0.018 m³ per m². Brick mortar is 0.022 m³ per m² per skin.</li>
+      <li>Tiles include 7% waste, or 10% for small tiles and planks. The roof sheet area is the plan area divided by cos 20°, plus 10% for laps.</li>
+    </ul>
+  </section>
+</main>
+
+<script src="house-data.js"></script>
+<script>
+(function () {
+  const H = window.HOUSE, LV = H.LV;
+  if (location.protocol === 'file:') { document.getElementById('toDraw').href = 'Architectural Drawing.html'; document.getElementById('to3d').href = 'Home3d.html'; }
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const ceil = (v, s = 1) => Math.ceil(v / s - 1e-9) * s;
+  const f = (v, d = 1) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const usd = v => '$' + Math.round(v).toLocaleString('en-US');
+  const len = b => b.e - b.s;
+
+  /* ================= CONCRETE ================= */
+  const S = H.S;
+  const conc = [];
+  const add = (el, grade, vol, ratio) => conc.push({ el, grade, vol, ratio });
+  add('Footings F1, F2, F3', 'C25', sum(S.footings.map(x => (x.x1 - x.x0) * (x.y1 - x.y0) * x.th)), 70);
+  const leanV = sum(S.footings.map(x => (x.x1 - x.x0 + 0.1) * (x.y1 - x.y0 + 0.1) * 0.05)) + sum(S.groundBeams.map(b => len(b) * (b.b + 0.1) * 0.05));
+  add('Lean concrete 50 mm', 'C15', leanV, 0);
+  add('Strap and ground beams', 'C25', sum(S.groundBeams.map(b => len(b) * b.b * b.d)), 120);
+  add('Columns C1, C2', 'C25', sum(S.columns.map(c => c.b * c.d * (c.z1 - c.z0))), 180);
+  const s0 = S.slabs.gf; add('Ground slab S0', 'C25', (s0.x1 - s0.x0) * (s0.y1 - s0.y0) * s0.th, 40);
+  add('First floor beams B1–B3, LB1', 'C25', sum(S.floorBeams.map(b => len(b) * b.b * (b.m === 'LB1' ? b.d : b.d - 0.12))), 150);
+  const sv = H.stair.void, s1Area = 5.8 * 11.0 - (sv.x1 - sv.x0) * (sv.y1 - sv.y0);
+  add('First floor slab S1/S2', 'C25', s1Area * 0.12, 90);
+  const incl = Math.hypot(2.25, 1.65), stairV = 2 * (0.15 * 0.95 * incl + 9 * 0.5 * 0.25 * 0.165 * 0.95) + 1.95 * 0.95 * 0.15;
+  add('Stair ST1', 'C25', stairV, 110);
+  add('Ring and tie beams RB1', 'C25', sum(S.ringBeams.map(b => len(b) * b.b * b.d)), 100);
+  const lintelV = sum(H.openings.map(o => { const w = H.walls.find(w => w.lv === o.lv && w.o === o.o && Math.abs(w.c - o.c) < 1e-6 && o.s >= w.s - 1e-6 && o.e <= w.e + 1e-6); return (o.e - o.s + 0.4) * w.t * 0.15; }));
+  const wallLenTot = sum(H.walls.map(w => len(w)));
+  const tcCount = Math.ceil(wallLenTot / 3) + H.openings.filter(o => H.types[o.t].kind === 'door').length;
+  add('Lintels L1 and stiffeners TC1', 'C25', lintelV + tcCount * 0.15 * 0.15 * 2.9, 80);
+  const c25 = sum(conc.filter(c => c.grade === 'C25').map(c => c.vol)), c15 = sum(conc.filter(c => c.grade === 'C15').map(c => c.vol));
+  const steelKg = sum(conc.map(c => c.vol * c.ratio)) * 1.05;
+
+  /* ================= MASONRY / PLASTER ================= */
+  const hOf = w => (w.low ? w.low : (w.lv === 'gf' ? 2.9 : 2.95));
+  let skinArea = 0, faceArea = 0, bricks = 0, extRender = 0, cladA = 0, timberA = 0, wallNetTot = 0;
+  H.walls.forEach(w => {
+    const ops = H.openingsOn(w);
+    const opA = sum(ops.map(o => { const ty = H.types[o.t]; return (o.e - o.s) * (Math.min(ty.head, hOf(w)) - ty.sill); }));
+    const net = Math.max(0, len(w) * hOf(w) - opA);
+    const skins = w.t >= 0.2 ? 2 : 1;
+    skinArea += net * skins; faceArea += net * 2; bricks += net * 58 * skins; wallNetTot += net;
+    if (w.out) { if (w.fin === 'clad') cladA += net; else if (w.fin === 'timber') timberA += net; else extRender += net; }
+  });
+  const parapet = 11.2 * (LV.parapet - LV.ring);
+  skinArea += parapet * 2; faceArea += parapet * 2; bricks += parapet * 116; extRender += parapet * 2;
+  bricks *= 1.05;
+  const plasterA = faceArea * 1.08;
+  const mortarBrick = skinArea * 0.022, mortarPlaster = plasterA * 0.018;
+
+  /* ================= FLOORS / FINISHES ================= */
+  const areaBy = code => sum(H.rooms.filter(r => r.fl === code && !r.stair).map(H.roomArea));
+  const wet = H.rooms.filter(r => r.wet);
+  const perim = rm => sum(rm.r.map(r => 2 * ((r[2] - r[0]) + (r[3] - r[1]))));
+  const wallTile = sum(wet.map(r => perim(r) * 2.4 - 0.7 * 2.1)) + sum(H.furniture.filter(x => x.k === 'counter').map(x => Math.max(x.r[2] - x.r[0], x.r[3] - x.r[1]) * 0.6));
+  const skirting = sum(H.rooms.filter(r => (r.fl === 'F1' || r.fl === 'F4')).map(perim)) * 0.85;
+  const stairFin = 20 * 0.95 * (0.3 + 0.165) + 1.95 * 0.95 + 1.95 * 0.9;
+  const floorAll = areaBy('F1') + areaBy('F2') + areaBy('F3') + areaBy('F4') + stairFin;
+  const screed = floorAll * 0.04;
+  const roofPlan = (H.roof.x1 - H.roof.x0) * (H.roof.y1 - H.roof.y0);
+  const cos20 = Math.cos(20 * Math.PI / 180);
+  const c1 = sum(H.rooms.filter(r => r.cl === 'C1').map(H.roomArea));
+  const c2 = sum(H.rooms.filter(r => r.cl === 'C2').map(H.roomArea));
+  const soffit = roofPlan - 5.8 * 11.2 + sum(H.rooms.filter(r => r.cl === 'C3').map(H.roomArea));
+  const intPaint = Math.max(0, plasterA - (extRender + cladA + timberA) - wallTile);
+  const extPaint = extRender * 1.08 + 18;
+  const ceilPaint = c1 + c2 + soffit;
+  const wpA = sum(wet.map(r => H.roomArea(r) + perim(r) * 0.15)) + 3 * 2 * 1.0 * 1.8 + 3.24 + 7.8 * 0.15;
+
+  /* ================= ROOF ================= */
+  const r = H.roof;
+  const hip = Math.hypot(r.half, r.half, r.half * H.T20);
+  const sheetA = roofPlan / cos20 * 1.10;
+  const canopyA = (H.canopy.x1 - H.canopy.x0) * (H.canopy.y1 - H.canopy.y0);
+
+  /* ================= SERVICES ================= */
+  const el = { L: 0, S: 0, AC: 0, F: 0, H: 0, D: 0 };
+  H.rooms.forEach(rm => Object.entries(rm.elec || {}).forEach(([k, v]) => { el[k] += v; }));
+  const extLights = 12;
+  const count = k => H.furniture.filter(x => x.k === k).length;
+
+  /* ================= LINE ITEMS ================= */
+  const cementBags = {
+    'Concrete C25 (7.5 bags/m³)': c25 * 7.5 * 1.05,
+    'Lean concrete C15 (4.5 bags/m³)': c15 * 4.5 * 1.05,
+    'Brick mortar 1:4 (7.4 bags/m³)': mortarBrick * 7.4,
+    'Plaster 1:4 (7.4 bags/m³)': mortarPlaster * 7.4,
+    'Floor screed 1:3 (9 bags/m³)': screed * 9 * 1.05
+  };
+  const cementTot = sum(Object.values(cementBags));
+  const sandTot = c25 * 0.45 * 1.05 + c15 * 0.5 + (mortarBrick + mortarPlaster) * 1.15 + screed * 1.1;
+  const gravelTot = c25 * 0.85 * 1.05 + c15 * 0.9;
+  const barSplit = [['DB16', 0.33, 1.578], ['DB12', 0.30, 0.888], ['DB10', 0.25, 0.617], ['RB6', 0.12, 0.222]];
+  const formwork = sum(S.footings.map(x => 2 * ((x.x1 - x.x0) + (x.y1 - x.y0)) * x.th)) + sum(S.groundBeams.map(b => 2 * b.d * len(b))) +
+    sum(S.columns.map(c => 2 * (c.b + c.d) * (c.z1 - Math.max(c.z0, 0)))) + sum(S.floorBeams.map(b => (2 * (b.d - 0.12) + b.b) * len(b))) +
+    s1Area + stairV / 0.15 * 1.2 + sum(S.ringBeams.map(b => 2 * b.d * len(b)));
+  const winArea = code => { const t = H.types[code]; return t.w * (t.head - t.sill); };
+
+  const CATS = [
+    { id: 'sub', name: 'Earthworks and substructure', items: [
+      ['Excavation', 'Footings and ground beams, incl. working space; machine or hand', 'm³', sum(S.footings.map(x => (x.x1 - x.x0 + 0.6) * (x.y1 - x.y0 + 0.6) * 1.7)) + sum(S.groundBeams.map(b => len(b) * 0.6 * 0.6)), 5],
+      ['Fill and compaction', 'Selected fill under ground slab, 150 mm layers, 95% MDD', 'm³', 63.8 * 0.3 * 1.25, 7],
+      ['Sand blinding', '50 mm under ground slab', 'm³', 64.4 * 0.05 * 1.2, 12],
+      ['Anti-termite treatment', 'Soil treatment under slab and around footings', 'm²', 75, 1.5],
+      ['Polythene DPM', '0.2 mm, lapped 300 and taped', 'm²', 64.4 * 1.15, 0.6]
+    ] },
+    { id: 'conc', name: 'Concrete and reinforcement', items: [
+      ['Cement', 'Portland cement, 50 kg bags; all uses (see cement table)', 'bag', ceil(cementTot), 5.8],
+      ['Sand', 'Washed river sand for concrete, mortar, plaster, screed', 'm³', ceil(sandTot, 0.5), 14],
+      ['Gravel', 'Crushed stone 10–20 mm for concrete', 'm³', ceil(gravelTot, 0.5), 20],
+      ...barSplit.map(([d, p, kgm]) => [d + ' bars', `${d === 'RB6' ? 'Round SR24' : 'Deformed SD40'}; ${f(steelKg * p, 0)} kg ≈ ${Math.ceil(steelKg * p / (kgm * 12))} bars × 12 m`, 'kg', ceil(steelKg * p, 10), d === 'RB6' ? 0.9 : 0.85]),
+      ['Tie wire', 'Annealed binding wire, 1.5% of steel', 'kg', ceil(steelKg * 0.015), 1.5],
+      ['Plywood formwork', '12 mm, 1220 × 2440, 4 uses', 'sheet', ceil(formwork / 2.98 / 4 * 1.1), 14],
+      ['Formwork timber', '50 × 100 soldiers, bearers and props', 'm', ceil(formwork * 2.2, 10), 1.2],
+      ['Concrete spacers', 'Cover blocks 20/30/40/50 mm', 'pc', ceil(steelKg / 4, 50), 0.08]
+    ] },
+    { id: 'mas', name: 'Masonry and plaster', items: [
+      ['Clay bricks', '80 × 80 × 180 hollow, 4-hole; ' + f(wallNetTot, 0) + ' m² of wall', 'pc', ceil(bricks, 100), 0.055],
+      ['Wall ties and mesh', 'Column ties every 3rd course; mesh strip at concrete/brick joints', 'm', ceil(wallLenTot * 2.4 + 60, 10), 0.5],
+      ['Skim coat', 'Interior skim, 0.8 kg/m², 25 kg bags', 'bag', ceil(intPaint * 0.8 / 25), 8]
+    ] },
+    { id: 'roof', name: 'Roof and rainwater', items: [
+      ['Steel roof trusses and purlins', 'Light-gauge galvanised steel; approx. 12 kg/m² of roof plan; supplier-designed', 'kg', ceil(roofPlan * 12, 10), 1.6],
+      ['Roof sheeting', '0.45 mm colour-coated trapezoidal, charcoal', 'm²', ceil(sheetA), 7.5],
+      ['Foil sarking', 'Reflective foil under sheeting', 'm²', ceil(sheetA), 1.2],
+      ['Ridge and hip capping', 'Ridge ' + f(r.ridgeY1 - r.ridgeY0) + ' m + 4 hips × ' + f(hip, 2) + ' m', 'm', ceil((r.ridgeY1 - r.ridgeY0) + 4 * hip + 1), 4],
+      ['Fascia', '200 mm steel fascia, charcoal', 'm', ceil((r.x1 - r.x0) * 2 + (r.y1 - r.y0)), 5],
+      ['Quad gutter 150', 'Colour-coated, with brackets', 'm', ceil((r.x1 - r.x0) * 2 + (r.y1 - r.y0)), 7],
+      ['Box gutter', '250 wide galvanised, party wall side, overflow at each end', 'm', ceil(11.2 + 1), 14],
+      ['Parapet capping', 'Metal capping on party-wall parapet', 'm', 12, 4.5],
+      ['Downpipes', 'uPVC 90 mm, 4 no. with brackets and shoes', 'm', 4 * 7.5, 3.5],
+      ['Skylight', '1200 × 2000 twin-wall polycarbonate over stair', 'no.', 1, 150],
+      ['Entry canopy', 'Steel frame 50 × 100 + metal sheet, ' + f(canopyA, 1) + ' m²', 'm²', ceil(canopyA), 45],
+      ['Ceiling insulation', '50 mm glasswool batts over first floor ceiling', 'm²', ceil(c1 + c2 - 17), 3]
+    ] },
+    { id: 'dw', name: 'Doors and windows', items: Object.entries(H.types).map(([code, t]) => {
+      const n = H.openings.filter(o => o.t === code).length;
+      const rate = t.kind === 'door' ? { D01: 480, D02: 130, D03: 95, D05: 180 }[code] : Math.round(winArea(code) * (t.kind === 'slider' ? 88 : t.kind === 'louvre' ? 70 : 75));
+      return [code + ' ' + t.name, Math.round(t.w * 1000) + ' × ' + Math.round((t.head - t.sill) * 1000) + '. ' + t.spec, 'no.', n, rate];
+    }).concat([['Ironmongery allowance', 'Hinges, closers, stops for internal doors', 'set', 7, 18]]) },
+    { id: 'fin', name: 'Floor, wall and ceiling finishes', items: [
+      ['F1 porcelain 600 × 600', 'Living, dining, kitchen, guest room', 'm²', ceil(areaBy('F1') * 1.07), 11],
+      ['F2 anti-slip 300 × 300', 'Bathrooms, laid to falls', 'm²', ceil(areaBy('F2') * 1.10), 8],
+      ['F3 outdoor porcelain', 'Porch and balcony, R11', 'm²', ceil(areaBy('F3') * 1.07 + 1.5), 12],
+      ['F4 wood-look plank 200 × 1200', 'Bedrooms, lounge, hall', 'm²', ceil(areaBy('F4') * 1.10), 14],
+      ['F5 stair finish', '20 treads + risers + 2 landings; granite or porcelain', 'm²', ceil(stairFin * 1.1), 25],
+      ['Skirting', '100 mm tile skirting to dry rooms', 'm', ceil(skirting), 2],
+      ['W2 wall tiles 300 × 600', 'Bathrooms to 2400 + kitchen splashback', 'm²', ceil(wallTile * 1.10), 9],
+      ['Tile adhesive', '25 kg bags, wall tiles and outdoor tiles', 'bag', ceil((wallTile + areaBy('F3')) / 4), 6],
+      ['Grout', 'Cement grout, 1 kg per 4 m²', 'kg', ceil((floorAll + wallTile) / 4), 1.5],
+      ['C1 gypsum ceiling', '9 mm board on concealed steel grid', 'm²', ceil(c1 * 1.05), 8.5],
+      ['C2 moisture-resistant ceiling', 'Bathrooms', 'm²', ceil(c2 * 1.05), 10],
+      ['C3 fibre-cement soffit', 'Eaves, porch and balcony soffits', 'm²', ceil(soffit * 1.05), 9],
+      ['Waterproofing membrane', '2-coat cementitious; wet rooms, showers, balcony', 'm²', ceil(wpA * 1.1), 4],
+      ['Interior paint', 'Washable emulsion, 2 coats at 10 m²/L; walls ' + f(intPaint, 0) + ' m² + ceilings ' + f(ceilPaint, 0) + ' m²', 'L', ceil((intPaint + ceilPaint) * 2 / 10), 4.5],
+      ['Exterior paint', 'Acrylic, 2 coats at 9 m²/L; ' + f(extPaint, 0) + ' m²', 'L', ceil(extPaint * 2 / 9), 6],
+      ['Primer and sealer', '1 coat, all painted surfaces, 12 m²/L', 'L', ceil((intPaint + ceilPaint + extPaint) / 12), 4]
+    ] },
+    { id: 'fac', name: 'Facade and balustrades', items: [
+      ['Fibre-cement weatherboard', 'Charcoal, 150 exposure, on treated battens and wrap; ' + f(cladA, 1) + ' m² net', 'm²', ceil(cladA * 1.12), 16],
+      ['Timber-look WPC battens', 'Lounge front wall + porch column; ' + f(timberA + 3.4, 1) + ' m² net', 'm²', ceil((timberA + 3.4) * 1.1), 30],
+      ['Glass balustrade', '12 mm toughened, stainless clamps; balcony 2.5 m + stair void 0.9 m', 'm', 3.4, 160],
+      ['Stair handrail', 'Hardwood on steel brackets + half-wall cap', 'm', ceil(2 * incl + 3.3 + 1), 18]
+    ] },
+    { id: 'plb', name: 'Plumbing and sanitary', items: [
+      ['WC', 'Close-coupled, dual flush, soft-close seat', 'no.', count('wc'), 110],
+      ['Basin and mixer', 'Wall-hung or vanity, with waste and trap', 'no.', count('basin'), 75],
+      ['Shower set', 'Mixer, rail, head, glass screen allowance', 'no.', count('shower'), 55],
+      ['Kitchen sink and tap', 'Stainless double bowl with mixer', 'no.', 1, 90],
+      ['Floor drains', '3 bathrooms + balcony + laundry', 'no.', 5, 6],
+      ['Electric water heater', '3.5 kW instant, with RCD', 'no.', el.H, 95],
+      ['Water tank', '1000 L PE on concrete base', 'no.', 1, 180],
+      ['Booster pump', 'Automatic pressure pump 250 W', 'no.', 1, 160],
+      ['PPR pipes and fittings', '25/20 mm cold, hot to showers; allowance', 'lot', 1, 450],
+      ['uPVC 100 soil pipe', 'WCs to septic tank, 1:50', 'm', 35, 5],
+      ['uPVC 75/50 waste pipe', 'Showers, basins, kitchen, balcony', 'm', 40, 3],
+      ['Septic tank', '2-chamber, 2.5 m³, precast or PE', 'no.', 1, 450],
+      ['Inspection chambers', '450 × 450 with covers', 'no.', 3, 35],
+      ['Laundry point', 'Washing machine tap and trapped drain, rear yard', 'no.', 1, 25]
+    ] },
+    { id: 'ele', name: 'Electrical', items: [
+      ['Main distribution board', '12-way, 63 A main switch, 30 mA RCBOs', 'no.', 1, 220],
+      ['Light points and LED fittings', 'Interior ' + el.L + ' + exterior ' + extLights, 'no.', el.L + extLights, 12],
+      ['Switches', '1 per 1.5 light points', 'no.', Math.ceil(el.L / 1.5) + 3, 2.5],
+      ['Socket outlets', 'Double 13 A; outdoor weatherproof included', 'no.', el.S, 3.5],
+      ['Air-conditioner points', '20 A isolator, 4 mm² circuit, drain sleeve', 'no.', el.AC, 25],
+      ['Exhaust fans', 'Bathroom ceiling fans, ducted outside', 'no.', el.F, 25],
+      ['Data / TV points', 'Cat6 + coax', 'no.', el.D, 10],
+      ['Cable 1.5 mm²', 'Lighting circuits', 'm', ceil((el.L + extLights) * 12, 10), 0.35],
+      ['Cable 2.5 mm²', 'Socket circuits', 'm', ceil(el.S * 10, 10), 0.55],
+      ['Cable 4 mm²', 'AC, water heater and pump circuits', 'm', ceil((el.AC + el.H + 1) * 15, 10), 0.9],
+      ['Cable 10 mm²', 'Meter to main board', 'm', 25, 2.2],
+      ['PVC conduit 20 mm', 'Cast in slabs and chased into walls', 'm', ceil((el.L + el.S + extLights + el.AC + el.H + el.F + el.D) * 7, 10), 0.35],
+      ['Earthing', 'Earth rod, clamp and 10 mm² conductor', 'set', 1, 25]
+    ] },
+    { id: 'ext', name: 'External works', items: [
+      ['Paving', 'Path, forecourt and rear yard on 100 mm sand-cement bed', 'm²', ceil((1.2 * 2.3) + (2.75 * 1.5) + 7.0 * 1.0 + 0.95 * 0.3), 12],
+      ['Gravel passage', '50 mm decorative gravel on geotextile', 'm²', ceil(0.95 * 11.2), 6],
+      ['Lawn turf', 'Front yard, with topsoil', 'm²', ceil(7.0 * 2.8 - 2.76 - 4.1 - 2.75), 3],
+      ['Planting', 'Front bed shrubs, soil and mulch', 'lot', 1, 120],
+      ['Front-left low wall', '1200 high rendered brick, 2.8 m long', 'm', 2.8, 45],
+      ['Storm drainage', 'Surface drain, pits and connection to street', 'lot', 1, 250]
+    ] }
+  ];
+
+  /* ================= RATES (editable, remembered in this browser) ================= */
+  const KEY = 'house7x15-rates-v1';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+  const rid = (c, i) => c.id + ':' + i;
+  const rateOf = (c, i) => (saved[rid(c, i)] != null ? saved[rid(c, i)] : c.items[i][4]);
+
+  /* ================= RENDER ================= */
+  document.getElementById('concTbl').innerHTML = `<thead><tr><th>Element</th><th>Grade</th><th class="n">m³</th><th class="n">Steel kg</th></tr></thead><tbody>${conc.map(c => `<tr><td>${esc(c.el)}</td><td>${c.grade}</td><td class="n">${f(c.vol, 2)}</td><td class="n">${c.ratio ? f(c.vol * c.ratio, 0) : '—'}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total</td><td></td><td class="n">${f(c25 + c15, 2)}</td><td class="n">${f(steelKg, 0)}</td></tr></tfoot>`;
+  document.getElementById('cemTbl').innerHTML = `<thead><tr><th>Use</th><th class="n">Bags</th></tr></thead><tbody>${Object.entries(cementBags).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="n">${f(v, 0)}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total, 50 kg bags</td><td class="n">${f(ceil(cementTot), 0)}</td></tr></tfoot>`;
+
+  const catsEl = document.getElementById('cats');
+  catsEl.innerHTML = CATS.map(c => `
+    <section class="panel" id="cat-${c.id}">
+      <h2>${esc(c.name)}<small id="sub-${c.id}"></small></h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Item</th><th>Specification</th><th>Unit</th><th class="n">Qty</th><th class="n">Rate USD</th><th class="n">Amount</th></tr></thead>
+        <tbody>${c.items.map((it, i) => `<tr><td class="item">${esc(it[0])}</td><td class="spec">${esc(it[1])}</td><td>${it[2]}</td><td class="n">${f(it[3], it[3] % 1 ? 1 : 0)}</td><td class="n"><input type="number" min="0" step="0.01" id="r-${c.id}-${i}" data-c="${c.id}" data-i="${i}" value="${rateOf(c, i)}" aria-label="Rate for ${esc(it[0])}"></td><td class="n" id="a-${c.id}-${i}"></td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>`).join('');
+
+  const gfa = 2 * 6.0 * 11.2;
+  function recalc() {
+    let mat = 0; const subs = {};
+    CATS.forEach(c => {
+      let st = 0;
+      c.items.forEach((it, i) => { const rt = rateOf(c, i), a = it[3] * rt; st += a; document.getElementById(`a-${c.id}-${i}`).textContent = usd(a); });
+      subs[c.id] = st; mat += st; document.getElementById('sub-' + c.id).textContent = usd(st);
+    });
+    const lp = Math.max(0, +document.getElementById('labour').value || 0), cp = Math.max(0, +document.getElementById('cont').value || 0);
+    const lab = mat * lp / 100, cont = (mat + lab) * cp / 100, tot = mat + lab + cont;
+    document.getElementById('totals').innerHTML =
+      CATS.map(c => `<tr><td>${esc(c.name)}</td><td class="n">${usd(subs[c.id])}</td></tr>`).join('') +
+      `<tr><td><b>Materials subtotal</b></td><td class="n"><b>${usd(mat)}</b></td></tr>
+       <tr><td>Labour at ${lp}% of materials</td><td class="n">${usd(lab)}</td></tr>
+       <tr><td>Contingency at ${cp}%</td><td class="n">${usd(cont)}</td></tr>
+       <tr><td><b>Estimated total</b> · ${usd(tot / gfa)} per m² over ${f(gfa, 1)} m² gross floor area</td><td class="n"><b>${usd(tot)}</b></td></tr>`;
+    document.getElementById('sum').innerHTML = [
+      [f(c25 + c15, 1) + ' m³', 'Concrete'], [f(steelKg / 1000, 2) + ' t', 'Reinforcement'], [f(ceil(cementTot), 0), 'Cement bags'],
+      [f(ceil(bricks, 100), 0), 'Bricks'], [usd(mat), 'Materials'], [usd(tot), 'Estimated total']
+    ].map((s, i) => `<div class="${i === 5 ? 'tot' : ''}"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+    return { mat, lab, cont, tot };
+  }
+  catsEl.addEventListener('input', e => {
+    const t = e.target; if (!t.dataset.c) return;
+    const c = CATS.find(x => x.id === t.dataset.c), v = parseFloat(t.value);
+    if (!isNaN(v) && v >= 0) { saved[rid(c, +t.dataset.i)] = v; try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (err) {} }
+    recalc();
+  });
+  ['labour', 'cont'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
+  document.getElementById('reset').addEventListener('click', () => {
+    saved = {}; try { localStorage.removeItem(KEY); } catch (e) {}
+    CATS.forEach(c => c.items.forEach((it, i) => { document.getElementById(`r-${c.id}-${i}`).value = it[4]; }));
+    recalc(); document.getElementById('copied').textContent = 'Rates reset to the example values.';
+  });
+  document.getElementById('csv').addEventListener('click', () => {
+    const q = s => '"' + String(s).replace(/"/g, '""') + '"';
+    const lines = [['Section', 'Item', 'Specification', 'Unit', 'Qty', 'Rate USD', 'Amount USD'].map(q).join(',')];
+    CATS.forEach(c => c.items.forEach((it, i) => { const rt = rateOf(c, i); lines.push([c.name, it[0], it[1], it[2], +it[3].toFixed(2), rt, Math.round(it[3] * rt)].map(q).join(',')); }));
+    const t = recalc();
+    lines.push(['', 'Materials subtotal', '', '', '', '', Math.round(t.mat)].map(q).join(','));
+    lines.push(['', 'Labour', '', '', '', '', Math.round(t.lab)].map(q).join(','));
+    lines.push(['', 'Contingency', '', '', '', '', Math.round(t.cont)].map(q).join(','));
+    lines.push(['', 'Estimated total', '', '', '', '', Math.round(t.tot)].map(q).join(','));
+    const text = lines.join('\n'), msg = document.getElementById('copied'), ta = document.getElementById('csvOut');
+    const fallback = () => { ta.hidden = false; ta.value = text; ta.focus(); ta.select(); msg.textContent = 'Copying is blocked here. The CSV text is selected below, so press Ctrl+C.'; };
+    try { navigator.clipboard.writeText(text).then(() => { msg.textContent = 'Copied. Paste it into Excel or Google Sheets.'; ta.hidden = true; }, fallback); } catch (e) { fallback(); }
+  });
+  recalc();
+})();
+</script>
+</body>
+</html>
