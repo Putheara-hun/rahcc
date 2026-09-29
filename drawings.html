@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Chhim Putheara">
+<title>7×15 House Drawings</title>
+<meta name="description" content="Architectural and structural drawing set for a two-storey house on a 7 × 15 m lot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a drawing set — sticky sheet index, then full-width sheets with title strips, then schedules and notes. */
+:root {
+  --paper: #eef0ec; --sheet: #fbfbf8; --ink: #1b242e; --ink2: #56616d; --ink3: #9aa3ab; --rule: #d6dad4;
+  --accent: #1f5c9e; --dim: #1f5c9e; --warn: #9a5a00; --warnbg: #fbf1df;
+  --wallfill: #3a4450; --room: #f1f3ee; --wet: #e2ecf3; --out: #e7efdf;
+  --glass: #b9d2e3; --wood: #b98657; --clad: #4b535d; --render: #e4e2dc; --roofc: #3a4048; --frame: #1e2226;
+  --plinth: #bcb8ae; --conc: #cfd2cc; --ftg: #e6e1d3; --bm: #dde3ea; --earth: #b9a88a; --grass: #a9c98e;
+  --f-cond: "IBM Plex Sans Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b;
+  --accent: #7fb0e8; --dim: #7fb0e8; --warn: #f0b35a; --warnbg: #2b2213;
+  --wallfill: #aeb9c4; --room: #1b2229; --wet: #182835; --out: #1a2a1d;
+  --glass: #3e5f78; --wood: #9c6d45; --clad: #5d6671; --render: #3b4046; --roofc: #262b31; --frame: #0b0d0f;
+  --plinth: #4d4a44; --conc: #3a3f44; --ftg: #3a362c; --bm: #2b3440; --earth: #5b4e3a; --grass: #3f6436;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b;
+  --accent: #7fb0e8; --dim: #7fb0e8; --warn: #f0b35a; --warnbg: #2b2213;
+  --wallfill: #aeb9c4; --room: #1b2229; --wet: #182835; --out: #1a2a1d;
+  --glass: #3e5f78; --wood: #9c6d45; --clad: #5d6671; --render: #3b4046; --roofc: #262b31; --frame: #0b0d0f;
+  --plinth: #4d4a44; --conc: #3a3f44; --ftg: #3a362c; --bm: #2b3440; --earth: #5b4e3a; --grass: #3f6436;
+  color-scheme: dark }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--f-body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--f-cond); text-wrap: balance; margin: 0; }
+
+/* ---- Title block header ---- */
+.tb { border-bottom: 2px solid var(--ink); background: var(--sheet); }
+.tb .wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; padding-block: 28px 22px; align-items: end; }
+.eyebrow { font: 600 12px var(--f-cond); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
+h1 { font-size: clamp(30px, 5vw, 52px); font-weight: 700; line-height: 1.02; letter-spacing: -.01em; margin-top: 6px; }
+.credit { margin: 8px 0 0; font: 500 15px var(--f-cond); letter-spacing: .02em; } .credit b { font-weight: 700; }
+.sub { color: var(--ink2); margin: 10px 0 0; max-width: 62ch; }
+.links { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1.5px solid var(--ink); color: var(--ink); text-decoration: none; font: 600 14px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; background: var(--sheet); }
+.btn:hover { background: var(--ink); color: var(--sheet); }
+.facts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.facts div { padding: 12px 14px; border-right: 1px solid var(--rule); min-width: 0; }
+.facts div:last-child { border-right: 0; }
+.facts b { display: block; font: 600 22px var(--f-cond); font-variant-numeric: tabular-nums; }
+.facts span { font: 500 11px var(--f-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
+
+/* ---- Sheet index ---- */
+nav.idx { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--ink); }
+nav.idx .wrap { display: flex; gap: 2px; overflow-x: auto; padding-block: 0; scrollbar-width: thin; }
+nav.idx a { color: var(--sheet); text-decoration: none; font: 500 13px var(--f-cond); letter-spacing: .04em; padding: 10px 10px; white-space: nowrap; opacity: .82; }
+nav.idx a b { font-family: var(--f-mono); font-weight: 500; font-size: 11px; opacity: .7; margin-right: 6px; }
+nav.idx a:hover { opacity: 1; background: rgba(255,255,255,.08); }
+
+.warnbox { margin-top: 22px; border: 1.5px solid var(--warn); background: var(--warnbg); padding: 16px 18px; }
+.warnbox h3 { color: var(--warn); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; }
+.warnbox ul { margin: 8px 0 0; padding-left: 20px; }
+.warnbox li { margin: 3px 0; }
+
+/* ---- Sheets ---- */
+main { padding-block: 8px 60px; }
+.sheet { background: var(--sheet); border: 1.5px solid var(--ink); margin-top: 28px; scroll-margin-top: 52px; }
+.sheet .draw { overflow-x: auto; padding: 10px; }
+.sheet svg.dwg { display: block; width: 100%; height: auto; min-width: 760px; }
+.sheet.narrow svg.dwg { max-width: 860px; margin: 0 auto; }
+.strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; border-top: 1.5px solid var(--ink); }
+.strip > div { padding: 10px 14px; min-width: 0; }
+.strip .no { border-right: 1.5px solid var(--ink); font: 600 26px var(--f-cond); display: flex; align-items: center; letter-spacing: .02em; }
+.strip h2 { font-size: 19px; letter-spacing: .05em; text-transform: uppercase; }
+.strip p { margin: 2px 0 0; color: var(--ink2); font-size: 13.5px; }
+.strip .meta { border-left: 1px solid var(--rule); font: 500 12px var(--f-mono); color: var(--ink2); text-align: right; white-space: nowrap; }
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 22px; padding: 12px 16px 16px; border-top: 1px solid var(--rule); margin: 0; list-style: none; }
+.keys li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 8px; font-size: 13.5px; align-items: start; }
+.keys li i { font: normal 600 12px var(--f-cond); width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--ink); display: grid; place-items: center; }
+
+/* ---- Tables ---- */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 11.5px var(--f-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); border-bottom: 1.5px solid var(--ink); white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-size: 12.5px; white-space: nowrap; }
+td.code { font: 600 13px var(--f-cond); white-space: nowrap; }
+.pad { padding: 16px; }
+.cols2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.cols2 > section { padding: 16px 18px; min-width: 0; border-top: 1px solid var(--rule); }
+.cols2 > section:nth-child(odd) { border-right: 1px solid var(--rule); }
+.notes h3 { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+.notes ol, .notes ul { margin: 0; padding-left: 20px; }
+.notes li { margin: 4px 0; font-size: 14px; max-width: 70ch; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 10px 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 18px; height: 12px; display: inline-block; border: 1px solid var(--ink2); }
+footer { color: var(--ink2); font-size: 13px; padding-block: 24px 40px; }
+
+@media (max-width: 900px) {
+  .tb .wrap { grid-template-columns: 1fr; }
+  .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .facts div:nth-child(3) { border-right: 0; }
+  .facts div:nth-child(-n+3) { border-bottom: 1px solid var(--rule); }
+  .cols2 { grid-template-columns: 1fr; }
+  .cols2 > section:nth-child(odd) { border-right: 0; }
+  .strip { grid-template-columns: auto minmax(0, 1fr); }
+  .strip .meta { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--rule); text-align: left; white-space: normal; }
+}
+
+/* ---- SVG drawing styles ---- */
+svg.dwg * { vector-effect: non-scaling-stroke; }
+.dwg text { font-family: var(--f-cond); }
+.g-line { stroke: var(--accent); stroke-width: .8; stroke-dasharray: 14 4 2 4; opacity: .6; fill: none; }
+.g-bub { fill: var(--sheet); stroke: var(--accent); stroke-width: 1.3; }
+.g-txt { fill: var(--accent); font-size: 21px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.room { fill: var(--room); } .room.wet { fill: var(--wet); } .room.out { fill: var(--out); }
+.wall { fill: var(--wallfill); }
+.col { fill: var(--ink); }
+.low { fill: var(--sheet); stroke: var(--ink); stroke-width: 1; }
+.win { fill: var(--sheet); stroke: var(--ink); stroke-width: 1; }
+.gl { stroke: var(--ink); stroke-width: .7; }
+.glh { stroke: var(--ink); stroke-width: 1.5; }
+.leaf { stroke: var(--ink); stroke-width: 1.8; }
+.swing { fill: none; stroke: var(--ink2); stroke-width: .8; stroke-dasharray: 4 3; }
+.jamb { stroke: var(--ink); stroke-width: 1; }
+.furn { fill: var(--sheet); stroke: var(--ink3); stroke-width: .9; }
+.furl { fill: none; stroke: var(--ink3); stroke-width: .8; }
+.st { fill: none; stroke: var(--ink); stroke-width: .9; }
+.std { fill: none; stroke: var(--ink2); stroke-width: .8; stroke-dasharray: 5 4; }
+.arrow { fill: none; stroke: var(--ink); stroke-width: 1.2; }
+.arrowh { fill: var(--ink); }
+.dash { fill: none; stroke: var(--ink2); stroke-width: .9; stroke-dasharray: 9 5; }
+.bound { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 20 5 3 5; }
+.dim { stroke: var(--dim); stroke-width: .8; fill: none; }
+.dimt { fill: var(--dim); font-family: var(--f-mono) !important; font-size: calc(12.5px * var(--k, 1)); text-anchor: middle; font-weight: 500; }
+.rn { fill: var(--ink); font-size: calc(15px * var(--k, 1)); font-weight: 600; text-anchor: middle; letter-spacing: .06em; }
+.ra { fill: var(--ink2); font-family: var(--f-mono) !important; font-size: calc(11.5px * var(--k, 1)); text-anchor: middle; }
+.tagb { fill: var(--sheet); stroke: var(--ink); stroke-width: .9; }
+.tagt { fill: var(--ink); font-size: 11.5px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.note { fill: var(--ink2); font-size: 13px; }
+.noteb { fill: var(--ink); font-size: 14px; font-weight: 600; letter-spacing: .08em; }
+.secl { stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 22 5 4 5; fill: none; }
+.secb { fill: var(--accent); }
+.sect { fill: var(--sheet); font-size: 17px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+.sb0 { fill: var(--ink); } .sb1 { fill: var(--sheet); stroke: var(--ink); stroke-width: .8; }
+.sbt { fill: var(--ink2); font-family: var(--f-mono) !important; font-size: calc(11px * var(--k, 1)); text-anchor: middle; }
+.e-render { fill: var(--render); stroke: var(--ink); stroke-width: .8; }
+.e-clad { fill: url(#pClad); stroke: var(--ink); stroke-width: .8; }
+.e-timber { fill: url(#pTimber); stroke: var(--ink); stroke-width: .8; }
+.e-roof { fill: url(#pRoof); stroke: var(--ink); stroke-width: .9; }
+.e-fascia { fill: var(--roofc); stroke: var(--ink); stroke-width: .8; }
+.e-plinth { fill: var(--plinth); stroke: var(--ink); stroke-width: .8; }
+.e-rail { fill: var(--glass); fill-opacity: .45; stroke: var(--ink); stroke-width: .8; }
+.e-frame { fill: var(--frame); }
+.e-glass { fill: url(#pGlass); }
+.e-frost { fill: var(--glass); fill-opacity: .6; }
+.e-door { fill: url(#pTimber); stroke: var(--frame); stroke-width: 1.4; }
+.e-mul { stroke: var(--frame); stroke-width: 2; }
+.e-lou { stroke: var(--frame); stroke-width: .8; }
+.ground { stroke: var(--ink); stroke-width: 2.4; }
+.earth { fill: url(#pEarth); }
+.lvl { stroke: var(--ink2); stroke-width: .7; stroke-dasharray: 3 4; }
+.lvt { fill: var(--ink2); font-family: var(--f-mono) !important; font-size: calc(12px * var(--k, 1)); }
+.lvm { fill: var(--ink2); }
+.key { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.3; }
+.keyt { fill: var(--ink); font-size: calc(13px * var(--k, 1)); font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.lead { stroke: var(--ink); stroke-width: .8; fill: none; }
+.cut { fill: var(--conc); stroke: var(--ink); stroke-width: 1.3; }
+.cutb { fill: url(#pBrick); stroke: var(--ink); stroke-width: 1.3; }
+.cutg { fill: var(--glass); stroke: var(--ink); stroke-width: .9; }
+.fin { fill: var(--ink2); }
+.bey { fill: none; stroke: var(--ink3); stroke-width: .9; }
+.hid { fill: none; stroke: var(--ink3); stroke-width: .9; stroke-dasharray: 6 4; }
+.ceil { stroke: var(--ink2); stroke-width: 1.4; }
+.roofcut { fill: none; stroke: var(--ink); stroke-width: 3; }
+.ftg { fill: var(--ftg); stroke: var(--ink2); stroke-width: 1; stroke-dasharray: 7 4; }
+.bm { fill: var(--bm); stroke: var(--ink2); stroke-width: .9; }
+.bmd { fill: var(--bm); stroke: var(--ink2); stroke-width: .9; stroke-dasharray: 6 3; }
+.slab { fill: url(#pSlab); }
+.voidx { stroke: var(--ink2); stroke-width: .8; }
+.mk { fill: var(--accent); font-size: 12.5px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.mkb { fill: var(--sheet); stroke: var(--accent); stroke-width: .8; }
+.grass { fill: url(#pGrass); } .gravel { fill: url(#pGravel); } .pave { fill: url(#pPave); }
+.fp { fill: url(#pFoot); stroke: var(--ink); stroke-width: 1.6; }
+.road { fill: var(--plinth); fill-opacity: .55; }
+.pipe { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 8 3 2 3; }
+.util { fill: var(--sheet); stroke: var(--accent); stroke-width: 1.2; }
+.plant { fill: var(--grass); stroke: var(--ink3); stroke-width: .7; }
+</style>
+
+</head>
+<body>
+<!-- Shared SVG patterns (colours follow the theme tokens) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="pClad" width="40" height="15" patternUnits="userSpaceOnUse"><rect width="40" height="15" style="fill:var(--clad)"/><line x1="0" y1="14.5" x2="40" y2="14.5" style="stroke:var(--frame);stroke-width:.8;opacity:.55"/></pattern>
+    <pattern id="pTimber" width="9" height="40" patternUnits="userSpaceOnUse"><rect width="9" height="40" style="fill:var(--wood)"/><line x1="8.5" y1="0" x2="8.5" y2="40" style="stroke:var(--frame);stroke-width:.8;opacity:.4"/></pattern>
+    <pattern id="pRoof" width="12" height="40" patternUnits="userSpaceOnUse"><rect width="12" height="40" style="fill:var(--roofc)"/><line x1="11" y1="0" x2="11" y2="40" style="stroke:var(--ink3);stroke-width:.7;opacity:.6"/></pattern>
+    <pattern id="pGlass" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" style="fill:var(--glass)"/><line x1="0" y1="60" x2="60" y2="0" style="stroke:var(--sheet);stroke-width:2;opacity:.35"/></pattern>
+    <pattern id="pEarth" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="14" style="stroke:var(--earth);stroke-width:1.2"/></pattern>
+    <pattern id="pBrick" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="8" style="stroke:var(--ink2);stroke-width:1"/></pattern>
+    <pattern id="pSlab" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" style="fill:var(--sheet)"/><line x1="0" y1="0" x2="0" y2="16" style="stroke:var(--ink3);stroke-width:.7"/></pattern>
+    <pattern id="pFoot" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" style="fill:var(--room)"/><line x1="0" y1="0" x2="0" y2="10" style="stroke:var(--ink2);stroke-width:.9"/></pattern>
+    <pattern id="pGrass" width="18" height="18" patternUnits="userSpaceOnUse"><rect width="18" height="18" style="fill:var(--out)"/><path d="M4 12 l2 -5 l2 5 M12 6 l2 -5 l2 5" style="fill:none;stroke:var(--grass);stroke-width:1"/></pattern>
+    <pattern id="pGravel" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" style="fill:var(--sheet)"/><circle cx="3" cy="3" r="1.3" style="fill:var(--ink3)"/><circle cx="9" cy="8" r="1" style="fill:var(--ink3)"/></pattern>
+    <pattern id="pPave" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" style="fill:var(--room)"/><path d="M0 .5 H30 M.5 0 V30" style="stroke:var(--ink3);stroke-width:.8"/></pattern>
+  </defs>
+</svg>
+
+<header class="tb">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Drawing set · Rev A · 29 Sep 2026 · Issued for review and builder pricing</div>
+      <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
+      <h1>Two-Storey House<br>on a 7 × 15 m Lot</h1>
+      <p class="sub">Three bedrooms, three bathrooms, open living and kitchen, upstairs lounge with a front balcony. Reinforced concrete frame, brick infill, charcoal weatherboard and timber-look cladding, hip metal roof. The drawings, the 3D model and the material list all read from one data file, so they match each other.</p>
+    </div>
+    <div class="links">
+      <a class="btn" id="to3d" href="index.html">Open 3D model →</a>
+      <a class="btn" id="tomat" href="Metersaillist.html">Material list →</a>
+    </div>
+  </div>
+  <div class="wrap"><div class="facts" id="facts"></div></div>
+</header>
+
+<nav class="idx" aria-label="Sheet index"><div class="wrap" id="idx"></div></nav>
+
+<main class="wrap">
+  <div class="warnbox" role="note">
+    <h3>Confirm before construction starts</h3>
+    <ul>
+      <li><b>Structural sign-off.</b> Member sizes and reinforcement here are preliminary and typical for a two-storey RC frame of these spans. A licensed structural engineer must check and sign them before you pour concrete.</li>
+      <li><b>Soil test.</b> The footings assume a safe bearing capacity of at least 80 kPa at 1.5 m depth. On soft clay or filled land (common in low-lying city areas), the engineer may change them to piles.</li>
+      <li><b>Survey and permit.</b> Have a surveyor confirm the boundaries, road level and north point, then get the construction permit from the local land-management office. Check the setback rules and whether windows are allowed facing the 0.95 m side passage.</li>
+      <li><b>Party wall.</b> The left wall sits on the boundary. Agree the footing and party-wall details with your neighbour before digging.</li>
+    </ul>
+  </div>
+  <div id="sheets"></div>
+</main>
+
+<footer class="wrap">All dimensions are in millimetres. Levels are in metres above the road crown at the front boundary (±0.000). Wall positions are measured to the wall centreline and the gridline. Use the written dimensions and never scale from the screen. Where anything disagrees, the written dimension and the engineer's drawings take priority.</footer>
+
+<script src="house-data.js"></script>
+<script>
+(function () {
+  const H = window.HOUSE, LV = H.LV, SC = 100;
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const fx = v => +(v * SC).toFixed(1);
+  const mm = v => Math.round(v * 1000).toLocaleString('en-US');
+  const lvl = v => (v === 0 ? '±0.000' : (v > 0 ? '+' : '−') + Math.abs(v).toFixed(3));
+
+  /* links: work from disk and when published */
+
+  /* ---------- primitive helpers (u = right, v = up in drawing metres) ---------- */
+  const P = (u, v) => fx(u) + ',' + fx(-v);
+  const R = (u0, v0, u1, v1, cls, ex = '') => {
+    const a = Math.min(u0, u1), b = Math.max(u0, u1), c = Math.min(v0, v1), d = Math.max(v0, v1);
+    return `<rect x="${fx(a)}" y="${fx(-d)}" width="${fx(b - a)}" height="${fx(d - c)}" class="${cls}" ${ex}/>`;
+  };
+  const Ln = (u0, v0, u1, v1, cls) => `<line x1="${fx(u0)}" y1="${fx(-v0)}" x2="${fx(u1)}" y2="${fx(-v1)}" class="${cls}"/>`;
+  const Pg = (pts, cls) => `<polygon points="${pts.map(p => P(p[0], p[1])).join(' ')}" class="${cls}"/>`;
+  const Pl = (pts, cls) => `<polyline points="${pts.map(p => P(p[0], p[1])).join(' ')}" class="${cls}"/>`;
+  const Tx = (u, v, s, cls, ex = '') => `<text x="${fx(u)}" y="${fx(-v)}" class="${cls}" ${ex}>${esc(s)}</text>`;
+  const Ci = (u, v, r, cls) => `<circle cx="${fx(u)}" cy="${fx(-v)}" r="${fx(r)}" class="${cls}"/>`;
+  let K = 1; // text scale for wide sheets
+  const wrapSvg = (ext, body, label) =>
+    `<svg class="dwg" style="--k:${K.toFixed(2)}" viewBox="${fx(ext.u0)} ${fx(-ext.v1)} ${fx(ext.u1 - ext.u0)} ${fx(ext.v1 - ext.v0)}" role="img" aria-label="${esc(label)}">${body}</svg>`;
+
+  function arrowHead(u, v, ang, size = 0.14) {
+    const a1 = ang + Math.PI * 0.85, a2 = ang - Math.PI * 0.85;
+    return Pg([[u, v], [u + size * Math.cos(a1), v + size * Math.sin(a1)], [u + size * Math.cos(a2), v + size * Math.sin(a2)]], 'arrowh');
+  }
+  function scaleBar(u, v) {
+    let s = '';
+    for (let i = 0; i < 5; i++) s += R(u + i, v, u + i + 1, v + 0.08, i % 2 ? 'sb1' : 'sb0');
+    for (let i = 0; i <= 5; i++) s += Tx(u + i, v - 0.24 * K, i === 5 ? '5 m' : i, 'sbt');
+    return s;
+  }
+  function bubble(u, v, id) { return Ci(u, v, 0.23, 'g-bub') + Tx(u, v, id, 'g-txt'); }
+  function key(u, v, n) { return Ci(u, v, 0.17 * K, 'key') + Tx(u, v, n, 'keyt'); }
+
+  /* dimension chain. axis 'x': values along u at line v=at, extension from v=from.
+     axis 'y': values along v at line u=at. Points in drawing coords. */
+  function dims(axis, pts, at, from) {
+    pts = [...new Set(pts.map(p => +p.toFixed(3)))].sort((a, b) => a - b);
+    let s = '';
+    const t = 0.07;
+    if (axis === 'x') {
+      s += Ln(pts[0] - 0.12, at, pts[pts.length - 1] + 0.12, at, 'dim');
+      pts.forEach(p => {
+        if (from != null) s += Ln(p, from + (from > at ? -0.08 : 0.08), p, at + (from > at ? -0.1 : 0.1), 'dim');
+        s += Ln(p - t, at - t, p + t, at + t, 'dim');
+      });
+      let flip = false;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const w = pts[i + 1] - pts[i], lab = mm(w), need = (lab.length * 0.078 + 0.08) * K;
+        const small = w < need; flip = small ? !flip : false;
+        s += Tx((pts[i] + pts[i + 1]) / 2, at + (small && flip ? -0.22 * K : 0.06), lab, 'dimt');
+      }
+    } else {
+      s += Ln(at, pts[0] - 0.12, at, pts[pts.length - 1] + 0.12, 'dim');
+      pts.forEach(p => {
+        if (from != null) s += Ln(from + (from > at ? -0.08 : 0.08), p, at + (from > at ? -0.1 : 0.1), p, 'dim');
+        s += Ln(at - t, p - t, at + t, p + t, 'dim');
+      });
+      let flip = false;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const w = pts[i + 1] - pts[i], lab = mm(w), need = (lab.length * 0.078 + 0.08) * K;
+        const small = w < need; flip = small ? !flip : false;
+        const m = (pts[i] + pts[i + 1]) / 2, uu = at - 0.06 + (small && flip ? 0.3 * K : 0);
+        s += `<text x="${fx(uu)}" y="${fx(-m)}" class="dimt" transform="rotate(-90 ${fx(uu)} ${fx(-m)})">${lab}</text>`;
+      }
+    }
+    return s;
+  }
+
+  /* ---------- derived facts ---------- */
+  const gfa = H.rooms.filter(r => !r.out).reduce((a, r) => a + H.roomArea(r), 0);
+  const footprint = 6.0 * 11.2;
+  const gfaGross = 2 * footprint;
+  const facts = [
+    ['7.0 × 15.0 m', 'Lot · 105 m²'],
+    [gfaGross.toFixed(1) + ' m²', 'Gross floor area'],
+    [(footprint / 105 * 100).toFixed(0) + '%', 'Site coverage'],
+    ['3 · 3', 'Bedrooms · Baths'],
+    ['3.30 m', 'Floor to floor'],
+    [H.roof.ridge.toFixed(2) + ' m', 'Ridge above road']
+  ];
+  $('#facts').innerHTML = facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+
+  /* ======================= PLANS ======================= */
+  const wallsOf = lv => H.walls.filter(w => w.lv === lv);
+  const wallFor = o => H.walls.find(w => w.lv === o.lv && w.o === o.o && Math.abs(w.c - o.c) < 1e-6 && o.s >= w.s - 1e-6 && o.e <= w.e + 1e-6);
+  const M = (o, a, n) => (o === 'h' ? [a, n] : [n, a]);
+
+  function wallSegs(w) {
+    const ext = w.t / 2, ops = H.openingsOn(w).sort((a, b) => a.s - b.s), segs = [];
+    let a = w.s - ext;
+    ops.forEach(op => { if (op.s > a + 1e-6) segs.push([a, op.s]); a = op.e; });
+    segs.push([a, w.e + ext]);
+    return segs;
+  }
+  function drawWalls(lv) {
+    let s = '';
+    wallsOf(lv).forEach(w => {
+      wallSegs(w).forEach(([a, b]) => {
+        const p = M(w.o, a, w.c - w.t / 2), q = M(w.o, b, w.c + w.t / 2);
+        s += R(p[0], p[1], q[0], q[1], w.low ? 'low' : 'wall');
+      });
+    });
+    return s;
+  }
+  function drawColumns(lv) {
+    return H.S.columns.filter(c => (lv === 'gf' ? true : c.z1 > LV.ff + 0.5))
+      .map(c => R(c.x - c.b / 2, c.y - c.d / 2, c.x + c.b / 2, c.y + c.d / 2, 'col')).join('');
+  }
+  function drawOpening(o) {
+    const ty = H.types[o.t], w = wallFor(o), t = w.t, n0 = o.c - t / 2, n1 = o.c + t / 2;
+    const L2 = (a0, b0, a1, b1, c) => { const p = M(o.o, a0, b0), q = M(o.o, a1, b1); return Ln(p[0], p[1], q[0], q[1], c); };
+    const R2 = (a0, b0, a1, b1, c) => { const p = M(o.o, a0, b0), q = M(o.o, a1, b1); return R(p[0], p[1], q[0], q[1], c); };
+    let s = '';
+    if (ty.kind === 'window' || ty.kind === 'louvre') {
+      s += R2(o.s, n0, o.e, n1, 'win') + L2(o.s, o.c - t * 0.14, o.e, o.c - t * 0.14, 'gl') + L2(o.s, o.c + t * 0.14, o.e, o.c + t * 0.14, 'gl');
+    } else if (ty.kind === 'slider') {
+      const m = (o.s + o.e) / 2;
+      s += R2(o.s, n0, o.e, n1, 'win') + L2(o.s, o.c - 0.03, m + 0.06, o.c - 0.03, 'glh') + L2(m - 0.06, o.c + 0.03, o.e, o.c + 0.03, 'glh');
+    } else {
+      const sg = o.swing[0] === '+' ? 1 : -1, f = o.c + sg * t / 2, wd = o.e - o.s;
+      const ha = o.hinge === 's' ? o.s : o.e, oa = o.hinge === 's' ? o.e : o.s;
+      s += L2(o.s, n0, o.s, n1, 'jamb') + L2(o.e, n0, o.e, n1, 'jamb');
+      s += L2(ha, f, ha, f + sg * wd, 'leaf');
+      const A = M(o.o, ha, f + sg * wd), B = M(o.o, oa, f), Hh = M(o.o, ha, f);
+      const ax = A[0] - Hh[0], ay = -(A[1] - Hh[1]), bx = B[0] - Hh[0], by = -(B[1] - Hh[1]);
+      s += `<path d="M${P(A[0], A[1])} A${fx(wd)},${fx(wd)} 0 0 ${(ax * by - ay * bx) > 0 ? 1 : 0} ${P(B[0], B[1])}" class="swing"/>`;
+    }
+    // type tag
+    let side;
+    if (ty.kind === 'door') side = o.swing[0] === '+' ? -1 : 1;
+    else side = w.out ? (w.out[0] === '-' ? -1 : 1) : 1;
+    if (o.tagIn) side = -side;
+    const tp = M(o.o, (o.s + o.e) / 2, o.c + side * (t / 2 + 0.24));
+    const tw = o.t.length * 0.075 + 0.1;
+    s += R(tp[0] - tw / 2, tp[1] - 0.1, tp[0] + tw / 2, tp[1] + 0.1, 'tagb') + Tx(tp[0], tp[1], o.t, 'tagt');
+    return s;
+  }
+  function drawFurniture(lv) {
+    let s = '';
+    H.furniture.filter(f => f.lv === lv).forEach(f => {
+      const [x0, y0, x1, y1] = f.r, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, w = x1 - x0, d = y1 - y0;
+      switch (f.k) {
+        case 'bed': {
+          s += R(x0, y0, x1, y1, 'furn');
+          // pillows against the wall nearest to the head (x0 side if against x=0, else y1 side)
+          if (x0 < 0.2) { s += R(x0 + 0.05, y0 + 0.08, x0 + 0.4, cy - 0.04, 'furl') + R(x0 + 0.05, cy + 0.04, x0 + 0.4, y1 - 0.08, 'furl') + Ln(x0 + 0.65, y0, x0 + 0.65, y1, 'furl'); }
+          else { s += R(x0 + 0.08, y1 - 0.4, cx - 0.04, y1 - 0.05, 'furl') + R(cx + 0.04, y1 - 0.4, x1 - 0.08, y1 - 0.05, 'furl') + Ln(x0, y1 - 0.65, x1, y1 - 0.65, 'furl'); }
+          break;
+        }
+        case 'wardrobe': s += R(x0, y0, x1, y1, 'furn') + Ln(x0, y0, x1, y1, 'furl') + Ln(x0, y1, x1, y0, 'furl'); break;
+        case 'sofa': s += R(x0, y0, x1, y1, 'furn') + (w < d ? R(x0, y0 + 0.12, x0 + 0.22, y1 - 0.12, 'furl') : R(x0 + 0.12, y1 - 0.22, x1 - 0.12, y1, 'furl')); break;
+        case 'dining': {
+          s += R(x0, y0, x1, y1, 'furn');
+          [x0 + 0.3, cx, x1 - 0.3].forEach(u => { s += R(u - 0.2, y0 - 0.45, u + 0.2, y0 - 0.08, 'furl') + R(u - 0.2, y1 + 0.08, u + 0.2, y1 + 0.45, 'furl'); });
+          break;
+        }
+        case 'counter': {
+          s += R(x0, y0, x1, y1, 'furn');
+          if (f.sink) s += `<rect x="${fx(cx - 0.4)}" y="${fx(-(y1 - 0.08))}" width="${fx(0.8)}" height="${fx(0.42)}" rx="4" class="furl"/>`;
+          if (f.hob) [[-0.14, -0.14], [0.14, -0.14], [-0.14, 0.14], [0.14, 0.14]].forEach(([a, b]) => { s += Ci(cx + a, cy + b, 0.09, 'furl'); });
+          break;
+        }
+        case 'fridge': s += R(x0, y0, x1, y1, 'furn') + Tx(cx, cy - 0.05, 'REF', 'ra'); break;
+        case 'shower': s += R(x0, y0, x1, y1, 'furn') + Ln(x0, y0, x1, y1, 'furl') + Ln(x0, y1, x1, y0, 'furl') + Ci(cx, cy, 0.05, 'furl'); break;
+        case 'wc': {
+          const alongX = w > d, atMin = alongX ? x0 < 1.0 || x0 < 3.0 && x1 < 3.0 : y0 < 1;
+          const nearHigh = alongX ? x1 > 5.6 : false;
+          if (alongX) {
+            const cz = nearHigh ? x1 : x0, dir = nearHigh ? -1 : 1;
+            s += R(cz, y0, cz + dir * 0.2, y1, 'furn');
+            s += `<ellipse cx="${fx(cz + dir * 0.45)}" cy="${fx(-cy)}" rx="${fx(0.25)}" ry="${fx(0.18)}" class="furn"/>`;
+          } else {
+            s += R(x0, y1, x1, y1 - 0.2, 'furn') + `<ellipse cx="${fx(cx)}" cy="${fx(-(y1 - 0.45))}" rx="${fx(0.18)}" ry="${fx(0.25)}" class="furn"/>`;
+          }
+          void atMin; break;
+        }
+        case 'basin': s += R(x0, y0, x1, y1, 'furn') + `<ellipse cx="${fx(cx)}" cy="${fx(-cy)}" rx="${fx(w * 0.34)}" ry="${fx(d * 0.3)}" class="furl"/>`; break;
+        case 'plant': s += Ci(cx, cy, w / 2, 'plant'); break;
+        case 'chair': s += R(x0 + 0.05, y0 + 0.05, x1 - 0.05, y1 - 0.05, 'furn'); break;
+        case 'tv': s += R(x0, y0, x1, y1, 'furn') + Ln(x1 - 0.06, y0 + 0.2, x1 - 0.06, y1 - 0.2, 'glh'); break;
+        default: s += R(x0, y0, x1, y1, 'furn');
+      }
+    });
+    return s;
+  }
+  function drawStair(lv) {
+    const st = H.stair, f1 = st.f1, f2 = st.f2, L = st.landing;
+    let s = '';
+    if (lv === 'gf') {
+      for (let i = 0; i <= 9; i++) { const y = f1.yStart + i * st.going; s += Ln(f1.x0, y, f1.x1, y, i <= 5 ? 'st' : 'std'); }
+      s += Pl([[f1.x0, 6.05], [0.45, 6.05], [0.6, 6.2], [0.5, 6.25], [0.65, 6.4], [f1.x1, 6.4]], 'st');
+      s += R(L.x0, L.y0, L.x1, L.y1, 'std') + R(f2.x0, 4.75, f2.x1, 7.0, 'std');
+      s += Pl([[0.55, 4.82], [0.55, 5.95]], 'arrow') + arrowHead(0.55, 5.98, Math.PI / 2);
+      s += Tx(0.8, 5.3, 'UP', 'ra');
+      s += Tx(1.58, 5.9, 'STORE', 'ra') + Tx(1.58, 5.65, 'UNDER', 'ra');
+    } else {
+      for (let i = 0; i <= 9; i++) { const y = f1.yStart + i * st.going; s += Ln(f1.x0, y, f1.x1, y, 'st'); }
+      for (let i = 0; i <= 9; i++) { const y = f2.yStart - i * st.going; s += Ln(f2.x0, y, f2.x1, y, 'st'); }
+      s += R(L.x0, L.y0, L.x1, L.y1, 'st');
+      s += R(1.0, 4.75, 1.1, 7.0, 'low');
+      s += Ln(0.1, 4.75, 1.0, 4.75, 'glh') + Ln(0.1, 4.79, 1.0, 4.79, 'gl');
+      s += Pl([[1.575, 4.95], [1.575, 6.85]], 'arrow') + arrowHead(1.575, 6.88, Math.PI / 2);
+      s += Tx(1.575, 4.4, 'DN', 'ra');
+    }
+    return s;
+  }
+  function gridLines(ext, opt = {}) {
+    let s = '';
+    H.grid.x.forEach(g => { s += Ln(g.v, ext.v0 + 0.55, g.v, ext.v1 - 0.55, 'g-line') + bubble(g.v, ext.v1 - 0.3, g.id) + (opt.bottom === false ? '' : bubble(g.v, ext.v0 + 0.3, g.id)); });
+    H.grid.y.forEach(g => { s += Ln(ext.u0 + 0.55, g.v, ext.u1 - 0.55, g.v, 'g-line') + bubble(ext.u0 + 0.3, g.v, g.id) + bubble(ext.u1 - 0.3, g.v, g.id); });
+    return s;
+  }
+  function lotLines() {
+    const sx = -H.site.ox, sy = -H.site.oy;
+    return R(sx, sy, sx + H.site.w, sy + H.site.d, 'bound');
+  }
+  function roomLabels(lv) {
+    let s = '';
+    H.rooms.filter(r => r.lv === lv).forEach(rm => {
+      const r0 = rm.r[0];
+      const c = rm.lab || [(r0[0] + r0[2]) / 2, (r0[1] + r0[3]) / 2];
+      const showSize = rm.r.length === 1 && !rm.compact && !rm.stair && (r0[2] - r0[0]) >= 1.8;
+      s += Tx(c[0], c[1] + 0.05, rm.name.toUpperCase(), 'rn');
+      if (rm.compact) { s += Tx(c[0], c[1] - 0.17, H.roomArea(rm).toFixed(2) + ' m² · ' + rm.fl, 'ra'); return; }
+      s += Tx(c[0], c[1] - 0.17, H.roomArea(rm).toFixed(2) + ' m²' + (showSize ? '  ' + (r0[2] - r0[0]).toFixed(2) + '×' + (r0[3] - r0[1]).toFixed(2) : ''), 'ra');
+      s += Tx(c[0], c[1] - 0.36, rm.id + ' · ' + rm.fl, 'ra');
+    });
+    return s;
+  }
+  function sectionMark(ext) {
+    const x = 1.5, y0 = ext.v0 + 1.0, y1 = ext.v1 - 0.65;
+    let s = Ln(x, y0, x, -0.35, 'secl') + Ln(x, 11.35, x, y1, 'secl');
+    [[y0, -1], [y1, 1]].forEach(([y, d]) => {
+      s += Ci(x, y + d * 0.26, 0.24, 'secb') + Tx(x, y + d * 0.26, 'A', 'sect');
+      s += Pg([[x - 0.02, y - 0.12], [x - 0.02, y + 0.12], [x - 0.4, y]], 'secb');
+    });
+    return s;
+  }
+
+  function planSheet(lv) {
+    K = 1;
+    const ext = { u0: -2.5, u1: 8.9, v0: -3.4, v1: 13.2 };
+    let s = '';
+    s += lotLines();
+    H.rooms.filter(r => r.lv === lv).forEach(rm => rm.r.forEach(r => { s += R(r[0], r[1], r[2], r[3], 'room' + (rm.wet ? ' wet' : '') + (rm.out ? ' out' : '')); }));
+    s += gridLines(ext, { bottom: false });
+    s += drawFurniture(lv) + drawStair(lv) + drawWalls(lv) + drawColumns(lv);
+    H.openings.filter(o => o.lv === lv).forEach(o => { s += drawOpening(o); });
+    s += roomLabels(lv);
+    if (lv === 'gf') {
+      const c = H.canopy;
+      s += R(c.x0, c.y0, c.x1, c.y1, 'dash') + Tx((c.x0 + c.x1) / 2 + 0.6, c.y0 + 0.28, 'CANOPY OVER', 'ra');
+      s += Ln(2.7, -0.1, 5.9, -0.1, 'dash');
+      const st = H.siteItems.steps;
+      for (let i = 0; i < 3; i++) s += Ln(st.x0, st.y0 + i * 0.3 - 0.0, st.x1, st.y0 + i * 0.3, 'st');
+      s += R(st.x0, st.y0, st.x1, st.y1, 'st');
+      s += Tx((st.x0 + st.x1) / 2, st.y0 - 0.3, '2 STEPS UP', 'ra');
+      s += Tx(-1.3, -2.55, 'PARTY WALL ON BOUNDARY', 'note', 'text-anchor="middle"');
+    } else {
+      const r = H.roof;
+      s += R(r.x0, r.y0, r.x1, r.y1, 'dash') + Tx(6.2, 11.45, 'ROOF EAVE', 'ra');
+      const c = H.canopy; s += R(c.x0, c.y0, c.x1, c.y1, 'std') + Tx(5.3, -0.55, 'CANOPY BELOW', 'ra');
+      s += Ln(0.1, 0.02, 2.6, 0.02, 'glh') + Tx(1.35, -0.28, 'GLASS BALUSTRADE 1100 H', 'ra');
+    }
+    s += sectionMark(ext);
+    // dimensions
+    const front = lv === 'gf' ? [-0.1, 0.4, 2.3, 2.7, 2.85, 3.85, 4.05, 5.65, 5.9] : [-0.1, 0.3, 2.4, 2.7, 2.95, 3.55, 3.8, 5.6, 5.9];
+    s += dims('x', front, -1.35, lv === 'gf' ? -0.7 : -0.8);
+    s += dims('x', [-0.1, 2.7, 5.9], -1.85, null);
+    s += dims('x', [-0.1, 5.9], -2.35, null);
+    const rightOps = H.openings.filter(o => o.lv === lv && o.o === 'v' && o.c === 5.8).flatMap(o => [o.s, o.e]);
+    s += dims('y', [-0.1, 11.1, ...rightOps, ...(lv === 'gf' ? [1.2] : [])], 7.2, 6.0);
+    s += dims('y', [-0.1, 3.8, 8.0, 11.1], 7.7, null);
+    s += dims('y', [-0.1, 11.1], 8.2, null);
+    s += dims('y', [-0.1, 1.2, 3.8, 4.75, 7.0, 8.0, 11.1], -1.05, -0.15);
+    const rearOps = H.openings.filter(o => o.lv === lv && o.o === 'h' && o.c === 11).flatMap(o => [o.s, o.e]);
+    s += dims('x', [-0.1, 5.9, ...rearOps], 11.62, 11.2);
+    s += scaleBar(-2.2, -3.15);
+    s += Tx(3.35, -3.15, 'STREET  ↓', 'noteb', 'text-anchor="middle"');
+    return wrapSvg(ext, s, (lv === 'gf' ? 'Ground' : 'First') + ' floor plan');
+  }
+
+  /* ======================= SITE PLAN ======================= */
+  function siteSheet() {
+    K = 1;
+    const ext = { u0: -2.2, u1: 8.9, v0: -5.4, v1: 13.2 };
+    const si = H.siteItems, lx = -H.site.ox, ly = -H.site.oy, W = H.site.w, D = H.site.d;
+    let s = '';
+    s += R(ext.u0, ly - 2.4, ext.u1, ly - 1.1, 'road') + Tx(3.35, ly - 1.85, 'PUBLIC ROAD  ±0.000', 'noteb', 'text-anchor="middle"');
+    s += R(ext.u0, ly - 1.1, ext.u1, ly, 'pave') + Tx(-1.0, ly - 0.6, 'FOOTPATH', 'ra');
+    s += R(lx, ly, lx + W, -0.1, 'grass');
+    s += R(si.bedFront.x0, si.bedFront.y0, si.bedFront.x1, si.bedFront.y1, 'room out');
+    [[0.3, -0.6], [0.9, -0.45], [1.5, -0.65], [2.1, -0.5]].forEach(([u, v]) => { s += Ci(u, v, 0.26, 'plant'); });
+    s += R(si.path.x0, si.path.y0, si.path.x1, si.path.y1, 'pave');
+    s += R(si.forecourt.x0, si.forecourt.y0, si.forecourt.x1, si.forecourt.y1, 'pave');
+    s += R(5.9, -0.1, lx + W, 11.1, 'gravel');
+    s += R(lx, 11.1, lx + W, ly + D, 'pave');
+    s += R(-0.1, -0.1, 5.9, 11.1, 'fp');
+    s += R(H.roof.x0, H.roof.y0, H.roof.x1, H.roof.y1, 'dash');
+    s += Ln(H.roof.ridgeX, H.roof.ridgeY0, H.roof.ridgeX, H.roof.ridgeY1, 'dash');
+    s += R(2.7, -0.1, 5.9, 1.2, 'room out');
+    s += Tx(2.9, 5.9, 'TWO-STOREY HOUSE', 'rn') + Tx(2.9, 5.55, 'FFL GF ' + lvl(LV.gf) + ' · FF ' + lvl(LV.ff), 'ra') + Tx(2.9, 5.25, 'Footprint 6.00 × 11.20 m', 'ra');
+    s += Tx(4.3, 0.55, 'PORCH', 'ra');
+    s += R(si.septic.x0, si.septic.y0, si.septic.x1, si.septic.y1, 'util') + Tx((si.septic.x0 + si.septic.x1) / 2, (si.septic.y0 + si.septic.y1) / 2 - 0.05, 'SEPTIC TANK 2.5 m³', 'ra');
+    s += Ci(si.tank.x, si.tank.y, si.tank.r, 'util') + Tx(si.tank.x - 1.35, si.tank.y + 0.2, '1000 L TANK', 'ra') + Tx(si.tank.x - 1.35, si.tank.y - 0.02, '+ PUMP', 'ra');
+    s += R(si.meterW.x - 0.15, si.meterW.y, si.meterW.x + 0.15, si.meterW.y + 0.25, 'util') + Tx(si.meterW.x - 0.1, si.meterW.y + 0.45, 'WM', 'ra');
+    s += R(si.meterE.x - 0.1, si.meterE.y, si.meterE.x + 0.3, si.meterE.y + 0.25, 'util') + Tx(si.meterE.x + 0.1, si.meterE.y + 0.45, 'EM', 'ra');
+    s += Pl([[6.35, 11.0], [6.35, -1.35]], 'pipe') + Pl([[5.6, 11.3], [6.35, 11.3]], 'pipe') + Pl([[1.0, 11.3], [5.6, 11.3]], 'pipe');
+    s += Pl([[5.6, -2.35], [5.6, -2.9]], 'pipe');
+    s += Tx(6.62, 5.0, 'SEWER uPVC 100 @ 1:50', 'ra', `transform="rotate(-90 ${fx(6.62)} ${fx(-5.0)})"`);
+    s += Tx(3.1, 11.55, 'IC', 'ra') + Ci(3.1, 11.3, 0.12, 'util');
+    [[6.3, -0.55], [6.3, 11.55], [0.25, -0.55], [0.25, 11.55]].forEach(([u, v]) => { s += Ci(u, v, 0.07, 'util'); });
+    s += Tx(3.35, -2.1, 'PATH', 'ra') + Tx(5.5, -2.72, 'PAVED FORECOURT', 'ra') + Tx(1.2, -2.2, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(1.6, 11.55, 'SERVICE YARD', 'ra');
+    s += R(lx, ly, lx + W, ly + D, 'bound');
+    // dims
+    s += dims('x', [lx, lx + W], ly - 2.9, null);
+    s += dims('x', [lx, -0.1, 5.9, lx + W], 12.5, ly + D + 0.1);
+    s += dims('y', [ly, -0.1, 11.1, ly + D], 7.55, lx + W + 0.1);
+    s += dims('y', [ly, ly + D], 8.2, null);
+    s += Tx(-1.3, 5.0, 'NEIGHBOUR', 'ra', `transform="rotate(-90 ${fx(-1.3)} ${fx(-5.0)})"`) + Tx(-0.7, 5.0, 'PARTY WALL ON BOUNDARY — SETBACK 0', 'ra', `transform="rotate(-90 ${fx(-0.7)} ${fx(-5.0)})"`);
+    s += scaleBar(-1.9, -5.1);
+    s += Tx(5.6, -5.1, 'North: confirm on survey', 'note');
+    return wrapSvg(ext, s, 'Site plan');
+  }
+
+  /* ======================= ROOF PLAN ======================= */
+  function roofSheet() {
+    K = 1;
+    const ext = { u0: -2.5, u1: 8.6, v0: -3.4, v1: 13.2 };
+    const r = H.roof;
+    let s = lotLines() + gridLines(ext, { bottom: false });
+    const e = [[r.x0, r.y0], [r.x1, r.y0], [r.x1, r.y1], [r.x0, r.y1]];
+    const c = H.canopy; s += R(c.x0, c.y0, c.x1, c.y1, 'e-roof');
+    s += Pg(e, 'room');
+    s += Pg([[r.x0, r.y0], [r.x1, r.y0], [r.ridgeX, r.ridgeY0]], 'e-roof') + Pg([[r.x1, r.y1], [r.x0, r.y1], [r.ridgeX, r.ridgeY1]], 'e-roof');
+    s += Pg([[r.x0, r.y1], [r.x0, r.y0], [r.ridgeX, r.ridgeY0], [r.ridgeX, r.ridgeY1]], 'e-roof') + Pg([[r.x1, r.y0], [r.x1, r.y1], [r.ridgeX, r.ridgeY1], [r.ridgeX, r.ridgeY0]], 'e-roof');
+    const sk = r.skylight; s += R(sk.x0, sk.y0, sk.x1, sk.y1, 'e-rail') + Tx((sk.x0 + sk.x1) / 2, (sk.y0 + sk.y1) / 2, 'SKYLIGHT', 'tagt');
+    s += R(-0.1, -0.1, 0.1, 11.1, 'wall');
+    s += R(0.1, r.y0 + 0.6, 0.38, r.y1 - 0.6, 'win');
+    s += R(r.x1 - 0.15, r.y0, r.x1, r.y1, 'win') + R(r.x0, r.y0, r.x1, r.y0 + 0.15, 'win') + R(r.x0, r.y1 - 0.15, r.x1, r.y1, 'win');
+    [[6.3, -0.55], [6.3, 11.55], [0.25, -0.55], [0.25, 11.55]].forEach(([u, v]) => { s += Ci(u, v, 0.09, 'util'); });
+    const fall = (u, v, ang) => Pl([[u, v], [u + 0.9 * Math.cos(ang), v + 0.9 * Math.sin(ang)]], 'arrow') + arrowHead(u + 0.9 * Math.cos(ang), v + 0.9 * Math.sin(ang), ang, 0.16);
+    s += fall(4.6, 5.0, 0) + fall(2.0, 3.5, Math.PI) + fall(3.3, 0.9, -Math.PI / 2) + fall(3.3, 10.0, Math.PI / 2);
+    s += Tx(4.95, 6.2, '20° FALL', 'tagt', 'style="fill:var(--sheet)"');
+    s += Tx(3.4, 5.4, 'RIDGE ' + lvl(r.ridge), 'tagt', `style="fill:var(--sheet)" transform="rotate(-90 ${fx(3.4)} ${fx(-5.4)})"`);
+    s += Tx(-0.55, 5.4, 'BOX GUTTER 250 W, PARAPET ' + lvl(LV.parapet), 'ra', `transform="rotate(-90 ${fx(-0.55)} ${fx(-5.4)})"`);
+    s += Tx(7.0, 12.05, 'DP', 'ra') + Tx(6.95, -1.05, 'DP 90', 'ra') + Tx(0.3, -1.05, 'DP 90', 'ra') + Tx(0.3, 12.05, 'DP', 'ra');
+    s += Tx(4.45, -1.2, 'CANOPY 15°', 'ra');
+    s += dims('x', [r.x0, r.ridgeX, r.x1], -1.85, r.y0);
+    s += dims('y', [r.y0, r.ridgeY0, r.ridgeY1, r.y1], 7.45, r.x1);
+    s += dims('x', [-0.1, 5.9, r.x1], 12.5, 11.2);
+    s += scaleBar(-2.2, -3.15);
+    return wrapSvg(ext, s, 'Roof plan');
+  }
+
+  /* ======================= ELEVATIONS ======================= */
+  const DIRS = {
+    front: { u: (x, y) => x, d: (x, y) => y, out: '-y', name: 'Front elevation (street)' },
+    rear: { u: (x, y) => -x, d: (x, y) => -y, out: '+y', name: 'Rear elevation' },
+    right: { u: (x, y) => y, d: (x, y) => -x, out: '+x', name: 'Right side elevation (passage)' },
+    left: { u: (x, y) => -y, d: (x, y) => x, out: '-x', name: 'Left side elevation (party wall)' }
+  };
+  const porchWalls = new Set(['G2', 'G3']);
+  const quad = (o, c, a0, a1, z0, z1) => (o === 'h'
+    ? [[a0, c, z0], [a1, c, z0], [a1, c, z1], [a0, c, z1]]
+    : [[c, a0, z0], [c, a1, z0], [c, a1, z1], [c, a0, z1]]);
+
+  function elevationPanels(dirKey) {
+    const D = DIRS[dirKey], out = D.out, panels = [];
+    const sign = out[0] === '-' ? -1 : 1;
+    H.walls.filter(w => w.out).forEach(w => {
+      const z0 = w.lv === 'gf' ? (porchWalls.has(w.id) ? LV.gf : LV.yard) : LV.ff;
+      const z1 = w.lv === 'gf' ? LV.ff : (w.top || LV.ring);
+      const cls = 'e-' + (w.fin || 'render');
+      const axisOut = w.o === 'h' ? 'y' : 'x';
+      if (w.out === out) {
+        const f = w.c + sign * w.t / 2;
+        panels.push({ pts: quad(w.o, f, w.s - w.t / 2, w.e + w.t / 2, z0, z1), cls });
+        H.openingsOn(w).forEach(o => {
+          const ty = H.types[o.t], lz = H.lvZ(o.lv);
+          panels.push({ pts: quad(w.o, f + sign * 0.004, o.s, o.e, lz + ty.sill, lz + ty.head), op: o, ty, bias: -0.004 });
+        });
+      }
+      // wall end caps
+      if (out[1] !== axisOut) {
+        const capAxis = out[1];
+        const endsTo = capAxis === (w.o === 'h' ? 'x' : 'y');
+        if (endsTo) {
+          const at = out[0] === '-' ? w.s - w.t / 2 : w.e + w.t / 2;
+          const c0 = w.c - w.t / 2, c1 = w.c + w.t / 2;
+          const pts = w.o === 'h' ? [[at, c0, z0], [at, c1, z0], [at, c1, z1], [at, c0, z1]] : [[c0, at, z0], [c1, at, z0], [c1, at, z1], [c0, at, z1]];
+          panels.push({ pts, cls, bias: 0.002 });
+        }
+      }
+    });
+    // porch column B1 (timber clad)
+    const col = { x0: 5.675, x1: 5.925, y0: -0.125, y1: 0.125 };
+    const colFaces = { '-y': quad('h', col.y0, col.x0, col.x1, LV.yard, 3.75), '+x': quad('v', col.x1, col.y0, col.y1, LV.yard, 3.75) };
+    if (colFaces[out]) panels.push({ pts: colFaces[out], cls: 'e-timber' });
+    // beam bands and porch plinth
+    if (out === '-y') {
+      panels.push({ pts: quad('h', -0.125, 2.8, 5.925, 3.2, 3.75), cls: 'e-render' });
+      panels.push({ pts: quad('h', -0.1, 2.8, 5.925, LV.yard, LV.gf), cls: 'e-plinth' });
+      panels.push({ pts: quad('h', -0.1, -0.1, 2.6, 6.65, 6.95), cls: 'e-render', bias: -0.001 });
+      panels.push({ pts: quad('h', -0.06, 0.1, 2.6, 3.72, 4.82), cls: 'e-rail', bias: -0.01 });
+      const st = H.siteItems.steps;
+      panels.push({ pts: quad('h', st.y0, st.x0, st.x1, LV.yard, LV.yard + 0.15), cls: 'e-plinth' });
+      panels.push({ pts: quad('h', st.y0 + 0.3, st.x0, st.x1, LV.yard + 0.15, LV.gf), cls: 'e-plinth' });
+    }
+    if (out === '+x') {
+      panels.push({ pts: quad('v', 5.9, -0.1, 1.3, 3.3, 3.75), cls: 'e-render' });
+      panels.push({ pts: quad('v', 5.9, -0.1, 1.3, LV.yard, LV.gf), cls: 'e-plinth' });
+    }
+    // canopy
+    const c = H.canopy;
+    panels.push({ pts: [[c.x0, c.y0, c.hEdge], [c.x1, c.y0, c.hEdge], [c.x1, c.y1, c.hWall], [c.x0, c.y1, c.hWall]], cls: 'e-roof', near: true });
+    if (out === '-y') panels.push({ pts: quad('h', c.y0 - 0.01, c.x0, c.x1, c.hEdge - 0.12, c.hEdge), cls: 'e-fascia', near: true });
+    // roof
+    const r = H.roof, e = r.eave, RH = r.ridge;
+    panels.push({ pts: [[r.x0, r.y0, e], [r.x1, r.y0, e], [r.ridgeX, r.ridgeY0, RH]], cls: 'e-roof', roof: true });
+    panels.push({ pts: [[r.x1, r.y1, e], [r.x0, r.y1, e], [r.ridgeX, r.ridgeY1, RH]], cls: 'e-roof', roof: true });
+    panels.push({ pts: [[r.x0, r.y1, e], [r.x0, r.y0, e], [r.ridgeX, r.ridgeY0, RH], [r.ridgeX, r.ridgeY1, RH]], cls: 'e-roof', roof: true });
+    panels.push({ pts: [[r.x1, r.y0, e], [r.x1, r.y1, e], [r.ridgeX, r.ridgeY1, RH], [r.ridgeX, r.ridgeY0, RH]], cls: 'e-roof', roof: true });
+    const fas = { '-y': quad('h', r.y0, r.x0, r.x1, e - 0.2, e), '+y': quad('h', r.y1, r.x0, r.x1, e - 0.2, e), '+x': quad('v', r.x1, r.y0, r.y1, e - 0.2, e) };
+    if (fas[out]) panels.push({ pts: fas[out], cls: 'e-fascia', near: true });
+    // sort far -> near
+    panels.forEach(p => {
+      const ds = p.pts.map(q => D.d(q[0], q[1]));
+      p.depth = (p.near ? Math.min(...ds) : ds.reduce((a, b) => a + b, 0) / ds.length) + (p.bias || 0);
+    });
+    panels.sort((a, b) => b.depth - a.depth);
+    return panels;
+  }
+
+  function openingElev(u0, u1, v0, v1, ty) {
+    let s = '';
+    const w = u1 - u0, fr = 0.05;
+    if (ty.kind === 'door') {
+      if (ty.name.startsWith('Main')) {
+        s += R(u0, v0, u1, v1, 'e-door');
+        s += Ln(u0 + 0.15, v0 + 0.9, u0 + 0.15, v0 + 1.5, 'e-mul');
+      } else {
+        s += R(u0, v0, u1, v1, 'e-frame') + R(u0 + fr, v0 + 1.0, u1 - fr, v1 - fr, 'e-frost') + R(u0 + fr, v0 + fr, u1 - fr, v0 + 0.95, 'e-render');
+      }
+      return s;
+    }
+    s += R(u0, v0, u1, v1, 'e-frame');
+    s += R(u0 + fr, v0 + fr, u1 - fr, v1 - fr, ty.kind === 'louvre' ? 'e-frost' : 'e-glass');
+    if (ty.kind === 'louvre') { for (let v = v0 + 0.1; v < v1 - 0.05; v += 0.1) s += Ln(u0 + fr, v, u1 - fr, v, 'e-lou'); }
+    const n = ty.kind === 'slider' ? 2 : (w >= 2.0 ? 4 : w >= 1.7 ? 3 : w >= 1.1 ? 2 : 1);
+    for (let i = 1; i < n; i++) s += Ln(u0 + w * i / n, v0, u0 + w * i / n, v1, 'e-mul');
+    if (ty.name.includes('picture')) s += Ln(u0, v0 + 0.5, u1, v0 + 0.5, 'e-mul');
+    return s;
+  }
+
+  const ELEV_KEYS = {
+    front: [
+      [4.6, 7.55, 'Colour-coated metal roof 0.45 mm, charcoal, 20° hip; foil insulation under'],
+      [6.3, 6.8, 'Fascia 200 + 150 quad gutter, charcoal; 90 mm downpipes'],
+      [4.7, 6.5, 'Charcoal fibre-cement weatherboard, 150 exposure, on battens'],
+      [1.3, 6.4, 'Timber-look WPC vertical battens on battens'],
+      [1.9, 4.45, '12 mm toughened glass balustrade, 1100 high, stainless clamps'],
+      [5.4, 3.86, 'Metal canopy 15° on 50×100 steel frame, fixed to beam'],
+      [3.35, 1.3, 'D01 solid timber entry door, 1000 × 2400'],
+      [5.8, 2.2, 'Porch column C1, clad in timber-look WPC'],
+      [1.35, 2.3, 'Black aluminium windows, 6 mm glass, flyscreens'],
+      [0.0, 6.5, 'Party wall rising to parapet ' + lvl(LV.parapet) + ', rendered'],
+      [4.85, 3.0, 'Light grey render and exterior acrylic paint']
+    ],
+    rear: [[-3.0, 7.4, 'Metal roof, hip end'], [-3.0, 5.0, 'Render and exterior paint, light grey'], [-2.7, 5.8, 'W09 master bedroom window 2200 × 1800'], [-3.7, 1.7, 'W02 kitchen window over sink'], [-5.15, 1.0, 'D05 aluminium rear service door'], [-1.05, 2.3, 'W03 frosted louvre, bathroom']],
+    right: [[5.5, 7.5, 'Metal roof and fascia with 150 gutter'], [1.0, 5.4, 'Charcoal weatherboard wrapping the bedroom 2 box'], [7.0, 5.55, 'W08 frosted high windows to bathrooms'], [6.4, 1.9, 'W04 dining window'], [0.6, 2.5, 'Open porch with timber-clad column'], [9.0, 2.0, 'Render and exterior paint, light grey']],
+    left: [[-8.5, 7.2, 'Parapet with metal capping, box gutter behind'], [-5.5, 3.5, 'Party wall on boundary: render both sides where reachable, no openings'], [-5.5, 7.75, 'Metal roof beyond']]
+  };
+
+  function elevationSheet(dirKey) {
+    const D = DIRS[dirKey];
+    const panels = elevationPanels(dirKey);
+    const lotU0 = dirKey === 'front' ? [-0.15, 6.85] : dirKey === 'rear' ? [-6.85, 0.15] : dirKey === 'right' ? [-2.9, 12.1] : [-12.1, 2.9];
+    K = Math.max(1, (lotU0[1] - lotU0[0] + 3.9) / 12.5);
+    let body = '';
+    let umin = Infinity, umax = -Infinity;
+    panels.forEach(p => {
+      const pts = p.pts.map(q => [D.u(q[0], q[1]), q[2]]);
+      pts.forEach(q => { umin = Math.min(umin, q[0]); umax = Math.max(umax, q[0]); });
+      if (p.op) {
+        const us = pts.map(q => q[0]), vs = pts.map(q => q[1]);
+        body += openingElev(Math.min(...us), Math.max(...us), Math.min(...vs), Math.max(...vs), p.ty);
+      } else body += Pg(pts, p.cls);
+    });
+    const lotU = lotU0;
+    const ext = { u0: lotU[0] - 2.6 * K, u1: lotU[1] + 1.3, v0: -1.1, v1: 9.0 };
+    let s = R(ext.u0 + 0.2, -0.9, ext.u1 - 0.2, LV.yard, 'earth');
+    s += body;
+    s += Ln(ext.u0 + 0.2, LV.yard, ext.u1 - 0.2, LV.yard, 'ground');
+    lotU.forEach(u => { s += Ln(u, LV.yard, u, LV.yard + 2.2, 'bound') + Tx(u, LV.yard + 2.4, 'BOUNDARY', 'ra'); });
+    // levels
+    const levels = [[LV.yard, 'YARD'], [LV.gf, 'GF FFL'], [LV.ff, 'FF FFL'], [LV.ring, 'RING BEAM'], [H.roof.ridge, 'RIDGE']];
+    if (dirKey === 'left' || dirKey === 'front') levels.push([LV.parapet, 'PARAPET']);
+    levels.forEach(([v, n], i) => {
+      s += Ln(ext.u0 + 0.25, v, umin - 0.15, v, 'lvl');
+      s += Pg([[ext.u0 + 0.35, v], [ext.u0 + 0.47, v + 0.12], [ext.u0 + 0.23, v + 0.12]], 'lvm');
+      const off = (n === 'PARAPET' ? 0.16 : 0) - (n === 'RING BEAM' && levels.some(l => l[1] === 'PARAPET') ? 0.16 : 0);
+      s += Tx(ext.u0 + 0.55, v + 0.03 + off, lvl(v) + '  ' + n, 'lvt');
+    });
+    s += dims('y', [LV.yard, LV.gf, LV.ff, LV.ring, H.roof.ridge], Math.max(umax, lotU[1]) + 0.5, null);
+    const keys = ELEV_KEYS[dirKey] || [];
+    keys.forEach((k, i) => { s += key(k[0], k[1], i + 1); });
+    s += scaleBar(ext.u0 + 0.3, -0.7);
+    return { svg: wrapSvg(ext, s, D.name), keys: keys.map(k => k[2]) };
+  }
+
+  /* ======================= SECTION A-A ======================= */
+  function sectionSheet() {
+    K = 1.4;
+    const ext = { u0: -5.6, u1: 13.0, v0: -2.9, v1: 8.4 };
+    const x = 1.5, r = H.roof, st = H.stair;
+    let s = '';
+    s += R(-3.0, -1.8, 12.1, LV.yard, 'earth');
+    s += Ln(ext.u0 + 0.2, LV.road, -2.9, LV.road, 'ground') + Ln(-2.9, LV.road, -2.9, LV.yard, 'ground') + Ln(-2.9, LV.yard, 12.1, LV.yard, 'ground');
+    // hidden footings on grid A (beyond)
+    H.S.footings.filter(f => f.m === 'F2').forEach(f => { s += R(f.y0, LV.footBot, f.y1, LV.footTop, 'hid') + R((f.y0 + f.y1) / 2 - 0.125, LV.footTop, (f.y0 + f.y1) / 2 + 0.125, -0.1, 'hid'); });
+    // strap beams cut
+    H.grid.y.forEach(g => { s += R(g.v - 0.125, -0.10, g.v + 0.125, 0.40, 'cut'); });
+    // ground slab
+    s += R(-0.1, 0.30, 11.1, 0.40, 'cut') + R(-0.1, 0.40, 11.1, 0.45, 'fin');
+    s += R(-0.1, 0.25, 11.1, 0.30, 'furn');
+    // GF walls cut
+    s += R(-0.1, 0.45, 0.1, 1.45, 'cutb') + R(-0.1, 1.45, 0.1, 2.45, 'cutg') + R(-0.1, 2.45, 0.1, 3.2, 'cutb');
+    s += R(3.75, 2.55, 3.85, 3.2, 'cutb');
+    s += R(7.95, 0.45, 8.05, 3.2, 'cutb');
+    s += R(10.9, 0.45, 11.1, 3.2, 'cutb');
+    // spine wall beyond and hidden flight 1
+    s += R(4.75, 0.45, 7.0, 3.75, 'bey');
+    s += Tx(5.9, 1.05, 'SPINE WALL BEYOND', 'ra');
+    // FF beams and slab
+    [0, 3.8, 8.0, 11.0].forEach(y => { s += R(y - 0.125, 3.20, y + 0.125, 3.70, 'cut'); });
+    s += R(1.1, 3.35, 1.3, 3.70, 'cut') + R(4.65, 3.35, 4.85, 3.70, 'cut');
+    s += R(0.0, 3.53, 1.2, 3.65, 'cut') + R(1.2, 3.58, 4.75, 3.70, 'cut') + R(7.95, 3.58, 11.0, 3.70, 'cut');
+    s += R(1.2, 3.70, 4.75, 3.75, 'fin') + R(7.95, 3.70, 11.0, 3.75, 'fin') + R(0.0, 3.65, 1.2, 3.70, 'fin');
+    // landing + beam
+    s += R(7.0, 1.95, 7.95, 2.10, 'cut') + R(7.85, 1.75, 8.05, 2.05, 'cut');
+    // flight 2 cut
+    const steps = [[7.0, 2.10]];
+    for (let i = 0; i < 10; i++) { const u = 7.0 - i * st.going, v = LV.landing + (i + 1) * st.rise; steps.push([u, v]); if (i < 9) steps.push([u - st.going, v]); }
+    steps.push([4.75, 3.75]);
+    const slope = 1.65 / 2.25;
+    steps.push([4.85, 1.95 + (7.0 - 4.85) * slope]); steps.push([7.0, 1.95]);
+    s += Pg(steps, 'cut');
+    s += Pl([[7.0, LV.landing + 0.9], [4.75, LV.ff + 0.9]], 'arrow');
+    // FF walls cut
+    s += R(1.1, 6.15, 1.3, 6.65, 'cutb') + R(1.1, 3.75, 1.3, 6.15, 'cutg');
+    s += R(7.95, 3.75, 8.05, 6.65, 'cutb') + R(10.9, 3.75, 11.1, 6.65, 'cutb');
+    s += R(-0.04, 3.70, 0.04, 4.80, 'cutg');
+    // stair half-wall beyond on FF is in front of cut: omitted. Ring beams
+    [0, 3.8, 8.0, 11.0].forEach(y => { s += R(y - 0.1, 6.65, y + 0.1, 6.95, 'cut'); });
+    s += R(1.1, 6.65, 1.3, 6.95, 'cut');
+    // ceilings
+    [[0.1, 3.68], [3.93, 4.62], [8.05, 10.9]].forEach(([a, b]) => { s += Ln(a, LV.gfCeil, b, LV.gfCeil, 'ceil'); });
+    [[0.1, 1.0], [1.3, 3.7], [3.9, 7.9], [8.1, 10.9]].forEach(([a, b]) => { s += Ln(a, LV.ffCeil, b, LV.ffCeil, 'ceil'); });
+    // roof profile at x = 1.5
+    const hr = y => r.h(x, y);
+    const rp = [[r.y0, hr(r.y0)], [r.y0 + (x - r.x0), hr(r.y0 + (x - r.x0))], [r.y1 - (x - r.x0), hr(r.y1 - (x - r.x0))], [r.y1, hr(r.y1)]];
+    s += Pl(rp, 'roofcut');
+    s += Pl(rp.map(p => [p[0], p[1] - 0.06]), 'bey');
+    s += Ln(-0.1, 7.10, 11.1, 7.10, 'bey');
+    for (let u = 0.3; u < 11; u += 1.2) s += Ln(u, 7.10, u, hr(u) - 0.06, 'bey');
+    for (let u = -0.5; u <= 11.5; u += 0.9) s += R(u - 0.05, hr(u) - 0.16, u + 0.05, hr(u) - 0.06, 'furn');
+    s += R(r.y0 - 0.02, r.eave - 0.2, r.y0 + 0.02, r.eave, 'cut') + R(r.y1 - 0.02, r.eave - 0.2, r.y1 + 0.02, r.eave, 'cut');
+    s += Ln(r.y0, r.eave - 0.2, -0.1, r.eave - 0.2, 'ceil') + Ln(11.1, r.eave - 0.2, r.y1, r.eave - 0.2, 'ceil');
+    // room names
+    [[1.9, 1.7, 'GUEST BEDROOM'], [4.3, 2.7, 'LOBBY'], [9.5, 1.7, 'BATHROOM'], [0.55, 4.25, 'BALCONY'], [2.5, 4.7, 'FAMILY LOUNGE'], [6.3, 5.2, 'STAIR'], [9.5, 4.7, 'MASTER BEDROOM'], [-1.5, 0.45, 'FRONT YARD'], [11.6, 0.9, 'YARD']].forEach(([u, v, n]) => { s += Tx(u, v, n, 'rn'); });
+    // levels
+    [[LV.footBot, 'U/S FOOTING'], [LV.road, 'ROAD'], [LV.gf, 'GF FFL'], [LV.landing, 'LANDING'], [LV.gfCeil, 'GF CEILING'], [LV.ff, 'FF FFL'], [LV.ffCeil, 'FF CEILING'], [LV.ring, 'RING BEAM']].forEach(([v, n]) => {
+      s += Ln(-5.4, v, -0.2, v, 'lvl') + Pg([[-5.3, v], [-5.18, v + 0.12], [-5.42, v + 0.12]], 'lvm') + Tx(-5.1, v + 0.04, lvl(v) + ' ' + n, 'lvt');
+    });
+    s += dims('y', [LV.yard, LV.gf, LV.ff, LV.ring, hr(5)], 12.4, 11.2);
+    s += dims('y', [LV.gf, LV.gfCeil, LV.ff, LV.ffCeil], 11.75, null);
+    s += dims('x', [-0.1, 3.8, 4.75, 7.0, 7.95, 11.1], -2.05, -1.65);
+    const keys = [
+      [5.5, 7.62, 'Roof: 0.45 mm colour-coated sheet, foil sarking, C75 purlins @ 900 on light-gauge steel trusses @ 1200, holding-down straps to RB1'],
+      [9.5, 6.45, 'Ceiling C1: 9 mm gypsum on concealed grid at ' + lvl(LV.ffCeil) + '; 50 mm glasswool batts over'],
+      [0.35, 5.3, 'Balcony: slab S2 set down 50, membrane, falls 1:100 to outlet; glass balustrade 1100 high'],
+      [6.0, 3.1, 'Stair ST1: 20 risers × 165, going 250, 150 waist; handrail 900 above nosing'],
+      [9.5, 3.45, 'First floor: slab S1 120 + 50 screed and tile; beams B1 250 × 500'],
+      [2.6, 0.7, 'Ground slab S0 100 on 0.2 mm DPM, 50 sand, compacted fill; SB1 250 × 500 strap beams'],
+      [0.4, -1.35, 'F2 eccentric footings on grid A (beyond, dashed), underside ' + lvl(LV.footBot)],
+      [8.6, 2.6, 'Walls: clay brick, 15 mm plaster both sides; lintels L1 over openings']
+    ];
+    keys.forEach((k, i) => { s += key(k[0], k[1], i + 1); });
+    s += scaleBar(-5.3, -2.55);
+    return { svg: wrapSvg(ext, s, 'Section A-A'), keys: keys.map(k => k[2]) };
+  }
+
+  /* ======================= STRUCTURE PLANS ======================= */
+  function beamRect(b, cls) {
+    const p = M(b.o, b.s, b.c - b.b / 2), q = M(b.o, b.e, b.c + b.b / 2);
+    return R(p[0], p[1], q[0], q[1], cls);
+  }
+  function beamMark(b, off = 0.3) {
+    const m = (b.s + b.e) / 2, p = M(b.o, m + (b.o === 'h' ? 0.55 : 0.35), b.c + off * 0);
+    const w = b.m.length * 0.085 + 0.12;
+    return R(p[0] - w / 2, p[1] - 0.1, p[0] + w / 2, p[1] + 0.1, 'mkb') + Tx(p[0], p[1], b.m, 'mk');
+  }
+  function foundationSheet() {
+    K = 1;
+    const ext = { u0: -2.5, u1: 8.6, v0: -3.2, v1: 13.2 };
+    let s = lotLines() + gridLines(ext, { bottom: false });
+    H.S.footings.forEach(f => { s += R(f.x0, f.y0, f.x1, f.y1, 'ftg'); });
+    H.S.groundBeams.forEach(b => { s += beamRect(b, 'bm'); });
+    H.S.columns.forEach(c => { s += R(c.x - c.b / 2, c.y - c.d / 2, c.x + c.b / 2, c.y + c.d / 2, 'col'); });
+    H.S.footings.forEach(f => { const cx = (f.x0 + f.x1) / 2, cy = f.y0 + 0.2; s += R(cx - 0.18, cy - 0.1, cx + 0.18, cy + 0.1, 'mkb') + Tx(cx, cy, f.m, 'mk'); });
+    const seen = new Set();
+    H.S.groundBeams.forEach(b => { const k = b.m + b.o + b.c; if (seen.has(k)) return; seen.add(k); s += beamMark(b); });
+    s += Tx(2.3, 8.45, 'C2', 'mk');
+    s += dims('x', [-0.125, 0.875, 5.05, 5.8, 6.55], -1.55, -0.95);
+    s += dims('y', [-0.9, 0, 3.8, 8.0, 11.0, 11.9], 7.45, 6.6);
+    s += Tx(-1.2, 12.4, 'F2 flush with boundary: no projection onto neighbour', 'note');
+    s += Tx(-1.2, -2.35, 'Top of footings ' + lvl(LV.footTop) + ' · underside ' + lvl(LV.footBot) + ' · 50 lean concrete C15 under all footings', 'note');
+    s += scaleBar(-2.2, -2.95);
+    return wrapSvg(ext, s, 'Foundation plan');
+  }
+  function framingSheet() {
+    K = 1;
+    const ext = { u0: -2.5, u1: 8.6, v0: -3.2, v1: 13.2 };
+    let s = lotLines();
+    const sl = H.S.slabs.ff;
+    s += R(sl.x0, sl.y0, sl.x1, sl.y1, 'slab');
+    const v = sl.hole; s += R(v.x0, v.y0, v.x1, v.y1, 'room') + Ln(v.x0, v.y0, v.x1, v.y1, 'voidx') + Ln(v.x0, v.y1, v.x1, v.y0, 'voidx') + Tx((v.x0 + v.x1) / 2, (v.y0 + v.y1) / 2 + 0.3, 'STAIR VOID', 'rn');
+    const b = H.S.slabs.balcony; s += R(b.x0, b.y0, b.x1, b.y1, 'room out') + Tx(1.35, 0.55, 'S2 (−50)', 'mk');
+    s += gridLines(ext, { bottom: false });
+    H.S.floorBeams.forEach(bm => { s += beamRect(bm, bm.m === 'LB1' ? 'bmd' : 'bm'); });
+    H.S.columns.forEach(c => { s += R(c.x - c.b / 2, c.y - c.d / 2, c.x + c.b / 2, c.y + c.d / 2, 'col'); });
+    const seen = new Set();
+    H.S.floorBeams.forEach(bm => { const k = bm.m + bm.o + bm.c; if (seen.has(k)) return; seen.add(k); s += beamMark(bm); });
+    [[1.4, 2.5], [4.4, 1.9], [4.6, 5.0], [4.6, 7.0], [2.9, 9.5]].forEach(([u, vv]) => { s += R(u - 0.18, vv - 0.1, u + 0.18, vv + 0.1, 'mkb') + Tx(u, vv, 'S1', 'mk'); });
+    s += dims('x', [0, 2.1, 2.7, 3.3, 5.8], -1.55, -0.3);
+    s += dims('y', [0, 1.2, 3.8, 4.75, 5.9, 8.0, 11.0], 7.45, 6.0);
+    s += Tx(-1.2, 12.4, 'Top of slab ' + lvl(LV.ffSlabTop) + ' · LB1 (dashed) at landing ' + lvl(LV.landing - 0.05), 'note');
+    s += scaleBar(-2.2, -2.95);
+    return wrapSvg(ext, s, 'First floor framing plan');
+  }
+
+  /* ======================= SCHEDULES ======================= */
+  function doorWindowTable() {
+    const rows = Object.entries(H.types).map(([code, ty]) => {
+      const ins = H.openings.filter(o => o.t === code);
+      const gf = ins.filter(o => o.lv === 'gf').length, ff = ins.filter(o => o.lv === 'ff').length;
+      return `<tr><td class="code">${code}</td><td>${esc(ty.name)}</td><td class="n">${mm(ty.w)} × ${mm(ty.head - ty.sill)}</td><td class="n">${mm(ty.sill)}</td><td class="n">${mm(ty.head)}</td><td class="n">${gf}</td><td class="n">${ff}</td><td class="n"><b>${ins.length}</b></td><td>${esc(ty.spec)}</td></tr>`;
+    }).join('');
+    return `<div class="tbl"><table><thead><tr><th>Type</th><th>Description</th><th class="n">W × H</th><th class="n">Sill</th><th class="n">Head</th><th class="n">GF</th><th class="n">FF</th><th class="n">Total</th><th>Specification</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  function roomTable() {
+    const e = rm => { const x = rm.elec || {}; return ['L', 'S', 'AC', 'F', 'H', 'D'].filter(k => x[k]).map(k => x[k] + ' ' + { L: 'light', S: 'socket', AC: 'AC', F: 'fan', H: 'heater', D: 'data' }[k] + (x[k] > 1 && k !== 'AC' ? 's' : '')).join(', '); };
+    const rows = H.rooms.map(rm => `<tr><td class="code">${rm.id}</td><td>${esc(rm.name)}</td><td class="n">${H.roomArea(rm).toFixed(2)}</td><td class="code">${rm.fl}</td><td class="code">${rm.wl}</td><td class="code">${rm.cl}</td><td>${e(rm)}</td></tr>`).join('');
+    const tot = lv => H.rooms.filter(r => r.lv === lv).reduce((a, r) => a + H.roomArea(r), 0).toFixed(2);
+    return `<div class="tbl"><table><thead><tr><th>No.</th><th>Room</th><th class="n">Area m²</th><th>Floor</th><th>Walls</th><th>Ceiling</th><th>Electrical points</th></tr></thead><tbody>${rows}<tr><td></td><td><b>Total, to wall centrelines</b></td><td class="n"><b>GF ${tot('gf')} · FF ${tot('ff')}</b></td><td colspan="4"></td></tr></tbody></table></div>`;
+  }
+  function finishKey() {
+    const f = H.finishes, blk = (t, o) => Object.entries(o).map(([k, v]) => `<tr><td class="code">${k}</td><td>${t}</td><td>${esc(v)}</td></tr>`).join('');
+    return `<div class="tbl"><table><thead><tr><th>Code</th><th>Element</th><th>Specification</th></tr></thead><tbody>${blk('Floor', f.floor)}${blk('Wall', f.wall)}${blk('Ceiling', f.ceil)}</tbody></table></div>`;
+  }
+  function settingOutTable() {
+    const rows = H.walls.map(w => {
+      const a = w.o === 'h' ? [w.s, w.c] : [w.c, w.s], b = w.o === 'h' ? [w.e, w.c] : [w.c, w.e];
+      return `<tr><td class="code">${w.id}</td><td>${w.lv === 'gf' ? 'Ground' : 'First'}</td><td class="n">${mm(a[0])}, ${mm(a[1])}</td><td class="n">${mm(b[0])}, ${mm(b[1])}</td><td class="n">${mm(w.t)}</td><td>${w.out ? 'External' + (w.fin ? ', ' + w.fin : '') : (w.low ? 'Half wall ' + mm(w.low) + ' high' : 'Internal')}${w.note ? ' · ' + esc(w.note) : ''}</td></tr>`;
+    }).join('');
+    return `<div class="tbl"><table><thead><tr><th>Wall</th><th>Level</th><th class="n">Start x, y</th><th class="n">End x, y</th><th class="n">Thick</th><th>Type</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  function structTable() {
+    const rows = H.S.schedule.map(r => `<tr><td class="code">${r.m}</td><td class="n">${esc(r.size)}</td><td>${esc(r.rebar)}</td><td>${esc(r.note)}</td></tr>`).join('');
+    return `<div class="tbl"><table><thead><tr><th>Mark</th><th class="n">Size (mm)</th><th>Reinforcement (preliminary)</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+
+  /* ======================= ASSEMBLE SHEETS ======================= */
+  const sheets = [];
+  const sheet = (id, no, title, desc, svg, opts = {}) => sheets.push({ id, no, title, desc, svg, ...opts });
+
+  sheet('a101', 'A-101', 'Site plan', 'Lot 7.00 × 15.00 m. Front setback 2800, rear 1000, right passage 950, party wall on the left boundary. Septic tank, water tank, meters and sewer route shown.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['fp', 'Building footprint']] });
+  sheet('a102', 'A-102', 'Ground floor plan', 'FFL ' + lvl(LV.gf) + '. Guest bedroom, open living, dining and kitchen, bathroom, stair with store under. Tags on openings refer to the door and window schedule.', planSheet('gf'), { narrow: true });
+  sheet('a103', 'A-103', 'First floor plan', 'FFL ' + lvl(LV.ff) + '. Family lounge opening to the front balcony, bedroom 2, master bedroom with ensuite, shared bathroom.', planSheet('ff'), { narrow: true });
+  sheet('a104', 'A-104', 'Roof plan', 'Hip roof at 20°, eaves 600 on three sides, box gutter behind the party-wall parapet, four 90 mm downpipes, stair skylight.', roofSheet(), { narrow: true });
+  ['front', 'rear', 'right', 'left'].forEach((d, i) => {
+    const e = elevationSheet(d);
+    sheet('a20' + (i + 1), 'A-20' + (i + 1), DIRS[d].name, 'Heights in metres above road crown. Numbered tags are listed below the drawing.', e.svg, { keys: e.keys });
+  });
+  const sec = sectionSheet();
+  sheet('a301', 'A-301', 'Section A-A', 'Cut through the stair at 1500 from grid A, looking towards the party wall. Shows floor-to-floor heights, slabs, beams and the roof build-up.', sec.svg, { keys: sec.keys });
+  sheet('s101', 'S-101', 'Foundation plan', 'Pad footings F1 on grid B, eccentric F2 on grid A held by strap beams SB1. Preliminary: engineer to confirm after the soil test.', foundationSheet(), { narrow: true, table: structTable() });
+  sheet('s102', 'S-102', 'First floor framing plan', 'Primary beams B1 span 5.8 m between grids A and B. Secondary beams B3 carry the first floor walls and trim the stair void.', framingSheet(), { narrow: true });
+
+  const idx = document.getElementById('idx');
+  idx.innerHTML = sheets.map(s => `<a href="#${s.id}"><b>${s.no}</b>${esc(s.title.replace(/ \(.*\)/, ''))}</a>`).join('') + '<a href="#a601"><b>A-601</b>Schedules</a><a href="#a701"><b>A-701</b>Notes</a>';
+
+  const scale = 'Scale bar in metres · dims in mm';
+  let html = sheets.map(s => `
+    <section class="sheet${s.narrow ? ' narrow' : ''}" id="${s.id}">
+      <div class="draw">${s.svg}</div>
+      ${s.legend ? `<div class="legend">${s.legend.map(l => `<span><svg width="18" height="12"><rect width="18" height="12" class="${l[0]}"/></svg>${l[1]}</span>`).join('')}</div>` : ''}
+      ${s.keys ? `<ol class="keys">${s.keys.map((k, i) => `<li><i>${i + 1}</i><span>${esc(k)}</span></li>`).join('')}</ol>` : ''}
+      ${s.table ? `<div class="pad" style="border-top:1px solid var(--rule)"><h3 style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Structural member schedule</h3>${s.table}</div>` : ''}
+      <div class="strip"><div class="no">${s.no}</div><div><h2>${esc(s.title)}</h2><p>${esc(s.desc)}</p></div><div class="meta">${scale}<br>Drawn by Chhim Putheara · Rev A · 29.09.2026</div></div>
+    </section>`).join('');
+
+  html += `
+    <section class="sheet" id="a601">
+      <div class="pad"><h3 class="noteb" style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Door and window schedule</h3>${doorWindowTable()}</div>
+      <div class="pad" style="border-top:1px solid var(--rule)"><h3 style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Room and finish schedule</h3>${roomTable()}</div>
+      <div class="pad" style="border-top:1px solid var(--rule)"><h3 style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Finish codes</h3>${finishKey()}</div>
+      <div class="pad" style="border-top:1px solid var(--rule)"><h3 style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Wall setting-out table</h3><p style="margin:0 0 8px;color:var(--ink2);font-size:13.5px">Coordinates in mm from grid A/1 (front-left wall centreline intersection). x runs to the right when facing the house from the street, and y runs from the front towards the rear.</p>${settingOutTable()}</div>
+      <div class="strip"><div class="no">A-601</div><div><h2>Schedules</h2><p>Openings, rooms, finishes and wall setting-out. Quantities and costs are on the material list.</p></div><div class="meta">Drawn by Chhim Putheara<br>Rev A · 29.09.2026</div></div>
+    </section>
+    <section class="sheet notes" id="a701">
+      <div class="cols2">
+        <section><h3>General</h3><ul>
+          <li>Datum ±0.000 is the road crown at the front boundary. The ground floor level is +0.450: two 150 mm steps up from the path, and 300 mm above the yard.</li>
+          <li>Set out from grid A/1. Grid A is 150 mm inside the left boundary, and grid 1 is 2900 mm behind the front boundary.</li>
+          <li>Check every dimension on site before ordering materials. Report any difference to the designer before building.</li>
+          <li>Build to the local building rules and permit conditions. Where these notes and the permit disagree, the permit applies.</li>
+        </ul></section>
+        <section><h3>Concrete and reinforcement</h3><ul>
+          <li>Structural concrete is C25 (25 MPa at 28 days), maximum aggregate 20 mm, slump 75–100 mm. Use ready-mix where you can. If mixed on site, use 1 : 1.5 : 3 by volume with a measured water content.</li>
+          <li>Lean concrete under footings and ground beams is C15, 50 mm thick.</li>
+          <li>Reinforcement: deformed bars SD40 (DB), round bars SR24 (RB). Lap length 50 × bar diameter, staggered. Bend the ends of links to 135°.</li>
+          <li>Cover: footings 50 mm, ground beams 40 mm, columns and beams 30 mm, slabs 20 mm. Use concrete spacer blocks, not stones or brick pieces.</li>
+          <li>Keep concrete wet for at least 7 days. Leave slab and beam props in place for 14 days, or 21 days for spans over 5 m.</li>
+          <li>Do not make holes or chases through beams or columns unless the engineer agrees. Put sleeves in before pouring.</li>
+        </ul></section>
+        <section><h3>Masonry and finishes</h3><ul>
+          <li>Walls are clay brick in 1 : 4 cement-sand mortar. External walls are 200 mm (two skins), internal walls 100 mm.</li>
+          <li>Fill the gap under beams and slabs with mortar. Where brick meets a column, fix ties into the column every 3rd course.</li>
+          <li>Add a lintel L1 over every opening that does not sit directly under a beam. Add a stiffener column TC1 at free wall ends and at least every 3.0 m along a wall.</li>
+          <li>Plaster is 15 mm, 1 : 4. Put mesh strips over every joint where concrete meets brick. Wait 7 days before painting.</li>
+          <li>Fix the fibre-cement weatherboard and WPC battens on treated battens at 600 mm centres, with a breathable membrane behind.</li>
+        </ul></section>
+        <section><h3>Waterproofing</h3><ul>
+          <li>Wet-room floors and the balcony: 2 coats of cementitious membrane, turned 150 mm up the walls and 1800 mm up in shower zones. Flood test for 24 hours before tiling.</li>
+          <li>Fall the balcony slab 1 : 100 to a 75 mm outlet. The outlet connects to the front downpipe.</li>
+          <li>Tile wet-room floors 20 mm below the adjoining floors, falling to the floor drain.</li>
+          <li>Put a 0.2 mm polythene DPM under the ground slab, lapped 300 mm and taped.</li>
+        </ul></section>
+        <section><h3>Roof and rainwater</h3><ul>
+          <li>The steel roof trusses are designed by the roof supplier for this span and the local wind load, and fixed to RB1 with cast-in plates and holding-down straps.</li>
+          <li>Roof sheeting is 0.45 mm colour-coated, fixed with screws and washers at every second rib, with foil sarking underneath.</li>
+          <li>Box gutter at the party wall: 250 mm wide galvanised steel with a 1 : 200 fall to both ends, with overflow outlets at each end.</li>
+          <li>Four 90 mm uPVC downpipes run to surface drains, which connect to the street drain. Rainwater must not go into the septic tank.</li>
+        </ul></section>
+        <section><h3>Plumbing and drainage</h3><ul>
+          <li>Water: meter at the front boundary, then a 25 mm PPR main to the 1000 L tank, then the booster pump and pressure tank. Distribute in 25/20 mm PPR, with hot water to the 3 showers by electric heaters.</li>
+          <li>Soil: 100 mm uPVC at 1 : 50 minimum to the 2.5 m³ two-chamber septic tank. Overflow to the public drain as the permit requires. Vent pipes rise above the roof.</li>
+          <li>Grey water (basins, showers, kitchen) goes in 50/75 mm uPVC with traps, to an inspection chamber and then the street drain.</li>
+          <li>Put access points at every change of direction, and an inspection chamber (IC) in the rear yard.</li>
+        </ul></section>
+        <section><h3>Electrical</h3><ul>
+          <li>Single-phase supply. The main board is in the lobby under the stair, with a 63 A main switch and a 30 mA RCBO on every circuit.</li>
+          <li>Circuits: 3 lighting, 4 general sockets, 1 kitchen, 3 air-conditioners (20 A each), 3 water heaters (20 A each), 1 pump and 1 outdoor circuit.</li>
+          <li>Cables are copper THW in PVC conduit, cast into slabs or chased into walls. Earth rod to be 10 Ω or less.</li>
+          <li>Point counts are in the room schedule. External: 8 eave downlights, 3 garden lights and 1 gate light.</li>
+        </ul></section>
+        <section><h3>Construction sequence</h3><ol>
+          <li>Survey, set out grids, soil test, permit, temporary power and water.</li>
+          <li>Excavate, lay lean concrete, then pour footings F1 to F3 and column starters.</li>
+          <li>Pour strap and ground beams, backfill and compact, then lay the DPM and ground slab S0.</li>
+          <li>Pour ground floor columns, then the first floor beams, slab S1 and stair ST1.</li>
+          <li>Pour first floor columns and ring beams RB1, then lay the parapet.</li>
+          <li>Install roof trusses, sheeting, gutters and downpipes. The building is now weather-tight.</li>
+          <li>Build brick walls with lintels and stiffeners, then install conduits and pipes.</li>
+          <li>Plaster, waterproof, then fit window frames and do the external cladding.</li>
+          <li>Ceilings, screed, tiling, joinery, then painting.</li>
+          <li>Fit fixtures, test and commission services, build the septic tank and external works, then hand over.</li>
+        </ol></section>
+      </div>
+      <div class="strip"><div class="no">A-701</div><div><h2>Notes and specification</h2><p>These notes apply to every sheet.</p></div><div class="meta">Drawn by Chhim Putheara<br>Rev A · 29.09.2026</div></div>
+    </section>`;
+  document.getElementById('sheets').innerHTML = html;
+})();
+</script>
+</body>
+</html>
