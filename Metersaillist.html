@@ -118,7 +118,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       <li>Reinforcement uses typical kg/m³ ratios for each element, split by bar size, plus 5% laps and waste. Bars are 12 m long.</li>
       <li>Brickwork is the net wall area (length × height between slab and beam, minus openings). It assumes 80 × 80 × 180 mm hollow clay bricks at 58 per m² per skin, plus 5% waste.</li>
       <li>Plaster covers both faces of every wall plus 8% for columns and beams, with 15 mm of 1 : 4 mortar at 0.018 m³ per m². Brick mortar is 0.022 m³ per m² per skin.</li>
-      <li>Tiles include 7% waste, or 10% for small tiles and planks. The roof sheet area is the plan area divided by cos 20°, plus 10% for laps.</li>
+      <li>Tiles include 7% waste, or 10% for small tiles and planks. Roof waterproofing covers the terrace, the stair-house roof and 300 mm upstands, plus 10% for laps.</li>
     </ul>
   </section>
 </main>
@@ -142,14 +142,19 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const leanV = sum(S.footings.map(x => (x.x1 - x.x0 + 0.1) * (x.y1 - x.y0 + 0.1) * 0.05)) + sum(S.groundBeams.map(b => len(b) * (b.b + 0.1) * 0.05));
   add('Lean concrete 50 mm', 'C15', leanV, 0);
   add('Strap and ground beams', 'C25', sum(S.groundBeams.map(b => len(b) * b.b * b.d)), 120);
-  add('Columns C1, C2', 'C25', sum(S.columns.map(c => c.b * c.d * (c.z1 - c.z0))), 180);
+  add('Columns C1, C2, C3', 'C25', sum(S.columns.map(c => c.b * c.d * (c.z1 - c.z0))), 180);
   const s0 = S.slabs.gf; add('Ground slab S0', 'C25', (s0.x1 - s0.x0) * (s0.y1 - s0.y0) * s0.th, 40);
   add('First floor beams B1–B3, LB1', 'C25', sum(S.floorBeams.map(b => len(b) * b.b * (b.m === 'LB1' ? b.d : b.d - 0.12))), 150);
   const sv = H.stair.void, s1Area = 5.8 * 11.0 - (sv.x1 - sv.x0) * (sv.y1 - sv.y0);
   add('First floor slab S1/S2', 'C25', s1Area * 0.12, 90);
-  const incl = Math.hypot(2.25, 1.65), stairV = 2 * (0.15 * 0.95 * incl + 9 * 0.5 * 0.25 * 0.165 * 0.95) + 1.95 * 0.95 * 0.15;
-  add('Stair ST1', 'C25', stairV, 110);
-  add('Ring and tie beams RB1', 'C25', sum(S.ringBeams.map(b => len(b) * b.b * b.d)), 100);
+  const incl = Math.hypot(2.25, 1.65), stairV = 4 * (0.15 * 0.95 * incl + 9 * 0.5 * 0.25 * 0.165 * 0.95) + 2 * 1.95 * 0.95 * 0.15;
+  add('Stair ST1, 4 flights + 2 landings', 'C25', stairV, 110);
+  add('Roof beams R1–R3, LB2', 'C25', sum(S.roofBeams.map(b => len(b) * b.b * (b.m === 'LB2' ? b.d : b.d - 0.15))), 150);
+  add('Roof slab S3 (150)', 'C25', s1Area * 0.15, 95);
+  const sh = S.slabs.sh, shA = (sh.x1 - sh.x0) * (sh.y1 - sh.y0);
+  add('Stair-house roof S4 + beams SH1', 'C25', shA * sh.th + sum(S.shBeams.map(b => len(b) * b.b * (b.d - sh.th))), 100);
+  const railLen = sum(H.roof.rails.map(r => r.e - r.s));
+  add('Parapet copings', 'C25', (railLen + 11.2) * 0.2 * 0.1, 80);
   const lintelV = sum(H.openings.map(o => { const w = H.walls.find(w => w.lv === o.lv && w.o === o.o && Math.abs(w.c - o.c) < 1e-6 && o.s >= w.s - 1e-6 && o.e <= w.e + 1e-6); return (o.e - o.s + 0.4) * w.t * 0.15; }));
   const wallLenTot = sum(H.walls.map(w => len(w)));
   const tcCount = Math.ceil(wallLenTot / 3) + H.openings.filter(o => H.types[o.t].kind === 'door').length;
@@ -158,7 +163,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const steelKg = sum(conc.map(c => c.vol * c.ratio)) * 1.05;
 
   /* ================= MASONRY / PLASTER ================= */
-  const hOf = w => (w.low ? w.low : (w.lv === 'gf' ? 2.9 : 2.95));
+  const hOf = w => (w.low ? w.low : w.lv === 'gf' ? 2.9 : w.lv === 'ff' ? 2.85 : (w.top - LV.ring - (w.top > LV.shSlab ? 0.3 : 0.1)));
   let skinArea = 0, faceArea = 0, bricks = 0, extRender = 0, cladA = 0, timberA = 0, wallNetTot = 0;
   H.walls.forEach(w => {
     const ops = H.openingsOn(w);
@@ -168,8 +173,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     skinArea += net * skins; faceArea += net * 2; bricks += net * 58 * skins; wallNetTot += net;
     if (w.out) { if (w.fin === 'clad') cladA += net; else if (w.fin === 'timber') timberA += net; else extRender += net; }
   });
-  const parapet = 11.2 * (LV.parapet - LV.ring);
-  skinArea += parapet * 2; faceArea += parapet * 2; bricks += parapet * 116; extRender += parapet * 2;
+  // inner faces of parapets are rendered and painted too
+  extRender += sum(H.walls.filter(w => w.lv === 'rf').map(w => len(w) * hOf(w)));
   bricks *= 1.05;
   const plasterA = faceArea * 1.08;
   const mortarBrick = skinArea * 0.022, mortarPlaster = plasterA * 0.018;
@@ -180,29 +185,39 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const perim = rm => sum(rm.r.map(r => 2 * ((r[2] - r[0]) + (r[3] - r[1]))));
   const wallTile = sum(wet.map(r => perim(r) * 2.4 - 0.7 * 2.1)) + sum(H.furniture.filter(x => x.k === 'counter').map(x => Math.max(x.r[2] - x.r[0], x.r[3] - x.r[1]) * 0.6));
   const skirting = sum(H.rooms.filter(r => (r.fl === 'F1' || r.fl === 'F4')).map(perim)) * 0.85;
-  const stairFin = 20 * 0.95 * (0.3 + 0.165) + 1.95 * 0.95 + 1.95 * 0.9;
+  const stairFin = 40 * 0.95 * (0.3 + 0.165) + 2 * 1.95 * 0.95 + 2 * 1.95 * 0.9;
   const floorAll = areaBy('F1') + areaBy('F2') + areaBy('F3') + areaBy('F4') + stairFin;
   const screed = floorAll * 0.04;
-  const roofPlan = (H.roof.x1 - H.roof.x0) * (H.roof.y1 - H.roof.y0);
-  const cos20 = Math.cos(20 * Math.PI / 180);
   const c1 = sum(H.rooms.filter(r => r.cl === 'C1').map(H.roomArea));
   const c2 = sum(H.rooms.filter(r => r.cl === 'C2').map(H.roomArea));
-  const soffit = roofPlan - 5.8 * 11.2 + sum(H.rooms.filter(r => r.cl === 'C3').map(H.roomArea));
+  const soffit = sum(H.rooms.filter(r => r.cl === 'C3').map(H.roomArea));
   const intPaint = Math.max(0, plasterA - (extRender + cladA + timberA) - wallTile);
   const extPaint = extRender * 1.08 + 18;
   const ceilPaint = c1 + c2 + soffit;
   const wpA = sum(wet.map(r => H.roomArea(r) + perim(r) * 0.15)) + 3 * 2 * 1.0 * 1.8 + 3.24 + 7.8 * 0.15;
 
   /* ================= ROOF ================= */
-  const r = H.roof;
-  const hip = Math.hypot(r.half, r.half, r.half * H.T20);
-  const sheetA = roofPlan / cos20 * 1.10;
+  const terraceA = H.roomArea(H.rooms.find(x => x.id === 'R-01'));
+  const roofWpA = terraceA + shA + (railLen + 11.2) * 0.3 + 4.4 * 2 * 0.3 + 2.3 * 2 * 0.3;
+  const roofScreed = (terraceA + shA) * 0.07;
   const canopyA = (H.canopy.x1 - H.canopy.x0) * (H.canopy.y1 - H.canopy.y0);
 
   /* ================= SERVICES ================= */
   const el = { L: 0, S: 0, AC: 0, F: 0, H: 0, D: 0 };
   H.rooms.forEach(rm => Object.entries(rm.elec || {}).forEach(([k, v]) => { el[k] += v; }));
-  const extLights = 12;
+  // measured from the service routes in house-data.js
+  const SV = H.services, plen = SV.polyLen;
+  const pipeLen = f => sum(SV.pipes.filter(f).map(pp => plen(pp.pts)));
+  const cwLen = pipeLen(pp => pp.sys === 'cw'), hwLen = pipeLen(pp => pp.sys === 'hw');
+  const soilLen = pipeLen(pp => pp.sys === 'ww' && pp.dia >= 0.1), wasteLen = pipeLen(pp => pp.sys === 'ww' && pp.dia < 0.1);
+  const segLen = (pp, test) => pp.pts.reduce((a, q, i) => (i && test(pp.pts[i - 1], q) ? a + Math.hypot(q[0] - pp.pts[i - 1][0], q[1] - pp.pts[i - 1][1], q[2] - pp.pts[i - 1][2]) : a), 0);
+  const swAll = SV.pipes.filter(pp => pp.sys === 'sw');
+  const dpLen = sum(swAll.map(pp => segLen(pp, (a, q) => Math.min(a[2], q[2]) >= 0)));
+  const stormUg = sum(swAll.map(pp => segLen(pp, (a, q) => Math.min(a[2], q[2]) < 0)));
+  const runLen = c => sum(SV.elec.runs.filter(r => r.cable === c).map(r => plen(r.pts)));
+  const conduitLen = sum(SV.elec.runs.filter(r => r.kind !== 'main').map(r => plen(r.pts)));
+  const nPt = k => SV.elec.points.filter(q => q.t === k).length;
+  const extLights = nPt('X');
   const count = k => H.furniture.filter(x => x.k === k).length;
 
   /* ================= LINE ITEMS ================= */
@@ -211,15 +226,16 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     'Lean concrete C15 (4.5 bags/m³)': c15 * 4.5 * 1.05,
     'Brick mortar 1:4 (7.4 bags/m³)': mortarBrick * 7.4,
     'Plaster 1:4 (7.4 bags/m³)': mortarPlaster * 7.4,
-    'Floor screed 1:3 (9 bags/m³)': screed * 9 * 1.05
+    'Floor screed 1:3 (9 bags/m³)': screed * 9 * 1.05,
+    'Roof screed to falls, avg 70 mm (9 bags/m³)': roofScreed * 9 * 1.05
   };
   const cementTot = sum(Object.values(cementBags));
-  const sandTot = c25 * 0.45 * 1.05 + c15 * 0.5 + (mortarBrick + mortarPlaster) * 1.15 + screed * 1.1;
+  const sandTot = c25 * 0.45 * 1.05 + c15 * 0.5 + (mortarBrick + mortarPlaster) * 1.15 + (screed + roofScreed) * 1.1;
   const gravelTot = c25 * 0.85 * 1.05 + c15 * 0.9;
   const barSplit = [['DB16', 0.33, 1.578], ['DB12', 0.30, 0.888], ['DB10', 0.25, 0.617], ['RB6', 0.12, 0.222]];
   const formwork = sum(S.footings.map(x => 2 * ((x.x1 - x.x0) + (x.y1 - x.y0)) * x.th)) + sum(S.groundBeams.map(b => 2 * b.d * len(b))) +
     sum(S.columns.map(c => 2 * (c.b + c.d) * (c.z1 - Math.max(c.z0, 0)))) + sum(S.floorBeams.map(b => (2 * (b.d - 0.12) + b.b) * len(b))) +
-    s1Area + stairV / 0.15 * 1.2 + sum(S.ringBeams.map(b => 2 * b.d * len(b)));
+    2 * s1Area + shA + stairV / 0.15 * 1.2 + sum(S.roofBeams.map(b => (2 * (b.d - 0.15) + b.b) * len(b))) + sum(S.shBeams.map(b => 2 * b.d * len(b)));
   const winArea = code => { const t = H.types[code]; return t.w * (t.head - t.sill); };
 
   const CATS = [
@@ -245,23 +261,19 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Wall ties and mesh', 'Column ties every 3rd course; mesh strip at concrete/brick joints', 'm', ceil(wallLenTot * 2.4 + 60, 10), 0.5],
       ['Skim coat', 'Interior skim, 0.8 kg/m², 25 kg bags', 'bag', ceil(intPaint * 0.8 / 25), 8]
     ] },
-    { id: 'roof', name: 'Roof and rainwater', items: [
-      ['Steel roof trusses and purlins', 'Light-gauge galvanised steel; approx. 12 kg/m² of roof plan; supplier-designed', 'kg', ceil(roofPlan * 12, 10), 1.6],
-      ['Roof sheeting', '0.45 mm colour-coated trapezoidal, charcoal', 'm²', ceil(sheetA), 7.5],
-      ['Foil sarking', 'Reflective foil under sheeting', 'm²', ceil(sheetA), 1.2],
-      ['Ridge and hip capping', 'Ridge ' + f(r.ridgeY1 - r.ridgeY0) + ' m + 4 hips × ' + f(hip, 2) + ' m', 'm', ceil((r.ridgeY1 - r.ridgeY0) + 4 * hip + 1), 4],
-      ['Fascia', '200 mm steel fascia, charcoal', 'm', ceil((r.x1 - r.x0) * 2 + (r.y1 - r.y0)), 5],
-      ['Quad gutter 150', 'Colour-coated, with brackets', 'm', ceil((r.x1 - r.x0) * 2 + (r.y1 - r.y0)), 7],
-      ['Box gutter', '250 wide galvanised, party wall side, overflow at each end', 'm', ceil(11.2 + 1), 14],
-      ['Parapet capping', 'Metal capping on party-wall parapet', 'm', 12, 4.5],
-      ['Downpipes', 'uPVC 90 mm, 4 no. with brackets and shoes', 'm', 4 * 7.5, 3.5],
-      ['Skylight', '1200 × 2000 twin-wall polycarbonate over stair', 'no.', 1, 150],
-      ['Entry canopy', 'Steel frame 50 × 100 + metal sheet, ' + f(canopyA, 1) + ' m²', 'm²', ceil(canopyA), 45],
-      ['Ceiling insulation', '50 mm glasswool batts over first floor ceiling', 'm²', ceil(c1 + c2 - 17), 3]
-    ] },
+    { id: 'roof', name: 'Roof terrace and rainwater', items: [
+      ['PU waterproofing membrane', '2-coat liquid polyurethane, reinforced at corners; terrace, stair-house roof and 300 upstands', 'm²', ceil(roofWpA * 1.1), 9],
+      ['XPS insulation 50 mm', 'Extruded polystyrene boards over the membrane', 'm²', ceil((terraceA + shA) * 1.05), 7],
+      ['Deck tiles', '600 × 600 WPC or porcelain deck tiles, terrace', 'm²', ceil(terraceA * 1.05), 28],
+      ['Adjustable pedestals', '4 per m², 100–150 mm height range', 'pc', ceil(terraceA * 4.2, 10), 1.2],
+      ['Steel railing', 'Black powder-coated, 40×40 top rail, 20×20 balusters @ 110, base plates on coping', 'm', ceil(railLen), 55],
+      ['Roof outlets', '100 mm outlet with leaf guard and membrane flange', 'no.', H.roof.outlets.length, 25],
+      ['Overflow scuppers', 'Through-parapet scupper, one next to each outlet, + 1 on stair-house roof', 'no.', H.roof.outlets.length + 1, 15],
+      ['Downpipes', 'uPVC 90 mm, 4 no. with brackets and shoes; measured ' + f(dpLen, 1) + ' m', 'm', ceil(dpLen * 1.1), 3.5],
+      ['Entry canopy', 'Steel frame 50 × 100 + metal sheet, ' + f(canopyA, 1) + ' m²', 'm²', ceil(canopyA), 45]    ] },
     { id: 'dw', name: 'Doors and windows', items: Object.entries(H.types).map(([code, t]) => {
       const n = H.openings.filter(o => o.t === code).length;
-      const rate = t.kind === 'door' ? { D01: 480, D02: 130, D03: 95, D05: 180 }[code] : Math.round(winArea(code) * (t.kind === 'slider' ? 88 : t.kind === 'louvre' ? 70 : 75));
+      const rate = t.kind === 'door' ? { D01: 480, D02: 130, D03: 95, D05: 180, D06: 220 }[code] : Math.round(winArea(code) * (t.kind === 'slider' ? 88 : t.kind === 'louvre' ? 70 : 75));
       return [code + ' ' + t.name, Math.round(t.w * 1000) + ' × ' + Math.round((t.head - t.sill) * 1000) + '. ' + t.spec, 'no.', n, rate];
     }).concat([['Ironmongery allowance', 'Hinges, closers, stops for internal doors', 'set', 7, 18]]) },
     { id: 'fin', name: 'Floor, wall and ceiling finishes', items: [
@@ -269,7 +281,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['F2 anti-slip 300 × 300', 'Bathrooms, laid to falls', 'm²', ceil(areaBy('F2') * 1.10), 8],
       ['F3 outdoor porcelain', 'Porch and balcony, R11', 'm²', ceil(areaBy('F3') * 1.07 + 1.5), 12],
       ['F4 wood-look plank 200 × 1200', 'Bedrooms, lounge, hall', 'm²', ceil(areaBy('F4') * 1.10), 14],
-      ['F5 stair finish', '20 treads + risers + 2 landings; granite or porcelain', 'm²', ceil(stairFin * 1.1), 25],
+      ['F5 stair finish', '40 treads + risers + 4 landings; granite or porcelain', 'm²', ceil(stairFin * 1.1), 25],
       ['Skirting', '100 mm tile skirting to dry rooms', 'm', ceil(skirting), 2],
       ['W2 wall tiles 300 × 600', 'Bathrooms to 2400 + kitchen splashback', 'm²', ceil(wallTile * 1.10), 9],
       ['Tile adhesive', '25 kg bags, wall tiles and outdoor tiles', 'bag', ceil((wallTile + areaBy('F3')) / 4), 6],
@@ -297,9 +309,11 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Electric water heater', '3.5 kW instant, with RCD', 'no.', el.H, 95],
       ['Water tank', '1000 L PE on concrete base', 'no.', 1, 180],
       ['Booster pump', 'Automatic pressure pump 250 W', 'no.', 1, 160],
-      ['PPR pipes and fittings', '25/20 mm cold, hot to showers; allowance', 'lot', 1, 450],
-      ['uPVC 100 soil pipe', 'WCs to septic tank, 1:50', 'm', 35, 5],
-      ['uPVC 75/50 waste pipe', 'Showers, basins, kitchen, balcony', 'm', 40, 3],
+      ['PPR cold water pipe 25/20', 'Meter, tank, pump, house main and branches; measured ' + f(cwLen, 1) + ' m + 15%', 'm', ceil(cwLen * 1.15), 1.6],
+      ['PPR hot water pipe 20 (PN20)', 'Heater to shower mixers; measured ' + f(hwLen, 1) + ' m + 15%', 'm', ceil(hwLen * 1.15 + 2), 2.0],
+      ['PPR fittings, valves, stop cocks', 'Elbows, tees, isolating valves at each fixture, non-return valve at pump', 'lot', 1, 180],
+      ['uPVC 100 soil pipe', 'WCs, stack, vent and sewer to septic tank, min. 1:50; measured ' + f(soilLen, 1) + ' m', 'm', ceil(soilLen * 1.1), 5],
+      ['uPVC 50 waste pipe', 'Showers, basins, kitchen; measured ' + f(wasteLen, 1) + ' m', 'm', ceil(wasteLen * 1.15), 2.5],
       ['Septic tank', '2-chamber, 2.5 m³, precast or PE', 'no.', 1, 450],
       ['Inspection chambers', '450 × 450 with covers', 'no.', 3, 35],
       ['Laundry point', 'Washing machine tap and trapped drain, rear yard', 'no.', 1, 25]
@@ -307,16 +321,18 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     { id: 'ele', name: 'Electrical', items: [
       ['Main distribution board', '12-way, 63 A main switch, 30 mA RCBOs', 'no.', 1, 220],
       ['Light points and LED fittings', 'Interior ' + el.L + ' + exterior ' + extLights, 'no.', el.L + extLights, 12],
-      ['Switches', '1 per 1.5 light points', 'no.', Math.ceil(el.L / 1.5) + 3, 2.5],
+      ['Switches', 'One gang per room entry, 2-way on the stair', 'no.', nPt('SW') + 2, 2.5],
       ['Socket outlets', 'Double 13 A; outdoor weatherproof included', 'no.', el.S, 3.5],
       ['Air-conditioner points', '20 A isolator, 4 mm² circuit, drain sleeve', 'no.', el.AC, 25],
       ['Exhaust fans', 'Bathroom ceiling fans, ducted outside', 'no.', el.F, 25],
       ['Data / TV points', 'Cat6 + coax', 'no.', el.D, 10],
-      ['Cable 1.5 mm²', 'Lighting circuits', 'm', ceil((el.L + extLights) * 12, 10), 0.35],
-      ['Cable 2.5 mm²', 'Socket circuits', 'm', ceil(el.S * 10, 10), 0.55],
-      ['Cable 4 mm²', 'AC, water heater and pump circuits', 'm', ceil((el.AC + el.H + 1) * 15, 10), 0.9],
-      ['Cable 10 mm²', 'Meter to main board', 'm', 25, 2.2],
-      ['PVC conduit 20 mm', 'Cast in slabs and chased into walls', 'm', ceil((el.L + el.S + extLights + el.AC + el.H + el.F + el.D) * 7, 10), 0.35],
+      ['Cable 1.5 mm² THW', 'Lighting, switches and fans: L + N + E on ' + f(runLen('1.5'), 0) + ' m of route', 'm', ceil(runLen('1.5') * 3.3, 10), 0.35],
+      ['Cable 2.5 mm² THW', 'Sockets and room feeds: L + N + E on ' + f(runLen('2.5'), 0) + ' m of route', 'm', ceil(runLen('2.5') * 3.3, 10), 0.55],
+      ['Cable 4 mm² THW', 'AC, water heaters, pump and risers: L + N + E on ' + f(runLen('4'), 0) + ' m of route', 'm', ceil(runLen('4') * 3.3, 10), 0.9],
+      ['Cable 10 mm²', 'Meter to main board, 2 cores + 6 mm² earth; route ' + f(runLen('10'), 1) + ' m', 'm', ceil(runLen('10') * 2.2 + 3), 2.2],
+      ['Data cable Cat6', 'Board to data points', 'm', ceil(runLen('data') * 1.2 + 5), 0.4],
+      ['PVC conduit 20 mm', 'Cast in slabs and chased into walls; measured ' + f(conduitLen, 0) + ' m', 'm', ceil(conduitLen * 1.1, 10), 0.35],
+      ['PVC conduit 32 mm', 'Underground main supply', 'm', ceil(runLen('10') + 2), 0.9],
       ['Earthing', 'Earth rod, clamp and 10 mm² conductor', 'set', 1, 25]
     ] },
     { id: 'ext', name: 'External works', items: [
@@ -325,7 +341,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Lawn turf', 'Front yard, with topsoil', 'm²', ceil(7.0 * 2.8 - 2.76 - 4.1 - 2.75), 3],
       ['Planting', 'Front bed shrubs, soil and mulch', 'lot', 1, 120],
       ['Front-left low wall', '1200 high rendered brick, 2.8 m long', 'm', 2.8, 45],
-      ['Storm drainage', 'Surface drain, pits and connection to street', 'lot', 1, 250]
+      ['Storm drain pipe uPVC 100', 'Underground from downpipes to the street drain; measured ' + f(stormUg, 1) + ' m', 'm', ceil(stormUg * 1.1), 4.5],
+      ['Storm pits and street connection', 'Pits at each downpipe foot, grating, connection permit', 'lot', 1, 150]
     ] }
   ];
 
@@ -350,7 +367,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       </table></div>
     </section>`).join('');
 
-  const gfa = 2 * 6.0 * 11.2;
+  const gfa = 2 * 6.0 * 11.2 + shA;
   function recalc() {
     let mat = 0; const subs = {};
     CATS.forEach(c => {
