@@ -302,9 +302,10 @@ body.walking #layers, body.walking #title dl { display: none; }
   }
 
   /* ---------- slabs, floors, beams ---------- */
-  const slabWithVoid = (top, th, mat, grp) => [[-0.1, 5.9, -0.1, 4.75], [-0.1, 5.9, 7.95, 11.1], [-0.1, 0.1, 4.75, 7.95], [2.05, 5.9, 4.75, 7.95]]
+  // Slab edges stop 10 mm inside the outer wall faces: two surfaces in the same plane "z-fight" and flicker.
+  const slabWithVoid = (top, th, mat, grp) => [[-0.09, 5.89, -0.09, 4.75], [-0.09, 5.89, 7.95, 11.09], [-0.09, 0.1, 4.75, 7.95], [2.05, 5.89, 4.75, 7.95]]
     .forEach(r => box(r[0], r[1], r[2], r[3], top - th, top, mat, grp));
-  box(-0.1, 5.9, -0.1, 11.1, 0, LV.gf - 0.005, MAT.plinth, G.gf);
+  box(-0.09, 5.89, -0.09, 11.09, 0, LV.gf - 0.005, MAT.plinth, G.gf);
   slabWithVoid(LV.ff - 0.005, 0.17, MAT.render, G.ff);
   slabWithVoid(LV.ring, 0.15, MAT.render, G.roof);
   const grpOf = lv => (lv === 'gf' ? G.gf : lv === 'ff' ? G.ff : G.roof);
@@ -320,7 +321,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   H.S.floorBeams.filter(b => b.m !== 'LB1').forEach(b => beamBox(b, b.top - b.d, b.top - 0.12, MAT.render, G.ff));
   H.S.roofBeams.filter(b => b.m !== 'LB2').forEach(b => beamBox(b, b.top - b.d, b.top - 0.15, MAT.render, G.ff));
   // stair-house roof slab
-  const shs = H.S.slabs.sh; box(shs.x0, shs.x1, shs.y0, shs.y1, LV.shSlab - shs.th, LV.shSlab, MAT.render, G.roof);
+  const shs = H.S.slabs.sh; box(shs.x0 + 0.01, shs.x1 - 0.01, shs.y0 + 0.01, shs.y1 - 0.01, LV.shSlab - shs.th, LV.shSlab, MAT.render, G.roof);
   // roof railings: top rail, mid rail and balusters on the parapet
   H.roof.rails.forEach(rl => {
     const along = (a0, a1, z0, z1, w) => (rl.o === 'h' ? box(a0, a1, rl.c - w, rl.c + w, z0, z1, MAT.frame, G.roof) : box(rl.c - w, rl.c + w, a0, a1, z0, z1, MAT.frame, G.roof));
