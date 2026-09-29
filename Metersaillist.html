@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="author" content="Chhim Putheara">
-<title>7×15 House Materials</title>
+<title>10×20 House Materials</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -90,7 +90,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   <div class="wrap">
     <div>
       <div class="eb">Material list and cost estimate · Rev A · 29 Sep 2026 · Concept idea and drawing by Chhim Putheara</div>
-      <h1>Two-Storey House on a 7 × 15 m Lot</h1>
+      <h1>Two-Storey House on a 10 × 20 m Lot</h1>
       <p class="sub">Quantities are calculated from the same geometry as the drawings and include normal waste. The rates are examples in US dollars. Replace them with your builder's and suppliers' quotes, and the totals update.</p>
     </div>
     <div class="links"><a class="btn" id="toDraw" href="drawings.html">Drawings</a><a class="btn" id="to3d" href="index.html">3D model</a><a class="btn" href="guide.html">Build guide</a></div>
@@ -237,6 +237,12 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const conduitLen = sum(SV.elec.runs.filter(r => r.kind !== 'main').map(r => plen(r.pts)));
   const nPt = k => SV.elec.points.filter(q => q.t === k).length;
   const extLights = nPt('X');
+  // external works, from the site layout
+  const SI = H.siteItems, ra = r => (r.x1 - r.x0) * (r.y1 - r.y0), Wl = H.site.w, oy = H.site.oy;
+  const carA = ra(SI.carpark), cportA = ra(SI.carport), pondA = (SI.pond.x1 - SI.pond.x0 + 0.5) * (SI.pond.y1 - SI.pond.y0 + 0.5);
+  const paveA = ra(SI.path) + Wl * (H.site.d - oy - 11.1), gravelA = ra(SI.gravel);
+  const lawnA = Wl * (oy - 0.1) + (Wl - 6.05) * 11.2 - ra(SI.path) - carA - pondA - ra(SI.bedFront) - gravelA;
+  const fenceLen = Wl - (SI.carGate.x1 - SI.carGate.x0) - (SI.walkGate.x1 - SI.walkGate.x0);
   const count = k => H.furniture.filter(x => x.k === k).length;
 
   /* ================= LINE ITEMS ================= */
@@ -328,7 +334,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Cooker hood', 'Chimney hood 600 mm, ducted to outside', 'no.', 1, 150],
       ['Floor drains', '2 bathrooms + balcony + laundry', 'no.', 4, 6],
       ['Electric water heater', '3.5 kW instant, with RCD', 'no.', el.H, 95],
-      ['Underground water tank', 'Reinforced concrete 2.0 × 1.1 × 1.0 m (~2.2 m³), waterproof render inside, 600 × 600 access lid', 'no.', 1, 450],
+      ['Underground water tank', 'Reinforced concrete 2.0 × 1.1 × 1.0 m (~2.2 m³) under the rear yard, waterproof render inside, 600 × 600 access lid', 'no.', 1, 450],
       ['Booster pump', 'Automatic pressure pump 250 W with pressure tank, in a ventilated box beside the tank', 'no.', 1, 190],
       ['PPR cold water pipe 25/20', 'Meter, tank, pump, house main and branches; measured ' + f(cwLen, 1) + ' m + 15%', 'm', ceil(cwLen * 1.15), 1.6],
       ['PPR hot water pipe 20 (PN20)', 'Heater to shower mixers; measured ' + f(hwLen, 1) + ' m + 15%', 'm', ceil(hwLen * 1.15 + 2), 2.0],
@@ -356,12 +362,17 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['PVC conduit 32 mm', 'Underground main supply', 'm', ceil(runLen('10') + 2), 0.9],
       ['Earthing', 'Earth rod, clamp and 10 mm² conductor', 'set', 1, 25]
     ] },
-    { id: 'ext', name: 'External works', items: [
-      ['Paving', 'Path, forecourt and rear yard on 100 mm sand-cement bed', 'm²', ceil((1.2 * 2.3) + (2.75 * 1.5) + 7.0 * 1.0 + 0.95 * 0.3), 12],
-      ['Gravel passage', '50 mm decorative gravel on geotextile', 'm²', ceil(0.95 * 11.2), 6],
-      ['Lawn turf', 'Front yard, with topsoil', 'm²', ceil(7.0 * 2.8 - 2.76 - 4.1 - 2.75), 3],
-      ['Planting', 'Front bed shrubs, soil and mulch', 'lot', 1, 120],
-      ['Front-left low wall', '1200 high rendered brick, 2.8 m long', 'm', 2.8, 45],
+    { id: 'ext', name: 'External works, car park and fish pond', items: [
+      ['Car park slab', '125 mm reinforced concrete (A142 mesh) on 150 mm compacted base, broom finish, falls to the street; ' + f(carA, 1) + ' m²', 'm²', ceil(carA), 22],
+      ['Carport', 'Four 100 × 100 steel posts on pad footings, steel beams, metal roof sheet with gutter; ' + f(cportA, 1) + ' m²', 'm²', ceil(cportA), 48],
+      ['Sliding car gate', '3.5 m wide × 1.6 m steel slat gate on ground track, lockable (motor optional)', 'no.', 1, 650],
+      ['Pedestrian gate', '1.2 m steel slat gate to match', 'no.', 1, 180],
+      ['Front fence', '600 mm rendered brick wall with steel slats to 1.5 m', 'm', ceil(fenceLen, 0.5), 60],
+      ['Koi fish pond', '2.0 × 3.0 × 0.8 m RC shell, waterproof lining, stone coping, pump + filter + UV lamp, overflow to storm drain', 'lot', 1, 1600],
+      ['Paving', 'Front path and rear service yard on 100 mm sand-cement bed; ' + f(paveA, 1) + ' m²', 'm²', ceil(paveA), 12],
+      ['Gravel strip', '50 mm decorative gravel on geotextile beside the house', 'm²', ceil(gravelA), 6],
+      ['Lawn turf', 'Front yard and side yard, with topsoil; ' + f(lawnA, 1) + ' m²', 'm²', ceil(lawnA), 3],
+      ['Planting', 'Front bed and pond planting, soil and mulch', 'lot', 1, 180],
       ['Storm drain pipe uPVC 100', 'Underground from downpipes to the street drain; measured ' + f(stormUg, 1) + ' m', 'm', ceil(stormUg * 1.1), 4.5],
       ['Storm pits and street connection', 'Pits at each downpipe foot, grating, connection permit', 'lot', 1, 150]
     ] }

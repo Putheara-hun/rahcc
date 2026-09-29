@@ -7,7 +7,7 @@
    Plan origin: grid A/1 = centreline of front wall on the left party wall.
      x -> to the right when standing on the street facing the house
      y -> into the lot, from the street towards the rear
-   Lot corner (front-left) is at plan (-0.15, -2.90).
+   Lot 10 x 20 m. Lot corner (front-left) is at plan (-0.15, -6.00).
    ===================================================================== */
 (function () {
   const T20 = Math.tan(20 * Math.PI / 180);
@@ -25,7 +25,7 @@
     footTop: -1.15, footBot: -1.55
   };
 
-  const site = { w: 7.0, d: 15.0, ox: 0.15, oy: 2.90 }; // lot x = plan x + ox, lot y = plan y + oy
+  const site = { w: 10.0, d: 20.0, ox: 0.15, oy: 6.00 }; // lot x = plan x + ox, lot y = plan y + oy
 
   const grid = {
     x: [{ id: 'A', v: 0 }, { id: 'B', v: 5.8 }],
@@ -315,15 +315,21 @@
     { m: 'L1', size: '100/200 × 150 lintel', rebar: '2-DB10 bottom, RB6 @ 200', note: 'Over every opening not under a beam, 200 bearing each side' },
     { m: 'TC1', size: '100/200 × 150 stiffener', rebar: '4-DB10, RB6 @ 200', note: 'At free wall ends, door jambs, and max 3.0 m along brick walls' }
   ];
+  /* Site, plan coordinates. Front yard 5.9 m deep: car park on the right, fish pond on the left. */
   const siteItems = {
-    path: { x0: 2.75, x1: 3.95, y0: -2.9, y1: -0.6 },         
+    path: { x0: 2.75, x1: 3.95, y0: -6.0, y1: -0.6 },
     steps: { x0: 2.75, x1: 3.95, y0: -0.6, y1: 0.0 },
-    forecourt: { x0: 4.10, x1: 6.85, y0: -2.9, y1: -1.4 },
+    carpark: { x0: 6.20, x1: 9.70, y0: -6.0, y1: -0.40 },                     // 3.5 × 5.6 m, 125 mm RC slab
+    carport: { x0: 6.10, x1: 9.80, y0: -5.60, y1: -0.30, z: 2.70, posts: [[6.2, -5.5], [9.7, -5.5], [6.2, -0.45], [9.7, -0.45]] },
+    car: { x0: 7.05, x1: 8.85, y0: -5.20, y1: -0.85 },
+    carGate: { x0: 6.20, x1: 9.70, y: -6.0 }, walkGate: { x0: 2.75, x1: 3.95, y: -6.0 },
+    pond: { x0: 0.50, x1: 2.50, y0: -4.80, y1: -1.80, depth: 0.8 },          // koi fish pond, RC shell
     bedFront: { x0: -0.15, x1: 2.60, y0: -1.1, y1: -0.1 },
-    septic: { x0: 4.60, x1: 6.60, y0: -2.35, y1: -1.35 },
-    tank: { x0: 0.6, x1: 2.6, y0: -2.6, y1: -1.5, top: -0.1, bot: -1.2 },   // underground RC water tank ~2.2 m³ under the front lawn
-    pump: { x: 2.3, y: -1.3 },
-    meterW: { x: 6.55, y: -2.85 }, meterE: { x: -0.05, y: -2.85 }
+    gravel: { x0: 5.90, x1: 6.90, y0: -0.1, y1: 11.1 },
+    septic: { x0: 4.20, x1: 6.00, y0: -4.60, y1: -3.60 },
+    tank: { x0: 2.6, x1: 4.6, y0: 12.0, y1: 13.1, top: -0.1, bot: -1.2 },    // underground RC water tank ~2.2 m³ under the rear yard
+    pump: { x: 4.95, y: 12.5 },
+    meterW: { x: 5.95, y: -5.85 }, meterE: { x: -0.05, y: -5.85 }
   };
   const lvZ = lv => (lv === 'gf' ? LV.gf : lv === 'ff' ? LV.ff : LV.roof);
   const rectArea = r => (r[2] - r[0]) * (r[3] - r[1]);
@@ -336,9 +342,10 @@
   const Zw = LV.ff + 0.30;      
   const Zd = LV.gfCeil + 0.25;  
   const Zu = -0.4, Zs = 0.2;    
-  pipe('cw', 'site', 0.025, [[6.55, -2.8, 0.9], [6.55, -2.8, Zu], [2.75, -2.8, Zu], [2.75, -2.05, Zu], [2.6, -2.05, -0.3]]);  
-  pipe('cw', 'site', 0.025, [[2.3, -1.7, -0.9], [2.3, -1.7, -0.3], [2.3, -1.3, -0.3], [2.3, -1.3, 0.3]]);                        // tank -> pump
-  pipe('cw', 'gf', 0.025, [[2.3, -1.3, 0.3], [2.3, -1.3, Zu], [2.4, -1.3, Zu], [2.4, -0.1, Zs], [2.4, 9.6, Zs], [0.25, 9.6, Zs]]); // pump -> under slab
+  pipe('cw', 'site', 0.025, [[5.95, -5.75, 0.9], [5.95, -5.75, Zu], [6.1, -5.75, Zu], [6.1, 12.55, Zu], [4.6, 12.55, Zu], [4.45, 12.55, -0.3]]); // meter -> rear tank  
+  pipe('cw', 'site', 0.025, [[4.45, 12.5, -0.9], [4.45, 12.5, -0.3], [4.95, 12.5, -0.3], [4.95, 12.5, 0.3]]);                        // tank -> pump
+  pipe('cw', 'gf', 0.025, [[4.95, 12.5, 0.3], [4.95, 12.5, Zu], [4.95, 11.2, Zu], [4.95, 11.0, Zs], [4.95, 9.6, Zs], [0.25, 9.6, Zs]]); // pump -> under slab
+  pipe('cw', 'site', 0.02, [[6.1, -2.6, Zu], [2.75, -2.6, Zu], [2.75, -2.6, LV.yard + 0.6]]);            // garden tap for the fish pond
   pipe('cw', 'gf', 0.02, [[2.4, 9.6, Zs], [3.7, 9.6, Zs], [3.7, 10.92, Zs], [3.7, 10.92, LV.gf + 0.95]]);                        // kitchen sink, up in rear wall
   pipe('cw', 'gf', 0.02, [[0.25, 9.6, Zs], [0.14, 9.6, Zs], [0.14, 8.85, Zs], [0.14, 8.85, LV.gf + 0.25]]);                     // WC, up in party wall
   pipe('cw', 'gf', 0.02, [[0.14, 9.6, Zs], [0.14, 10.4, Zs], [0.14, 10.4, LV.gf + 1.9]]);                                       // shower heater
@@ -358,8 +365,8 @@
   pipe('ww', 'gf', 0.05, [[3.7, 10.6, LV.gf + 0.5], [3.7, 10.6, 0.2], [3.7, 11.3, -0.15]]);
   pipe('cw', 'gf', 0.02, [[2.4, 9.6, 0.2], [2.4, 10.92, 0.2], [2.4, 10.92, LV.gf + 1.0]]);                     // washing machine tap, up in rear wall
   pipe('ww', 'gf', 0.05, [[2.6, 10.85, LV.gf + 0.6], [2.6, 10.85, 0.2], [2.6, 11.3, -0.15]]);                  // washing machine standpipe and trap
-  pipe('ww', 'site', 0.1, [[1.0, 11.3, -0.15], [6.35, 11.3, -0.3], [6.35, -1.85, -0.6], [5.6, -1.85, -0.6]]);   // sewer to septic
-  pipe('ww', 'site', 0.1, [[5.6, -2.35, -0.6], [5.6, -3.6, -0.7]]);                                              // septic overflow
+  pipe('ww', 'site', 0.1, [[1.0, 11.3, -0.15], [6.35, 11.3, -0.3], [6.35, -4.1, -0.6], [6.0, -4.1, -0.6]]);   // sewer to septic
+  pipe('ww', 'site', 0.1, [[5.1, -4.6, -0.6], [5.1, -6.6, -0.7]]);                                              // septic overflow
   pipe('ww', 'ff', 0.1, [[6.35, 5.9, -0.35], [6.0, 5.9, -0.3], [6.0, 5.9, LV.parapet + 0.6]]);                   // soil stack + vent
   pipe('ww', 'ff', 0.1, [[5.5, 4.4, Zd], [5.5, 5.9, Zd]]);
   pipe('ww', 'ff', 0.1, [[5.5, 5.9, Zd], [6.0, 5.9, Zd]]);
@@ -374,12 +381,14 @@
   pipe('sw', 'rf', 0.09, [[0.35, 10.65, RZ], [0.3, 11.2, RZ], [0.3, 11.2, LV.yard]]);
   pipe('sw', 'ff', 0.075, [[0.3, 0.3, LV.ff - 0.1], [0.3, -0.2, LV.ff - 0.1]]);                                 // balcony outlet
   pipe('sw', 'site', 0.1, [[6.0, 0.35, LV.yard], [6.0, 0.35, -0.3], [6.6, 0.35, -0.3]]);
-  pipe('sw', 'site', 0.1, [[6.0, 10.65, LV.yard], [6.0, 10.65, -0.3], [6.6, 10.65, -0.3], [6.6, -3.6, -0.4]]);
-  pipe('sw', 'site', 0.1, [[0.3, -0.2, LV.yard], [0.3, -0.2, -0.3], [0.3, -3.6, -0.4]]);
-  pipe('sw', 'site', 0.1, [[0.3, 11.2, LV.yard], [0.3, 11.2, -0.3], [0.3, 11.85, -0.3], [6.6, 11.85, -0.3], [6.6, 10.65, -0.3]]);
+  pipe('sw', 'site', 0.1, [[6.0, 10.65, LV.yard], [6.0, 10.65, -0.3], [6.6, 10.65, -0.3], [6.6, -6.6, -0.4]]);
+  pipe('sw', 'site', 0.1, [[0.3, -0.2, LV.yard], [0.3, -0.2, -0.3], [0.1, -0.5, -0.3], [0.1, -6.6, -0.4]]);
+  pipe('sw', 'site', 0.075, [[0.5, -3.3, 0.0], [0.1, -3.3, -0.3]]);                                            // fish pond overflow
+  pipe('sw', 'site', 0.1, [[0.3, 11.2, LV.yard], [0.3, 11.2, -0.3], [0.3, 13.6, -0.3], [6.6, 13.6, -0.3], [6.6, 10.65, -0.3]]);
   const fixtures = [
-    { k: 'pump', lv: 'site', x: 2.3, y: -1.3, z: 0.3 }, { k: 'tank', lv: 'site', x: 1.6, y: -2.05, z: -0.6 },
-    { k: 'septic', lv: 'site', x: 5.6, y: -1.85, z: -0.6 }, { k: 'meter', lv: 'site', x: 6.55, y: -2.8, z: 0.9 },
+    { k: 'pump', lv: 'site', x: 4.95, y: 12.5, z: 0.3 }, { k: 'tank', lv: 'site', x: 3.6, y: 12.55, z: -0.6 },
+    { k: 'septic', lv: 'site', x: 5.1, y: -4.1, z: -0.6 }, { k: 'meter', lv: 'site', x: 5.95, y: -5.75, z: 0.9 },
+    { k: 'tap', lv: 'site', x: 2.75, y: -2.6, z: LV.yard + 0.6 }, { k: 'pondpump', lv: 'site', x: 2.3, y: -3.3, z: 0.1 },
     { k: 'heater', lv: 'gf', x: 0.3, y: 10.4, z: LV.gf + 1.9 }, { k: 'heater', lv: 'ff', x: 5.65, y: 4.4, z: LV.ff + 1.9 },
     { k: 'fd', lv: 'gf', x: 0.6, y: 10.4, z: LV.gf }, { k: 'fd', lv: 'ff', x: 5.15, y: 4.4, z: LV.ff },
     { k: 'tap', lv: 'rf', x: 5.62, y: 5.9, z: LV.deck + 0.6 }, { k: 'ic', lv: 'site', x: 1.0, y: 11.3, z: -0.15 }
@@ -442,9 +451,10 @@
   });
   // risers from the board to each level, the incoming main, and outdoor points run underground from the board
   ['gf', 'ff', 'rf'].forEach(lv => { const [rx, ry] = riserXY[lv]; runs.push({ kind: 'riser', lv, cable: '4', pts: [[rx, ry, db.z1], [rx, ry, lv === 'rf' ? voidZ.rf : voidZ[lv]]] }); });
-  runs.push({ kind: 'main', lv: 'site', cable: '10', pts: [[0.05, -2.75, 1.0], [0.05, -2.75, -0.5], [0.3, -2.75, -0.5], [0.3, 3.8, -0.5], [0.3, 3.8, db.z0]] });
-  [{ t: 'X', x: 1.2, y: -1.6, z: LV.yard + 0.5 }, { t: 'X', x: 5.2, y: -0.6, z: LV.yard + 0.5 }, { t: 'X', x: 3.95, y: -2.8, z: LV.yard + 1.2 },
-   { t: 'X', x: 5.95, y: 5.0, z: LV.yard + 2.5 }, { t: 'P', x: 2.45, y: -1.3, z: LV.yard + 0.5 }].forEach(p => {
+  runs.push({ kind: 'main', lv: 'site', cable: '10', pts: [[0.05, -5.75, 1.0], [0.05, -5.75, -0.5], [0.3, -5.75, -0.5], [0.3, 3.8, -0.5], [0.3, 3.8, db.z0]] });
+  [{ t: 'X', x: 2.75, y: -1.4, z: LV.yard + 0.5 }, { t: 'X', x: 5.2, y: -0.6, z: LV.yard + 0.5 }, { t: 'X', x: 3.95, y: -5.85, z: LV.yard + 1.2 },
+   { t: 'X', x: 5.95, y: 5.0, z: LV.yard + 2.5 }, { t: 'X', x: 7.95, y: -4.2, z: 2.6 }, { t: 'X', x: 7.95, y: -1.6, z: 2.6 },
+   { t: 'S', x: 9.6, y: -5.3, z: LV.yard + 0.9 }, { t: 'P', x: 4.95, y: 12.4, z: LV.yard + 0.6 }, { t: 'P', x: 2.65, y: -3.3, z: LV.yard + 0.4 }].forEach(p => {
     p.lv = 'site'; p.room = 'EXT'; epts.push(p);
     runs.push({ kind: 'leg', lv: 'site', t: p.t, cable: cableOf[p.t], pts: [[0.5, 3.8, db.z0], [0.5, 3.8, -0.3], [0.5, p.y, -0.3], [p.x, p.y, -0.3], [p.x, p.y, p.z]] });
   });
@@ -452,7 +462,7 @@
   const services = { pipes, fixtures, elec: { db, points: epts, runs }, polyLen };
 
   window.HOUSE = {
-    name: 'Two-Storey House, 7 × 15 m Lot',
+    name: 'Two-Storey House, 10 × 20 m Lot',
     LV, site, grid, roof, canopy, walls, types, openings, finishes, rooms, furniture, stair, S, siteItems, services,
     lvZ, rectArea, roomArea, wallLen, openingsOn, T20
   };

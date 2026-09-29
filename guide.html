@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="author" content="Chhim Putheara">
-<title>7×15 House Build Guide</title>
+<title>10×20 House Build Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -110,7 +110,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
   <div class="wrap">
     <div>
       <div class="eb">Build guide · Rev A · 29 Sep 2026</div>
-      <h1>Build Order for the 7 × 15 m House</h1>
+      <h1>Build Order for the 10 × 20 m House</h1>
       <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
       <p class="sub">The house is built from the ground up, in 16 stages. Finish each stage and pass its hold points before starting the next. Hidden work (pipes under the slab, steel in the concrete, waterproofing) cannot be checked once it is covered.</p>
     </div>
@@ -183,9 +183,9 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
   /* ---------- the stages, in build order ---------- */
   const STAGES = [
     { t: 'Site set-up and setting out', w: [0, 1],
-      what: 'Clear the lot, fence it, and bring in temporary water and power. Mark grids A, B and 1–4 with a builder\'s string line (batter boards) from the surveyed boundary pegs. Grid A is 150 mm inside the left boundary, grid 1 is 2900 mm behind the front boundary.',
+      what: 'Clear the lot, fence it, and bring in temporary water and power. Mark grids A, B and 1–4 with a builder\'s string line (batter boards) from the surveyed boundary pegs. Grid A is 150 mm inside the left boundary, grid 1 is 6000 mm behind the front boundary.',
       steps: ['Build the site fence and a lockable store for cement and steel', 'Temporary power board with RCD, and a water tap', 'Set up batter boards, then string the grids and check the diagonals', 'Mark the ±0.000 datum (road crown) on a fixed post, for all levels'],
-      qty: [['Lot area', '105 m²'], ['Footprint to set out', '6.00 × 11.20 m']],
+      qty: [['Lot area', '10 × 20 m = 200 m²'], ['Footprint to set out', '6.00 × 11.20 m']],
       order: ['Cement, sand and gravel for the footings', 'DB12 bars for the footings, RB6 for the ties', 'Timber for the batter boards'],
       hold: ['Surveyor confirms the grid against the boundary pegs', 'Diagonals of the 5.8 × 11.0 m grid are equal within 10 mm'],
       mistakes: ['Setting out from the neighbour\'s wall instead of the surveyed pegs'] },
@@ -198,7 +198,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       mistakes: ['Letting a footing project over the neighbour\'s boundary', 'Placing steel directly on the soil'] },
     { t: 'Underground services, ground beams and ground slab', w: [3, 2.5],
       what: 'This is the stage where everything hidden under the floor goes in. Lay the buried water main, the sewer, the rainwater drains and the electrical conduit, and install the underground water tank and the septic tank. Then pour the strap and ground beams, backfill and compact, lay the DPM and pour the ground slab.',
-      steps: ['Fix pipe sleeves in the beam formwork wherever a pipe will pass through', 'Pour strap beams SB1 and ground beams GB1/GB2', 'Lay the underground pipes and conduit at the drawn depths, in sand, with marker tape', 'Build the underground water tank and set the septic tank in the front yard','Backfill in 150 mm layers and compact; apply anti-termite treatment', 'Lay the 0.2 mm DPM and slab mesh, then pour slab S0 at +0.400'],
+      steps: ['Fix pipe sleeves in the beam formwork wherever a pipe will pass through', 'Pour strap beams SB1 and ground beams GB1/GB2', 'Lay the underground pipes and conduit at the drawn depths, in sand, with marker tape', 'Build the underground water tank in the rear yard and set the septic tank in the front yard','Backfill in 150 mm layers and compact; apply anti-termite treatment', 'Lay the 0.2 mm DPM and slab mesh, then pour slab S0 at +0.400'],
       qty: [['Ground beams C25', f1(vGB) + ' m³'], ['Ground slab S0', f1(vS0) + ' m³'], ['Underground and under-slab pipes', f0(ugLen) + ' m'], ['Fill under the slab', f1(63.8 * 0.3 * 1.25) + ' m³']],
       order: ['Column steel for the ground floor (4-DB16 + 4-DB12)', 'Formwork plywood and props for the first floor slab'],
       hold: ['Water pipes pressure-tested at 10 bar for 2 hours before they are buried', 'Drains tested with water and checked for fall (min. 1:50) before backfill', 'Photograph every pipe with a tape measure before it is covered'],
@@ -275,11 +275,11 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       steps: ['Sanitary ware and taps, water heaters with RCD', 'Light fittings, sockets, switches; label every circuit in the board', 'Pump and pressure tank; check pressure on the top floor', 'Earth test (10 Ω or less) and RCD trip test'],
       qty: [['Air-conditioner points', pts('AC')], ['Water heaters', pts('H')]],
       order: [], hold: ['Every circuit tested and labelled; every tap run for leaks'], mistakes: [] },
-    { t: 'External works and roof terrace deck', w: [25.5, 3],
-      what: 'Finish outside once the heavy work is done: paving, lawn and planting, the side-passage gravel, and the storm pits. On the roof, lay the XPS insulation, the pedestals and the deck tiles.',
-      steps: ['Path, forecourt and rear paving', 'Lawn, front garden bed, gravel passage', 'Terrace: XPS boards, pedestals and deck tiles over the tested membrane'],
-      qty: [['Terrace deck', f1(terrace) + ' m²']],
-      order: [], hold: ['The membrane is inspected once more before the deck covers it'], mistakes: ['Laying the deck before all roof work is finished'] },
+    { t: 'External works, car park, fish pond and roof deck', w: [25.5, 3.5],
+      what: 'Finish outside once the heavy trucks have gone, so nothing new gets cracked: the car park slab and carport, the front fence and gates, the koi fish pond, paving, lawn and planting. On the roof, lay the XPS insulation, the pedestals and the deck tiles.',
+      steps: ['Car park slab on a compacted base, then the carport posts, beams and roof', 'Front fence, sliding car gate and pedestrian gate', 'Koi pond: dig, cast the RC shell, waterproof, fit the pump, filter and overflow; fill and run for 2 weeks before adding fish', 'Path and rear paving, lawn, planting and the gravel strip', 'Terrace: XPS boards, pedestals and deck tiles over the tested membrane'],
+      qty: [['Terrace deck', f1(terrace) + ' m²'], ['Car park slab', f1((H.siteItems.carpark.x1 - H.siteItems.carpark.x0) * (H.siteItems.carpark.y1 - H.siteItems.carpark.y0)) + ' m²'], ['Fish pond', '2.0 × 3.0 × 0.8 m']],
+      order: [], hold: ['The membrane is inspected once more before the deck covers it', 'Pond holds water for 48 hours with no level drop before fish go in'], mistakes: ['Laying the deck before all roof work is finished', 'Casting the car park slab before the underground pipes under it are tested'] },
     { t: 'Cleaning, snag list and handover', w: [28, 1],
       what: 'Clean the house, walk every room with the builder and list the defects, then get the as-built drawings and the test certificates.',
       steps: ['Snag list: walk every room with the builder', 'Collect warranties, test results and photos of the hidden pipes', 'Keep 5% of the payment until the snags are fixed'],

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="author" content="Chhim Putheara">
-<title>7×15 House Drawings</title>
-<meta name="description" content="Architectural and structural drawing set for a two-storey house on a 7 × 15 m lot.">
+<title>10×20 House Drawings</title>
+<meta name="description" content="Architectural and structural drawing set for a two-storey house on a 10 × 20 m lot.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -239,7 +239,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     <div>
       <div class="eyebrow">Drawing set · Rev A · 29 Sep 2026 · Issued for review and builder pricing</div>
       <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
-      <h1>Two-Storey House<br>on a 7 × 15 m Lot</h1>
+      <h1>Two-Storey House<br>on a 10 × 20 m Lot</h1>
       <p class="sub">Three bedrooms, two bathrooms (one on each floor), open living and kitchen, upstairs lounge with a front balcony. Reinforced concrete frame, brick infill, charcoal weatherboard and timber-look cladding, flat concrete roof with a roof terrace and stair house. The drawings, the 3D model and the material list all read from one data file, so they match each other.</p>
     </div>
     <div class="links">
@@ -259,7 +259,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     <ul>
       <li><b>Structural sign-off.</b> Member sizes and reinforcement here are preliminary and typical for a two-storey RC frame of these spans. A licensed structural engineer must check and sign them before you pour concrete.</li>
       <li><b>Soil test.</b> The footings assume a safe bearing capacity of at least 80 kPa at 1.5 m depth. On soft clay or filled land (common in low-lying city areas), the engineer may change them to piles.</li>
-      <li><b>Survey and permit.</b> Have a surveyor confirm the boundaries, road level and north point, then get the construction permit from the local land-management office. Check the setback rules and whether windows are allowed facing the 0.95 m side passage.</li>
+      <li><b>Survey and permit.</b> Have a surveyor confirm the boundaries, road level and north point, then get the construction permit from the local land-management office. Check the setback rules and the setbacks for the carport and the front fence.</li>
       <li><b>Party wall.</b> The left wall sits on the boundary. Agree the footing and party-wall details with your neighbour before digging.</li>
     </ul>
   </div>
@@ -350,7 +350,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   const gfaGross = 2 * footprint + shA;
   const terrace = H.roomArea(H.rooms.find(r => r.id === 'R-01'));
   const facts = [
-    ['7.0 × 15.0 m', 'Lot · 105 m²'],
+    ['10.0 × 20.0 m', 'Lot · 200 m²'],
     [gfaGross.toFixed(1) + ' m²', 'Gross floor area'],
     [terrace.toFixed(0) + ' m²', 'Roof terrace'],
     ['3 · 2', 'Bedrooms · Baths'],
@@ -542,7 +542,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
       });
     });
     H.services.fixtures.filter(f => lvs.includes(f.lv)).forEach(f => {
-      const lab = { pump: 'P', heater: 'WH', fd: 'FD', tap: 'T', ic: 'IC', meter: 'WM', tank: '', septic: '' }[f.k];
+      const lab = { pump: 'P', heater: 'WH', fd: 'FD', tap: 'T', ic: 'IC', meter: 'WM', pondpump: 'PP', tank: '', septic: '' }[f.k];
       if (!lab) return;
       const w = lab.length * 0.09 + 0.12;
       s += R(f.x - w / 2, f.y - 0.1, f.x + w / 2, f.y + 0.1, 'fx') + Tx(f.x, f.y, lab, 'e-t');
@@ -570,7 +570,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
 
   function planSheet(lv, overlay) {
     K = 1;
-    const ext = { u0: -2.5, u1: 8.9, v0: -3.4, v1: 13.2 };
+    const ext = overlay && lv === 'gf' ? { u0: -2.5, u1: 10.9, v0: -7.6, v1: 15.2 } : { u0: -2.5, u1: 8.9, v0: -3.4, v1: 13.2 };
     let s = '';
     s += lotLines();
     H.rooms.filter(r => r.lv === lv).forEach(rm => rm.r.forEach(r => { s += R(r[0], r[1], r[2], r[3], 'room' + (rm.wet ? ' wet' : '') + (rm.out ? ' out' : '')); }));
@@ -627,44 +627,45 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   /* ======================= SITE PLAN ======================= */
   function siteSheet() {
     K = 1;
-    const ext = { u0: -2.2, u1: 8.9, v0: -5.4, v1: 13.2 };
     const si = H.siteItems, lx = -H.site.ox, ly = -H.site.oy, W = H.site.w, D = H.site.d;
+    const ext = { u0: lx - 2.2, u1: lx + W + 2.0, v0: ly - 3.6, v1: ly + D + 1.4 };
     let s = '';
-    s += R(ext.u0, ly - 2.4, ext.u1, ly - 1.1, 'road') + Tx(3.35, ly - 1.85, 'PUBLIC ROAD  ±0.000', 'noteb', 'text-anchor="middle"');
-    s += R(ext.u0, ly - 1.1, ext.u1, ly, 'pave') + Tx(-1.0, ly - 0.6, 'FOOTPATH', 'ra');
-    s += R(lx, ly, lx + W, -0.1, 'grass');
+    s += R(ext.u0, ly - 2.4, ext.u1, ly - 1.1, 'road') + Tx(lx + W / 2, ly - 1.85, 'PUBLIC ROAD  ±0.000', 'noteb', 'text-anchor="middle"');
+    s += R(ext.u0, ly - 1.1, ext.u1, ly, 'pave') + Tx(lx - 1.1, ly - 0.6, 'FOOTPATH', 'ra');
+    s += R(lx, ly, lx + W, 11.1, 'grass');
+    s += R(si.gravel.x0, si.gravel.y0, si.gravel.x1, si.gravel.y1, 'gravel');
     s += R(si.bedFront.x0, si.bedFront.y0, si.bedFront.x1, si.bedFront.y1, 'room out');
     [[0.3, -0.6], [0.9, -0.45], [1.5, -0.65], [2.1, -0.5]].forEach(([u, v]) => { s += Ci(u, v, 0.26, 'plant'); });
     s += R(si.path.x0, si.path.y0, si.path.x1, si.path.y1, 'pave');
-    s += R(si.forecourt.x0, si.forecourt.y0, si.forecourt.x1, si.forecourt.y1, 'pave');
-    s += R(5.9, -0.1, lx + W, 11.1, 'gravel');
+    s += R(si.carpark.x0, si.carpark.y0, si.carpark.x1, si.carpark.y1, 'road');
+    const cp = si.carport; s += R(cp.x0, cp.y0, cp.x1, cp.y1, 'dash'); cp.posts.forEach(([u, v]) => { s += R(u - 0.07, v - 0.07, u + 0.07, v + 0.07, 'col'); });
+    const car = si.car; s += `<rect x="${fx(car.x0)}" y="${fx(-car.y1)}" width="${fx(car.x1 - car.x0)}" height="${fx(car.y1 - car.y0)}" rx="12" class="furn"/>`;
+    const pd = si.pond; s += R(pd.x0 - 0.25, pd.y0 - 0.25, pd.x1 + 0.25, pd.y1 + 0.25, 'plinth-s fx') + R(pd.x0, pd.y0, pd.x1, pd.y1, 'e-glass');
     s += R(lx, 11.1, lx + W, ly + D, 'pave');
     s += R(-0.1, -0.1, 5.9, 11.1, 'fp');
     const shh = H.roof.stairHouse; s += R(shh.x0, shh.y0, shh.x1, shh.y1, 'dash');
     s += R(2.7, -0.1, 5.9, 1.2, 'room out');
     s += Tx(2.9, 5.9, 'TWO-STOREY HOUSE', 'rn') + Tx(2.9, 5.55, 'FFL GF ' + lvl(LV.gf) + ' · FF ' + lvl(LV.ff) + ' · ROOF ' + lvl(LV.roof), 'ra') + Tx(2.9, 5.25, 'Footprint 6.00 × 11.20 m, flat roof terrace', 'ra');
-    s += Tx(1.05, 7.4, 'STAIR HOUSE', 'ra');
-    s += Tx(4.3, 0.55, 'PORCH', 'ra');
-    s += R(si.septic.x0, si.septic.y0, si.septic.x1, si.septic.y1, 'util') + Tx((si.septic.x0 + si.septic.x1) / 2, (si.septic.y0 + si.septic.y1) / 2 - 0.05, 'SEPTIC TANK 2.5 m³', 'ra');
+    s += Tx(1.05, 7.4, 'STAIR HOUSE', 'ra') + Tx(4.3, 0.55, 'PORCH', 'ra');
+    s += Tx((car.x0 + car.x1) / 2, (car.y0 + car.y1) / 2 + 0.2, 'CAR PARK', 'rn') + Tx((car.x0 + car.x1) / 2, (car.y0 + car.y1) / 2 - 0.1, '3.5 × 5.6 m under carport', 'ra');
+    s += Tx((pd.x0 + pd.x1) / 2, (pd.y0 + pd.y1) / 2 + 0.15, 'KOI POND', 'rn') + Tx((pd.x0 + pd.x1) / 2, (pd.y0 + pd.y1) / 2 - 0.15, '2.0 × 3.0 × 0.8 m', 'ra');
+    s += R(si.septic.x0, si.septic.y0, si.septic.x1, si.septic.y1, 'util') + Tx((si.septic.x0 + si.septic.x1) / 2, (si.septic.y0 + si.septic.y1) / 2 - 0.05, 'SEPTIC 2.5 m³', 'ra');
     s += R(si.tank.x0, si.tank.y0, si.tank.x1, si.tank.y1, 'hid') + Tx((si.tank.x0 + si.tank.x1) / 2, si.tank.y0 + 0.62, 'UNDERGROUND', 'ra') + Tx((si.tank.x0 + si.tank.x1) / 2, si.tank.y0 + 0.4, 'WATER TANK 2.2 m³', 'ra');
-    s += R(si.pump.x - 0.2, si.pump.y - 0.15, si.pump.x + 0.2, si.pump.y + 0.15, 'util') + Tx(si.pump.x + 0.45, si.pump.y - 0.05, 'PUMP', 'ra');
-    s += R(si.meterW.x - 0.15, si.meterW.y, si.meterW.x + 0.15, si.meterW.y + 0.25, 'util') + Tx(si.meterW.x - 0.1, si.meterW.y + 0.45, 'WM', 'ra');
+    s += R(si.pump.x - 0.2, si.pump.y - 0.15, si.pump.x + 0.2, si.pump.y + 0.15, 'util') + Tx(si.pump.x + 0.5, si.pump.y - 0.05, 'PUMP', 'ra');
+    s += R(si.meterW.x - 0.15, si.meterW.y, si.meterW.x + 0.15, si.meterW.y + 0.25, 'util') + Tx(si.meterW.x, si.meterW.y + 0.45, 'WM', 'ra');
     s += R(si.meterE.x - 0.1, si.meterE.y, si.meterE.x + 0.3, si.meterE.y + 0.25, 'util') + Tx(si.meterE.x + 0.1, si.meterE.y + 0.45, 'EM', 'ra');
-    s += Pl([[6.35, 11.0], [6.35, -1.35]], 'pipe') + Pl([[5.6, 11.3], [6.35, 11.3]], 'pipe') + Pl([[1.0, 11.3], [5.6, 11.3]], 'pipe');
-    s += Pl([[5.6, -2.35], [5.6, -2.9]], 'pipe');
-    s += Tx(6.62, 5.0, 'SEWER uPVC 100 @ 1:50', 'ra', `transform="rotate(-90 ${fx(6.62)} ${fx(-5.0)})"`);
-    s += Tx(3.1, 11.55, 'IC', 'ra') + Ci(3.1, 11.3, 0.12, 'util');
+    s += plumbingOverlay(['site']);
     H.roof.downpipes.forEach(([u, v]) => { s += Ci(u, v, 0.07, 'util'); });
-    s += Tx(3.35, -2.1, 'PATH', 'ra') + Tx(5.5, -2.72, 'PAVED FORECOURT', 'ra') + Tx(1.2, -1.3, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(1.6, 11.55, 'SERVICE YARD', 'ra');
+    s += Ln(si.carGate.x0, ly + 0.05, si.carGate.x1, ly + 0.05, 'glh') + Tx((si.carGate.x0 + si.carGate.x1) / 2, ly + 0.25, 'SLIDING GATE 3500', 'ra');
+    s += Tx((si.walkGate.x0 + si.walkGate.x1) / 2, ly + 0.25, 'GATE', 'ra') + Tx(3.35, -3.0, 'PATH', 'ra') + Tx(4.9, -2.0, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(8.0, 6.0, 'SIDE YARD (LAWN)', 'ra') + Tx(1.6, 13.6, 'SERVICE YARD', 'ra');
     s += R(lx, ly, lx + W, ly + D, 'bound');
-    // dims
     s += dims('x', [lx, lx + W], ly - 2.9, null);
-    s += dims('x', [lx, -0.1, 5.9, lx + W], 12.5, ly + D + 0.1);
-    s += dims('y', [ly, -0.1, 11.1, ly + D], 7.55, lx + W + 0.1);
-    s += dims('y', [ly, ly + D], 8.2, null);
-    s += Tx(-1.3, 5.0, 'NEIGHBOUR', 'ra', `transform="rotate(-90 ${fx(-1.3)} ${fx(-5.0)})"`) + Tx(-0.7, 5.0, 'PARTY WALL ON BOUNDARY — SETBACK 0', 'ra', `transform="rotate(-90 ${fx(-0.7)} ${fx(-5.0)})"`);
-    s += scaleBar(-1.9, -5.1);
-    s += Tx(5.6, -5.1, 'North: confirm on survey', 'note');
+    s += dims('x', [lx, -0.1, 5.9, lx + W], ly + D + 0.7, ly + D + 0.1);
+    s += dims('y', [ly, -0.1, 11.1, ly + D], lx + W + 0.7, lx + W + 0.1);
+    s += dims('y', [ly, ly + D], lx + W + 1.3, null);
+    s += Tx(lx - 1.3, 5.0, 'NEIGHBOUR', 'ra', `transform="rotate(-90 ${fx(lx - 1.3)} ${fx(-5.0)})"`) + Tx(lx - 0.6, 5.0, 'PARTY WALL ON BOUNDARY — SETBACK 0', 'ra', `transform="rotate(-90 ${fx(lx - 0.6)} ${fx(-5.0)})"`);
+    s += scaleBar(ext.u0 + 0.3, ext.v0 + 0.3);
+    s += Tx(lx + W - 2.6, ext.v0 + 0.3, 'North: confirm on survey', 'note');
     return wrapSvg(ext, s, 'Site plan');
   }
 
@@ -730,6 +731,10 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     const c = H.canopy;
     panels.push({ pts: [[c.x0, c.y0, c.hEdge], [c.x1, c.y0, c.hEdge], [c.x1, c.y1, c.hWall], [c.x0, c.y1, c.hWall]], cls: 'e-roof', near: true });
     if (out === '-y') panels.push({ pts: quad('h', c.y0 - 0.01, c.x0, c.x1, c.hEdge - 0.12, c.hEdge), cls: 'e-fascia', near: true });
+    // carport (front and right views)
+    const cp = H.siteItems.carport;
+    if (out === '-y') { panels.push({ pts: quad('h', cp.y0, cp.x0, cp.x1, cp.z, cp.z + 0.12), cls: 'e-fascia', near: true }); cp.posts.filter(p => p[1] < -3).forEach(([x, y]) => panels.push({ pts: quad('h', y - 0.06, x - 0.06, x + 0.06, LV.yard, cp.z), cls: 'e-frame', near: true })); }
+    if (out === '+x') { panels.push({ pts: quad('v', cp.x1, cp.y0, cp.y1, cp.z, cp.z + 0.12), cls: 'e-fascia', near: true }); cp.posts.filter(p => p[0] > 8).forEach(([x, y]) => panels.push({ pts: quad('v', x + 0.06, y - 0.06, y + 0.06, LV.yard, cp.z), cls: 'e-frame', near: true })); }
     // roof railings (see-through, drawn in the views that face them)
     H.roof.rails.forEach(rl => {
       const axisN = rl.o === 'h' ? 'y' : 'x';
@@ -786,7 +791,8 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   function elevationSheet(dirKey) {
     const D = DIRS[dirKey];
     const panels = elevationPanels(dirKey);
-    const lotU0 = dirKey === 'front' ? [-0.15, 6.85] : dirKey === 'rear' ? [-6.85, 0.15] : dirKey === 'right' ? [-2.9, 12.1] : [-12.1, 2.9];
+    const lx = -H.site.ox, ly = -H.site.oy, rx = lx + H.site.w, ry = ly + H.site.d;
+    const lotU0 = dirKey === 'front' ? [lx, rx] : dirKey === 'rear' ? [-rx, -lx] : dirKey === 'right' ? [ly, ry] : [-ry, -ly];
     K = Math.max(1, (lotU0[1] - lotU0[0] + 3.9) / 12.5);
     let body = '';
     let umin = Infinity, umax = -Infinity;
@@ -821,12 +827,13 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
 
   /* ======================= SECTION A-A ======================= */
   function sectionSheet() {
-    K = 1.4;
-    const ext = { u0: -5.6, u1: 13.0, v0: -2.9, v1: 10.4 };
+    K = 1.8;
+    const ext = { u0: -9.0, u1: 16.0, v0: -2.9, v1: 10.4 };
     const st = H.stair, slope = 1.65 / 2.25;
     let s = '';
-    s += R(-3.0, -1.8, 12.1, LV.yard, 'earth');
-    s += Ln(ext.u0 + 0.2, LV.road, -2.9, LV.road, 'ground') + Ln(-2.9, LV.road, -2.9, LV.yard, 'ground') + Ln(-2.9, LV.yard, 12.1, LV.yard, 'ground');
+    const fy = -H.site.oy, by = fy + H.site.d;
+    s += R(fy - 0.1, -1.8, by, LV.yard, 'earth');
+    s += Ln(ext.u0 + 0.2, LV.road, fy, LV.road, 'ground') + Ln(fy, LV.road, fy, LV.yard, 'ground') + Ln(fy, LV.yard, by, LV.yard, 'ground');
     // hidden footings on grid A (beyond)
     H.S.footings.filter(f => f.m === 'F2').forEach(f => { s += R(f.y0, LV.footBot, f.y1, LV.footTop, 'hid') + R((f.y0 + f.y1) / 2 - 0.125, LV.footTop, (f.y0 + f.y1) / 2 + 0.125, -0.1, 'hid'); });
     // strap beams cut
@@ -888,10 +895,10 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     [[0.1, 3.68], [3.93, 4.62], [8.05, 10.9]].forEach(([a, b]) => { s += Ln(a, LV.gfCeil, b, LV.gfCeil, 'ceil'); });
     [[0.1, 1.0], [1.3, 3.7], [8.1, 10.9]].forEach(([a, b]) => { s += Ln(a, LV.ffCeil, b, LV.ffCeil, 'ceil'); });
     // room names
-    [[1.9, 1.7, 'GUEST BEDROOM'], [4.3, 2.7, 'LOBBY'], [9.5, 1.7, 'BATHROOM'], [0.55, 4.25, 'BALCONY'], [2.5, 4.7, 'FAMILY LOUNGE'], [6.3, 4.1, 'STAIR'], [9.5, 4.7, 'MASTER BEDROOM'], [1.9, 7.75, 'ROOF TERRACE'], [9.5, 7.75, 'ROOF TERRACE'], [5.9, 8.6, 'STAIR HOUSE'], [-1.5, 0.45, 'FRONT YARD'], [11.6, 0.9, 'YARD']].forEach(([u, v, n]) => { s += Tx(u, v, n, 'rn'); });
+    [[1.9, 1.7, 'GUEST BEDROOM'], [4.3, 2.7, 'LOBBY'], [9.5, 1.7, 'BATHROOM'], [0.55, 4.25, 'BALCONY'], [2.5, 4.7, 'FAMILY LOUNGE'], [6.3, 4.1, 'STAIR'], [9.5, 4.7, 'MASTER BEDROOM'], [1.9, 7.75, 'ROOF TERRACE'], [9.5, 7.75, 'ROOF TERRACE'], [5.9, 8.6, 'STAIR HOUSE'], [-3.0, 0.45, 'FRONT YARD'], [12.6, 0.9, 'REAR YARD']].forEach(([u, v, n]) => { s += Tx(u, v, n, 'rn'); });
     // levels
     [[LV.footBot, 'U/S FOOTING'], [LV.road, 'ROAD'], [LV.gf, 'GF FFL'], [LV.landing, 'LANDING'], [LV.gfCeil, 'GF CEILING'], [LV.ff, 'FF FFL'], [LV.landing2, 'LANDING'], [LV.ffCeil, 'FF CEILING'], [LV.deck, 'TERRACE DECK'], [LV.rail, 'RAILING'], [LV.shSlab, 'STAIR HOUSE ROOF']].forEach(([v, n]) => {
-      s += Ln(-5.4, v, -0.2, v, 'lvl') + Pg([[-5.3, v], [-5.18, v + 0.12], [-5.42, v + 0.12]], 'lvm') + Tx(-5.1, v + 0.04, lvl(v) + ' ' + n, 'lvt');
+      s += Ln(-8.8, v, -0.2, v, 'lvl') + Pg([[-8.7, v], [-8.58, v + 0.12], [-8.82, v + 0.12]], 'lvm') + Tx(-8.5, v + 0.04, lvl(v) + ' ' + n, 'lvt');
     });
     s += dims('y', [LV.yard, LV.gf, LV.ff, LV.roof, LV.shTop], 12.4, 11.2);
     s += dims('y', [LV.gf, LV.gfCeil, LV.ff, LV.ffCeil], 11.75, null);
@@ -908,7 +915,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
       [0.4, -1.35, 'F2 eccentric footings on grid A (beyond, dashed), underside ' + lvl(LV.footBot)],
       [8.6, 2.6, 'Walls: clay brick, 15 mm plaster both sides; lintels L1 over openings']
     ];    keys.forEach((k, i) => { s += key(k[0], k[1], i + 1); });
-    s += scaleBar(-5.3, -2.55);
+    s += scaleBar(-8.7, -2.55);
     return { svg: wrapSvg(ext, s, 'Section A-A'), keys: keys.map(k => k[2]) };
   }
 
@@ -998,7 +1005,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   const sheets = [];
   const sheet = (id, no, title, desc, svg, opts = {}) => sheets.push({ id, no, title, desc, svg, ...opts });
 
-  sheet('a101', 'A-101', 'Site plan', 'Lot 7.00 × 15.00 m. Front setback 2800, rear 1000, right passage 950, party wall on the left boundary. Septic tank, water tank, meters and sewer route shown.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['fp', 'Building footprint']] });
+  sheet('a101', 'A-101', 'Site plan', 'Lot 10.00 × 20.00 m. Front yard 5900 with the car park and carport on the right and the koi fish pond on the left. Rear yard 2900, right side yard 3950, party wall on the left boundary. Services from the plumbing sheets.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['road', 'Car park slab'], ['fp', 'Building footprint']] });
   sheet('a102', 'A-102', 'Ground floor plan', 'FFL ' + lvl(LV.gf) + '. Guest bedroom, open living, dining and kitchen, bathroom, stair with store under. Tags on openings refer to the door and window schedule.', planSheet('gf'), { narrow: true });
   sheet('a103', 'A-103', 'First floor plan', 'FFL ' + lvl(LV.ff) + '. Family lounge opening to the front balcony, bedroom 2, and a master suite: bedroom, walk-in wardrobe and a private bathroom reached through the wardrobe.', planSheet('ff'), { narrow: true });
   sheet('a104', 'A-104', 'Roof terrace plan', 'Flat roof terrace at deck ' + lvl(LV.deck) + ', parapet and steel railing, stair house with door D06, falls 1:100 to four roof outlets (RO) and 90 mm downpipes.', planSheet('rf'), { narrow: true });
@@ -1015,7 +1022,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   const sw = (c, dash) => `<span><i class="leg-sw" style="background:${dash ? 'repeating-linear-gradient(90deg,var(' + c + ') 0 7px,transparent 7px 11px)' : 'var(' + c + ')'}"></i>`;
   const plbLegend = sw('--cw') + 'Cold water PPR 25/20</span>' + sw('--hw') + 'Hot water PPR 20 (PN20)</span>' + sw('--ww') + 'Waste 50 / soil 100 uPVC</span>' + sw('--sw') + 'Rainwater 90/100 uPVC</span>' + sw('--ww', 1) + 'Dashed = underground</span><span>● riser or drop · FD floor drain · WH water heater · P pump · T tap · IC inspection chamber</span>';
   const eleLegend = sw('--el') + 'Main supply</span>' + sw('--el', 1) + 'Conduit run from board / room hub</span><span>⊗ light · ◖ socket 300 AFF · ● switch 1200 AFF · ▲ data · AC air-con 2300 AFF · F exhaust fan · WH water heater · P pump · DB main board</span>';
-  sheet('p101', 'P-101', 'Plumbing: ground floor and site', 'Water meter to the underground tank and pump under the front lawn, then a buried main into the house. All ground floor supplies run in the fill under the slab and rise to fixtures inside the walls, so no pipe is exposed. Waste runs under the slab to the rear inspection chamber, then along the passage to the septic tank. Downpipes run underground to the street drain.', planSheet('gf', 'P'), { narrow: true, legendHtml: plbLegend });
+  sheet('p101', 'P-101', 'Plumbing: ground floor and site', 'Water meter to the underground tank and pump in the rear yard, then a buried main into the house. All ground floor supplies run in the fill under the slab and rise to fixtures inside the walls, so no pipe is exposed. Waste runs under the slab to the rear inspection chamber, then along the passage to the septic tank. Downpipes run underground to the street drain.', planSheet('gf', 'P'), { narrow: true, legendHtml: plbLegend });
   sheet('p102', 'P-102', 'Plumbing: first floor and roof', 'Cold riser inside the external wall at grid B; first floor supplies run in wall chases along the bathroom walls. First floor drains fall through the ground floor ceiling void to the external soil stack in the passage, which vents 600 above the parapet. Roof outlets to four downpipes; tap on the terrace.', planSheet('ff', 'P'), { narrow: true, legendHtml: plbLegend });
   sheet('e101', 'E-101', 'Electrical: ground floor and site', 'Meter at the front boundary, main cable underground to the board (DB) in the lobby. Each room is fed from a junction in the ceiling void. Outdoor lights and the pump are fed underground from the board.', planSheet('gf', 'E'), { narrow: true, legendHtml: eleLegend });
   sheet('e102', 'E-102', 'Electrical: first floor and roof', 'Risers in the lobby wall feed the first floor ceiling void and the stair house. Terrace lights and weatherproof sockets are fed through the roof screed.', planSheet('ff', 'E'), { narrow: true, legendHtml: eleLegend });
@@ -1046,7 +1053,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
       <div class="cols2">
         <section><h3>General</h3><ul>
           <li>Datum ±0.000 is the road crown at the front boundary. The ground floor level is +0.450: two 150 mm steps up from the path, and 300 mm above the yard.</li>
-          <li>Set out from grid A/1. Grid A is 150 mm inside the left boundary, and grid 1 is 2900 mm behind the front boundary.</li>
+          <li>Set out from grid A/1. Grid A is 150 mm inside the left boundary, and grid 1 is 6000 mm behind the front boundary.</li>
           <li>Check every dimension on site before ordering materials. Report any difference to the designer before building.</li>
           <li>Build to the local building rules and permit conditions. Where these notes and the permit disagree, the permit applies.</li>
         </ul></section>
@@ -1079,7 +1086,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
           <li>The stair-house roof (S4) falls 1 : 50 to a scupper that discharges onto the terrace, with the same membrane.</li>
         </ul></section>
         <section><h3>Plumbing and drainage</h3><ul>
-          <li>Water: meter at the front boundary, then a buried 25 mm PPR main (550 mm cover, in sand, with marker tape) to the 2.2 m³ underground concrete tank under the front lawn. The booster pump sits in a small box beside the tank. From the pump the main runs underground into the house and through the fill under the ground slab. Every branch rises to its fixture inside a wall chase, so no pipe is exposed. Hot water is supplied to the 2 showers by electric heaters.</li>
+          <li>Water: meter at the front boundary, then a buried 25 mm PPR main (550 mm cover, in sand, with marker tape) to the 2.2 m³ underground concrete tank under the rear yard. The booster pump sits in a small box beside the tank. From the pump the main runs underground into the house and through the fill under the ground slab. Every branch rises to its fixture inside a wall chase, so no pipe is exposed. Hot water is supplied to the 2 showers by electric heaters.</li>
           <li>Sleeve every pipe that passes through a footing, ground beam or slab. Pressure test all supply pipes at 10 bar for 2 hours before the chases are plastered and the slab is poured.</li>
           <li>Soil: 100 mm uPVC at 1 : 50 minimum to the 2.5 m³ two-chamber septic tank. Overflow to the public drain as the permit requires. Vent pipes rise 600 mm above the terrace deck, next to a parapet.</li>
           <li>Grey water (basins, showers, kitchen) goes in 50/75 mm uPVC with traps, to an inspection chamber and then the street drain.</li>

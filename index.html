@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>7×15 House 3D</title>
+<title>10×20 House 3D</title>
 <meta name="author" content="Chhim Putheara">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,13 +84,13 @@ body.walking #layers, body.walking #title dl { display: none; }
 
 <div class="card" id="title">
   <div class="eb">3D model · Rev A</div>
-  <h1>Two-Storey House, 7 × 15 m Lot</h1>
+  <h1>Two-Storey House, 10 × 20 m Lot</h1>
   <dl>
-    <dt>Lot</dt><dd>7.00 × 15.00 m</dd>
+    <dt>Lot</dt><dd>10.00 × 20.00 m</dd>
     <dt>Building</dt><dd>6.00 × 11.20 m, 2 storeys</dd>
     <dt>Floor to floor</dt><dd>3.30 m</dd>
     <dt>Highest point</dt><dd id="ridge"></dd>
-    <dt>Rooms</dt><dd>3 bed · 2 bath · roof terrace</dd>
+    <dt>Rooms</dt><dd>3 bed · 2 bath · car park · fish pond</dd>
   </dl>
   <div class="lk"><a id="toDraw" href="drawings.html">Drawings</a><a href="Metersaillist.html">Material list</a><a href="guide.html">Build guide</a></div>
   <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
@@ -403,6 +403,8 @@ body.walking #layers, body.walking #title dl { display: none; }
   })();
 
   /* ---------- site ---------- */
+  const FISH = [];
+  const pondC = [(H.siteItems.pond.x0 + H.siteItems.pond.x1) / 2, (H.siteItems.pond.y0 + H.siteItems.pond.y1) / 2];
   (function () {
     const lx = -H.site.ox, ly = -H.site.oy, W = H.site.w, D = H.site.d, si = H.siteItems;
     box(-30, 37, -30, 40, -0.2, -0.01, std({ color: 0xa9ad9f }), G.site, { cast: false, tile: 3 });
@@ -411,12 +413,13 @@ body.walking #layers, body.walking #title dl { display: none; }
     box(-30, 37, ly - 1.3, ly, 0, 0.1, MAT.walk, G.site, { cast: false, tile: 1 });
     box(lx, lx + W, ly, ly + D, 0, LV.yard, MAT.grass, G.site, { cast: false, tile: 2 });
     const pv = (r, m) => box(r.x0, r.x1, r.y0, r.y1, LV.yard, LV.yard + 0.012, m, G.site, { cast: false });
-    pv(si.path, MAT.pave); pv(si.forecourt, MAT.pave);
-    pv({ x0: 5.9, x1: lx + W, y0: -0.1, y1: 11.1 }, MAT.gravel);
+    pv(si.path, MAT.pave);
+    box(si.carpark.x0, si.carpark.x1, si.carpark.y0, si.carpark.y1, LV.yard, LV.yard + 0.02, MAT.conc, G.site, { cast: false });
+    pv(si.gravel, MAT.gravel);
     pv({ x0: lx, x1: lx + W, y0: 11.1, y1: ly + D }, MAT.pave);
     pv(si.bedFront, MAT.soil);
     [[0.3, -0.6, 0.35], [0.95, -0.45, 0.45], [1.6, -0.65, 0.38], [2.2, -0.5, 0.3]].forEach(([x, y, r]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10), MAT.plant); s.position.set(x, LV.yard + r * 0.8, -y); s.castShadow = true; G.site.add(s); });
-    [[-4.5, 4], [-6, 10], [9.5, -1], [10.5, 8]].forEach(([x, y]) => { const t = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 2.2, 8), MAT.frame); t.position.set(x, 1.1, -y); G.site.add(t); const c = new THREE.Mesh(new THREE.SphereGeometry(1.3, 14, 12), MAT.plant); c.position.set(x, 2.9, -y); c.castShadow = true; G.site.add(c); });
+    [[-4.5, 4], [-6, 10], [13, -2], [13.5, 9]].forEach(([x, y]) => { const t = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 2.2, 8), MAT.frame); t.position.set(x, 1.1, -y); G.site.add(t); const c = new THREE.Mesh(new THREE.SphereGeometry(1.3, 14, 12), MAT.plant); c.position.set(x, 2.9, -y); c.castShadow = true; G.site.add(c); });
     // boundary walls
     box(lx + W, lx + W + 0.1, ly, -0.1, 0, 1.2, MAT.brick, G.site);
     box(lx + W, lx + W + 0.1, -0.1, ly + D, 0, 2.2, MAT.brick, G.site);
@@ -425,7 +428,31 @@ body.walking #layers, body.walking #title dl { display: none; }
     box(lx, lx + W, ly + D, ly + D + 0.1, 0, 2.2, MAT.nwall, G.site);
     // septic lids, water tank, meters
     box(si.septic.x0, si.septic.x1, si.septic.y0, si.septic.y1, LV.yard, LV.yard + 0.03, MAT.conc, G.site, { cast: false });
-    const tk = si.tank; box(1.35, 1.95, -2.3, -1.8, LV.yard, LV.yard + 0.03, MAT.conc, G.site, { cast: false });   // access lid of the underground tank
+    const tk = si.tank, tcx = (tk.x0 + tk.x1) / 2, tcy = (tk.y0 + tk.y1) / 2; box(tcx - 0.3, tcx + 0.3, tcy - 0.3, tcy + 0.3, LV.yard, LV.yard + 0.03, MAT.conc, G.site, { cast: false });   // access lid of the underground tank
+    // front fence, pedestrian gate and sliding car gate
+    const fence = std({ color: 0x2b2f33, roughness: 0.5, metalness: 0.4 });
+    [[lx, si.walkGate.x0], [si.walkGate.x1, si.carGate.x0]].forEach(([a, b]) => { box(a, b, ly, ly + 0.15, 0, 0.6, MAT.nwall, G.site); for (let x = a + 0.06; x < b; x += 0.12) box(x - 0.015, x + 0.015, ly + 0.05, ly + 0.1, 0.6, 1.5, fence, G.site); });
+    box(si.walkGate.x0 + 0.05, si.walkGate.x1 - 0.05, ly + 0.04, ly + 0.1, 0.05, 1.5, fence, G.site);
+    for (let x = si.carGate.x0 + 0.1; x < si.carGate.x1; x += 0.14) box(x - 0.02, x + 0.02, ly + 0.02, ly + 0.08, 0.05, 1.6, fence, G.site);
+    box(si.carGate.x0, si.carGate.x1, ly + 0.02, ly + 0.08, 1.55, 1.62, fence, G.site);
+    // carport: four posts and a flat metal roof
+    const cp = si.carport; cp.posts.forEach(([x, y]) => box(x - 0.06, x + 0.06, y - 0.06, y + 0.06, LV.yard, cp.z, fence, G.site));
+    box(cp.x0, cp.x1, cp.y0, cp.y1, cp.z, cp.z + 0.12, MAT.fascia, G.site); box(cp.x0 + 0.05, cp.x1 - 0.05, cp.y0 + 0.05, cp.y1 - 0.05, cp.z - 0.01, cp.z, MAT.soffit, G.site, { cast: false });
+    // parked car
+    const car = si.car, paint = std({ color: 0x8c1f24, roughness: 0.35, metalness: 0.5 }), tyre = std({ color: 0x151515, roughness: 0.9 });
+    box(car.x0, car.x1, car.y0, car.y1, LV.yard + 0.3, LV.yard + 0.95, paint, G.site);
+    box(car.x0 + 0.12, car.x1 - 0.12, car.y0 + 1.1, car.y1 - 0.9, LV.yard + 0.95, LV.yard + 1.45, MAT.glass, G.site, { cast: false });
+    box(car.x0 + 0.14, car.x1 - 0.14, car.y0 + 1.15, car.y1 - 0.95, LV.yard + 1.42, LV.yard + 1.48, paint, G.site);
+    [[car.y0 + 0.75], [car.y1 - 0.75]].forEach(([y]) => [car.x0 + 0.02, car.x1 - 0.02].forEach(x => { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.22, 18), tyre); w.rotation.z = Math.PI / 2; w.position.set(x, LV.yard + 0.32, -y); w.castShadow = true; G.site.add(w); }));
+    // koi fish pond: stone coping, water and fish
+    const pd = si.pond, stone = std({ color: 0x8f8a80, roughness: 0.9 });
+    box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y0 - 0.25, pd.y0, LV.yard, LV.yard + 0.3, stone, G.site); box(pd.x0 - 0.25, pd.x1 + 0.25, pd.y1, pd.y1 + 0.25, LV.yard, LV.yard + 0.3, stone, G.site);
+    box(pd.x0 - 0.25, pd.x0, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.site); box(pd.x1, pd.x1 + 0.25, pd.y0, pd.y1, LV.yard, LV.yard + 0.3, stone, G.site);
+    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard - pd.depth, LV.yard - 0.7, std({ color: 0x2f4a3a }), G.site, { cast: false });
+    box(pd.x0, pd.x1, pd.y0, pd.y1, LV.yard + 0.1, LV.yard + 0.12, std({ color: 0x2c7a8c, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.55, depthWrite: false }), G.site, { cast: false });
+    const koi = [0xff7a1a, 0xffffff, 0xff5a1f, 0xf2c14a, 0xff7a1a];
+    koi.forEach((c, i) => { const f = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.08), std({ color: c, roughness: 0.4 })); f.userData = { r: 0.35 + i * 0.12, s: 0.35 + i * 0.07, p: i * 1.3 }; G.site.add(f); FISH.push(f); });
+    [[pd.x0 - 0.1, pd.y0 + 0.4], [pd.x1 + 0.1, pd.y1 - 0.3]].forEach(([x, y]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), MAT.plant); s.position.set(x, LV.yard + 0.5, -y); G.site.add(s); });
     box(si.pump.x - 0.2, si.pump.x + 0.2, si.pump.y - 0.15, si.pump.y + 0.15, LV.yard, LV.yard + 0.45, MAT.nwall, G.site); // pump box
     box(si.meterW.x - 0.15, si.meterW.x + 0.15, si.meterW.y, si.meterW.y + 0.25, LV.yard, LV.yard + 0.9, MAT.conc, G.site);
     box(si.meterE.x - 0.1, si.meterE.x + 0.3, si.meterE.y, si.meterE.y + 0.3, LV.yard, LV.yard + 1.6, MAT.conc, G.site);
@@ -472,9 +499,9 @@ body.walking #layers, body.walking #title dl { display: none; }
     const PM = { L: [0xfff6c8, 0.09], X: [0xfff6c8, 0.09], S: [0xff8c1a, 0.06], SW: [0x3cc7a0, 0.05], AC: [0x9fd3ff, 0.12], F: [0xcfd8dc, 0.1], H: [0xd9412b, 0.1], D: [0x7a5cc7, 0.06], P: [0x2f7fd8, 0.12] };
     SV.elec.points.forEach(q => { const [c, r] = PM[q.t] || [0xffffff, 0.06]; const s = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10), new THREE.MeshStandardMaterial({ color: c, emissive: q.t === 'L' || q.t === 'X' ? 0x6b5a10 : 0x000000 })); s.position.copy(V([q.x, q.y, q.z])); SVC.el.add(s); });
     SV.fixtures.forEach(f => {
-      const col = { pump: 0x2f7fd8, tank: 0x2f7fd8, heater: 0xd9412b, fd: 0x8a6a45, tap: 0x2f7fd8, septic: 0x8a6a45, meter: 0x2f7fd8, ic: 0x8a6a45 }[f.k];
-      const sz = { pump: 0.3, tank: 0.1, heater: 0.25, fd: 0.12, tap: 0.1, septic: 0.1, meter: 0.25, ic: 0.3 }[f.k];
-      const sys = { pump: 'cw', tank: 'cw', tap: 'cw', meter: 'cw', heater: 'hw', fd: 'ww', septic: 'ww', ic: 'ww' }[f.k];
+      const col = { pump: 0x2f7fd8, tank: 0x2f7fd8, heater: 0xd9412b, fd: 0x8a6a45, tap: 0x2f7fd8, septic: 0x8a6a45, meter: 0x2f7fd8, ic: 0x8a6a45, pondpump: 0x2f7fd8 }[f.k];
+      const sz = { pump: 0.3, tank: 0.1, heater: 0.25, fd: 0.12, tap: 0.1, septic: 0.1, meter: 0.25, ic: 0.3, pondpump: 0.25 }[f.k];
+      const sys = { pump: 'cw', tank: 'cw', tap: 'cw', meter: 'cw', pondpump: 'cw', heater: 'hw', fd: 'ww', septic: 'ww', ic: 'ww' }[f.k];
       box(f.x - sz / 2, f.x + sz / 2, f.y - sz / 2, f.y + sz / 2, f.z - sz / 2, f.z + sz / 2, new THREE.MeshStandardMaterial({ color: col }), SVC[sys]);
     });
     const sp = H.siteItems.septic; box(sp.x0, sp.x1, sp.y0, sp.y1, -1.6, -0.1, new THREE.MeshStandardMaterial({ color: 0x8a6a45, transparent: true, opacity: 0.35, depthWrite: false }), SVC.ww, { cast: false });
@@ -524,14 +551,14 @@ body.walking #layers, body.walking #title dl { display: none; }
 
   const C = (x, y, z) => new THREE.Vector3(x, z, -y);
   const VIEWS = {
-    front: { pos: C(-3.2, -12.8, 4.6), tgt: C(3.0, 3.0, 3.9), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    rear: { pos: C(11.5, 25, 8.5), tgt: C(3.0, 6.0, 3.0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
+    front: { pos: C(-4.5, -16.5, 5.2), tgt: C(3.8, 1.0, 3.2), st: { roof: true, ff: true, str: false, lab: false, site: true } },
+    rear: { pos: C(13.5, 29, 9.5), tgt: C(4.0, 6.0, 3.0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
     ff: { pos: C(3.2, -7.5, 16.5), tgt: C(2.9, 5.2, 3.2), st: { roof: false, ff: true, str: false, lab: true, site: true } },
     gf: { pos: C(3.2, -7.0, 14.5), tgt: C(2.9, 5.2, 0.4), st: { roof: true, ff: false, str: false, lab: true, site: true } },
     struct: { pos: C(-8.5, -9.5, 9.5), tgt: C(2.9, 5.5, 1.8), st: { str: true, lab: false, site: false, svc: false } },
     svc: { pos: C(-9.5, -11.5, 11.5), tgt: C(2.9, 5.0, 2.8), st: { str: true, lab: false, site: false, svc: true } },
-    top: { pos: C(2.95, 5.49, 30), tgt: C(2.9, 5.5, 0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
-    spin: { pos: C(-7.5, -12.5, 7.5), tgt: C(2.9, 5.5, 3.4), st: { roof: true, ff: true, str: false, lab: false, site: true } },
+    top: { pos: C(4.85, 3.98, 38), tgt: C(4.85, 4.0, 0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
+    spin: { pos: C(-9.5, -17.5, 9.5), tgt: C(4.3, 3.5, 3.0), st: { roof: true, ff: true, str: false, lab: false, site: true } },
     terrace: { pos: C(7.5, -6.5, 14.0), tgt: C(2.9, 5.5, 7.2), st: { roof: true, ff: true, str: false, lab: true, site: true } }
   };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -556,6 +583,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     segs.forEach(([p, q]) => lvs.forEach(lv => (w.o === 'h' ? addB(lv, p, q, w.c - w.t / 2, w.c + w.t / 2) : addB(lv, w.c - w.t / 2, w.c + w.t / 2, p, q))));
   });
   addB('gf', 5.66, 5.94, -0.14, 0.14);                       // porch column
+  { const si = H.siteItems; addB('gf', si.pond.x0 - 0.25, si.pond.x1 + 0.25, si.pond.y0 - 0.25, si.pond.y1 + 0.25); addB('gf', si.car.x0, si.car.x1, si.car.y0, si.car.y1); si.carport.posts.forEach(([x, y]) => addB('gf', x - 0.06, x + 0.06, y - 0.06, y + 0.06)); }
   H.furniture.filter(f => f.lv === 'gf' && ['counter', 'fridge', 'island', 'washer'].includes(f.k)).forEach(f => addB('gf', f.r[0], f.r[2], f.r[1], f.r[3]));
   addB('rf', 0.1, 1.0, 4.72, 4.78);                          // roof-level balustrade over flight 3
   addB('ff', 0.05, 2.65, -0.06, 0.03);                       // balcony glass
@@ -584,13 +612,16 @@ body.walking #layers, body.walking #title dl { display: none; }
     const lv = lvAt(z + 0.2);
     const rm = H.rooms.find(r => r.lv === lv && r.r.some(q => x >= q[0] && x <= q[2] && y >= q[1] && y <= q[3]));
     if (rm) return rm.name + ({ gf: ' · ground floor', ff: ' · first floor', rf: ' · roof' })[lv];
-    if (y < -2.9) return 'Footpath';
+    const si = H.siteItems, inR = r => x > r.x0 && x < r.x1 && y > r.y0 && y < r.y1;
+    if (y < -H.site.oy) return 'Footpath';
+    if (inR(si.carpark)) return 'Car park';
+    if (x > si.pond.x0 - 0.3 && x < si.pond.x1 + 0.3 && y > si.pond.y0 - 0.3 && y < si.pond.y1 + 0.3) return 'Fish pond';
     if (y < -0.1) return 'Front yard';
     if (y > 11.1) return 'Rear service yard';
     if (x > 5.9) return 'Side passage';
     return 'Outside';
   }
-  const me = { x: 3.35, y: -2.6, z: LV.yard, yaw: 0, pitch: -0.04 };
+  const me = { x: 3.35, y: -5.4, z: LV.yard, yaw: 0, pitch: -0.04 };
   const keys = {};
   const lamp = new THREE.PointLight(0xfff1dc, 0, 9, 1.6); camera.add(lamp); scene.add(camera);
   const hud = ui('walkhud'), pad = ui('pad'), roomEl = ui('roomName');
@@ -600,7 +631,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   function enterWalk() {
     walking = true; anim = null; pendingSpin = false; controls.autoRotate = false; controls.enabled = false;
     Object.assign(state, { roof: true, ff: true, site: true, lab: false, str: false }); apply();
-    Object.assign(me, { x: 3.35, y: -2.6, z: LV.yard, yaw: 0, pitch: -0.04 });
+    Object.assign(me, { x: 3.35, y: -5.4, z: LV.yard, yaw: 0, pitch: -0.04 });
     document.body.classList.add('walking'); hud.hidden = false; pad.hidden = false;
     lamp.intensity = 0.6; camera.near = 0.05; resize(); lastRoom = '';
   }
@@ -668,6 +699,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   const clock = new THREE.Clock();
   renderer.setAnimationLoop(now => {
     const dt = Math.min(clock.getDelta(), 0.05);
+    FISH.forEach(f => { const u = f.userData, a = now / 1000 * u.s + u.p; f.position.set(pondC[0] + Math.cos(a) * u.r * 0.7, LV.yard - 0.05, -(pondC[1] + Math.sin(a) * u.r * 1.1)); f.rotation.y = -a; });
     if (walking) stepWalk(dt);
     else {
       if (anim) {
