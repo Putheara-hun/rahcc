@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Chhim Putheara">
+<title>7×15 House Build Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a site handbook — header with key facts, a week-by-week timeline, then one card per stage in build order. */
+:root {
+  --paper: #eef0ec; --sheet: #fbfbf8; --ink: #1b242e; --ink2: #56616d; --ink3: #9aa3ab; --rule: #d6dad4;
+  --accent: #1f5c9e; --bar: #2a6fb8; --track: #e6e9e4; --hold: #9a5a00; --holdbg: #fbf1df; --done: #2e7d4f;
+  --f-cond: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b;
+  --accent: #7fb0e8; --bar: #5b9be0; --track: #222a32; --hold: #f0b35a; --holdbg: #2b2213; --done: #5cc48a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0f1418; --sheet: #151b21; --ink: #dde3e8; --ink2: #9ba6b0; --ink3: #5d6872; --rule: #2a333b;
+  --accent: #7fb0e8; --bar: #5b9be0; --track: #222a32; --hold: #f0b35a; --holdbg: #2b2213; --done: #5cc48a; color-scheme: dark }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--f-body); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; }
+h1, h2, h3 { font-family: var(--f-cond); margin: 0; text-wrap: balance; }
+a { color: var(--accent); }
+a:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+header { background: var(--sheet); border-bottom: 2px solid var(--ink); }
+header .wrap { padding-block: 26px 22px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: end; }
+.eb { font: 600 12px var(--f-cond); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
+h1 { font-size: clamp(30px, 5vw, 50px); line-height: 1.03; margin-top: 6px; }
+.credit { margin: 8px 0 0; font: 500 15px var(--f-cond); } .credit b { font-weight: 700; }
+.sub { color: var(--ink2); max-width: 64ch; margin: 10px 0 0; }
+.links { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; padding: 9px 13px; border: 1.5px solid var(--ink); background: var(--sheet); color: var(--ink); text-decoration: none; font: 600 13px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.btn:hover { background: var(--ink); color: var(--sheet); }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.facts div { padding: 12px 14px; border-right: 1px solid var(--rule); min-width: 0; }
+.facts div:last-child { border-right: 0; }
+.facts b { display: block; font: 600 22px var(--f-cond); font-variant-numeric: tabular-nums; }
+.facts span { font: 500 11px var(--f-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
+main { padding-block: 22px 60px; display: grid; gap: 22px; }
+.panel { background: var(--sheet); border: 1.5px solid var(--ink); }
+.panel > h2 { font-size: 18px; letter-spacing: .06em; text-transform: uppercase; padding: 12px 16px; border-bottom: 1.5px solid var(--ink); display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.panel > h2 small { font: 500 13px var(--f-body); letter-spacing: 0; text-transform: none; color: var(--ink2); }
+.before { padding: 14px 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; }
+.before label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; font-size: 14.5px; cursor: pointer; }
+input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--done); margin: 2px 0 0; }
+
+/* timeline */
+.gantt { padding: 14px 16px 16px; overflow-x: auto; }
+.g-row { display: grid; grid-template-columns: 220px minmax(520px, 1fr); align-items: center; min-height: 26px; }
+.g-lab { font: 500 13.5px var(--f-cond); padding-right: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-lab a { color: var(--ink); text-decoration: none; } .g-lab a:hover { text-decoration: underline; }
+.g-lab .n { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink2); margin-right: 6px; }
+.g-track { position: relative; height: 26px; border-left: 1px solid var(--rule); }
+.g-grid { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--rule); }
+.g-bar { position: absolute; top: 7px; height: 12px; background: var(--bar); border-radius: 0 4px 4px 0; cursor: default; }
+.g-bar.done { background: var(--done); }
+.g-bar:hover, .g-bar:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.g-hold { position: absolute; top: 3px; width: 2px; height: 20px; background: var(--hold); }
+.g-axis .g-track { border-left: 0; height: 22px; }
+.g-tick { position: absolute; top: 2px; transform: translateX(-50%); font: 500 11px var(--f-mono); color: var(--ink2); font-variant-numeric: tabular-nums; }
+.g-rain { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--accent) 10%, transparent) 6px 8px); }
+.g-key { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 0 16px 14px; font-size: 13px; color: var(--ink2); }
+.g-key i { display: inline-block; width: 16px; height: 10px; margin-right: 6px; vertical-align: middle; border-radius: 0 3px 3px 0; }
+#tip { position: fixed; z-index: 10; pointer-events: none; background: var(--ink); color: var(--sheet); font: 500 13px var(--f-body); padding: 8px 10px; max-width: 280px; opacity: 0; transition: opacity .12s; }
+@media (prefers-reduced-motion: reduce) { #tip { transition: none; } }
+
+/* stage cards */
+.stage { background: var(--sheet); border: 1.5px solid var(--ink); scroll-margin-top: 16px; }
+.stage.is-done { border-color: var(--done); }
+.st-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; padding: 14px 16px; border-bottom: 1px solid var(--rule); align-items: start; }
+.st-no { font: 700 34px/1 var(--f-cond); color: var(--accent); font-variant-numeric: tabular-nums; min-width: 44px; }
+.st-head h3 { font-size: 21px; letter-spacing: .01em; }
+.st-head p { margin: 4px 0 0; color: var(--ink2); max-width: 70ch; }
+.st-meta { text-align: right; font: 500 12.5px var(--f-mono); color: var(--ink2); white-space: nowrap; }
+.st-meta label { display: inline-flex; gap: 6px; align-items: center; margin-top: 8px; font: 600 12.5px var(--f-cond); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
+.st-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.st-body > section { padding: 12px 16px 14px; min-width: 0; border-top: 1px solid var(--rule); }
+.st-body > section:nth-child(odd) { border-right: 1px solid var(--rule); }
+.st-body h4 { margin: 0 0 6px; font: 600 12px var(--f-cond); letter-spacing: .12em; text-transform: uppercase; color: var(--ink2); }
+.st-body ol, .st-body ul { margin: 0; padding-left: 20px; }
+.st-body li { margin: 3px 0; font-size: 14.5px; }
+.hold { background: var(--holdbg); }
+.hold h4 { color: var(--hold); }
+.qty { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 14px; font-size: 14px; }
+.qty b { font: 500 13px var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { padding: 14px 16px; color: var(--ink2); font-size: 14px; }
+footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
+@media (max-width: 820px) {
+  header .wrap { grid-template-columns: 1fr; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts div:nth-child(2) { border-right: 0; } .facts div:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .before, .st-body { grid-template-columns: 1fr; }
+  .st-body > section:nth-child(odd) { border-right: 0; }
+  .st-head { grid-template-columns: auto minmax(0, 1fr); }
+  .st-meta { grid-column: 1 / -1; text-align: left; }
+  .g-row { grid-template-columns: 150px minmax(520px, 1fr); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <div class="eb">Build guide · Rev A · 29 Sep 2026</div>
+      <h1>Build Order for the 7 × 15 m House</h1>
+      <p class="credit">Concept idea and drawing by <b>Chhim Putheara</b></p>
+      <p class="sub">The house is built from the ground up, in 16 stages. Finish each stage and pass its hold points before starting the next. Hidden work (pipes under the slab, steel in the concrete, waterproofing) cannot be checked once it is covered.</p>
+    </div>
+    <div class="links"><a class="btn" id="to3d" href="index.html">3D model</a><a class="btn" href="drawings.html">Drawings</a><a class="btn" href="Metersaillist.html">Material list</a></div>
+  </div>
+  <div class="wrap"><div class="facts" id="facts"></div></div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <h2>Before any work on site<small>Tick these off first. Progress is saved in this browser only.</small></h2>
+    <div class="before" id="before"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="tl-h">
+    <h2 id="tl-h">Timeline<small>Typical weeks for a crew of 6–8. Bars overlap where work can run in parallel.</small></h2>
+    <div class="gantt" id="gantt" role="img" aria-label="Construction timeline by week"></div>
+    <div class="g-key"><span><i style="background:var(--bar)"></i>Stage</span><span><i style="background:var(--done)"></i>Ticked done</span><span><i style="background:var(--hold);width:3px"></i>Hold point: inspect before continuing</span><span><i style="background:repeating-linear-gradient(135deg,transparent 0 3px,var(--ink3) 3px 4px)"></i>Rainy season if you start in January (May to October)</span></div>
+  </section>
+
+  <div id="stages" style="display:grid;gap:22px"></div>
+
+  <section class="panel">
+    <h2>Why this order</h2>
+    <div class="note">
+      <p style="margin-top:0">Each stage carries the one after it, and each hides the one before it. Footings carry the columns, the columns carry the slabs, and the slabs carry the walls. So the concrete frame goes up first, floor by floor, and the brick walls are only infill built afterwards. The pipes under the floor and the conduits inside the slabs go in before the concrete that covers them. The roof is waterproofed early, so rain stops reaching the rooms while the inside work goes on. Finishes come last, from the top down and from wet trades to dry trades, so nothing finished gets damaged by the work above it.</p>
+      <p style="margin-bottom:0">If you start in January, plan to finish the roof slab before the heavy rains in June. Pour concrete in the morning, cover fresh concrete if rain is coming, and keep it wet while it cures.</p>
+    </div>
+  </section>
+</main>
+<footer class="wrap">This guide follows the drawing set. The structural engineer's instructions and the building permit take priority over it. Durations are typical and depend on crew size, weather and material delivery.</footer>
+<div id="tip" role="tooltip"></div>
+
+<script src="house-data.js"></script>
+<script>
+(function () {
+  const H = window.HOUSE, LV = H.LV, S = H.S;
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const f1 = v => v.toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+  const f0 = v => Math.round(v).toLocaleString('en-US');
+  const len = b => b.e - b.s;
+
+  /* ---------- quantities per stage, from the same data as the drawings ---------- */
+  const vFoot = sum(S.footings.map(x => (x.x1 - x.x0) * (x.y1 - x.y0) * x.th));
+  const vLean = sum(S.footings.map(x => (x.x1 - x.x0 + 0.1) * (x.y1 - x.y0 + 0.1) * 0.05));
+  const vGB = sum(S.groundBeams.map(b => len(b) * b.b * b.d));
+  const s0 = S.slabs.gf, vS0 = (s0.x1 - s0.x0) * (s0.y1 - s0.y0) * s0.th;
+  const colV = (z0, z1) => sum(S.columns.map(c => c.b * c.d * Math.max(0, Math.min(c.z1, z1) - Math.max(c.z0, z0))));
+  const sv = H.stair.void, slabA = 5.8 * 11 - (sv.x1 - sv.x0) * (sv.y1 - sv.y0);
+  const flight = 0.15 * 0.95 * Math.hypot(2.25, 1.65) + 9 * 0.5 * 0.25 * 0.165 * 0.95, landing = 1.95 * 0.95 * 0.15;
+  const vFF = colV(LV.footTop, LV.ffSlabTop) + sum(S.floorBeams.map(b => len(b) * b.b * (b.m === 'LB1' ? b.d : b.d - 0.12))) + slabA * 0.12 + 2 * flight + landing;
+  const vRF = colV(LV.ffSlabTop, LV.ring) + sum(S.roofBeams.map(b => len(b) * b.b * (b.m === 'LB2' ? b.d : b.d - 0.15))) + slabA * 0.15 + 2 * flight + landing;
+  const sh = S.slabs.sh, vSH = colV(LV.ring, LV.shSlab) + (sh.x1 - sh.x0) * (sh.y1 - sh.y0) * sh.th + sum(S.shBeams.map(b => len(b) * b.b * (b.d - sh.th)));
+  const wallA = lv => sum(H.walls.filter(w => w.lv === lv).map(w => {
+    const h = w.lv === 'gf' ? 2.9 : w.lv === 'ff' ? 2.85 : (w.top - LV.ring - 0.1);
+    const op = sum(H.openingsOn(w).map(o => { const t = H.types[o.t]; return (o.e - o.s) * (Math.min(t.head, h) - t.sill); }));
+    return Math.max(0, len(w) * h - op) * (w.t >= 0.2 ? 2 : 1);
+  }));
+  const bricks = lv => wallA(lv) * 58 * 1.05;
+  const terrace = H.roomArea(H.rooms.find(r => r.id === 'R-01'));
+  const floorA = sum(H.rooms.filter(r => !r.out && r.lv !== 'rf').map(H.roomArea));
+  const pipeLen = sys => sum(H.services.pipes.filter(p => p.sys === sys).map(p => H.services.polyLen(p.pts)));
+  const ugLen = sum(H.services.pipes.filter(p => p.lv === 'site' || p.pts.some(q => q[2] <= 0.25)).map(p => H.services.polyLen(p.pts)));
+  const conduit = sum(H.services.elec.runs.filter(r => r.kind !== 'main').map(r => H.services.polyLen(r.pts)));
+  const pts = t => H.services.elec.points.filter(p => p.t === t).length;
+  const steel = v => v * 130; // kg, average ratio for frame elements
+
+  /* ---------- the stages, in build order ---------- */
+  const STAGES = [
+    { t: 'Site set-up and setting out', w: [0, 1],
+      what: 'Clear the lot, fence it, and bring in temporary water and power. Mark grids A, B and 1–4 with a builder\'s string line (batter boards) from the surveyed boundary pegs. Grid A is 150 mm inside the left boundary, grid 1 is 2900 mm behind the front boundary.',
+      steps: ['Build the site fence and a lockable store for cement and steel', 'Temporary power board with RCD, and a water tap', 'Set up batter boards, then string the grids and check the diagonals', 'Mark the ±0.000 datum (road crown) on a fixed post, for all levels'],
+      qty: [['Lot area', '105 m²'], ['Footprint to set out', '6.00 × 11.20 m']],
+      order: ['Cement, sand and gravel for the footings', 'DB12 bars for the footings, RB6 for the ties', 'Timber for the batter boards'],
+      hold: ['Surveyor confirms the grid against the boundary pegs', 'Diagonals of the 5.8 × 11.0 m grid are equal within 10 mm'],
+      mistakes: ['Setting out from the neighbour\'s wall instead of the surveyed pegs'] },
+    { t: 'Excavation and footings', w: [1, 2],
+      what: 'Dig the pad footings F1 on grid B and the eccentric footings F2 flush with the party boundary on grid A, plus F3 for the stair column. Pour 50 mm of lean concrete, fix the footing mats and column starter bars, then pour the footings.',
+      steps: ['Excavate to ' + LV.footBot.toFixed(2) + ' m below the road datum', 'Pour 50 mm lean concrete C15', 'Fix footing mats (DB12) on 50 mm spacers, and tie the column starters', 'Pour footings C25, then start curing'],
+      qty: [['Footing concrete C25', f1(vFoot) + ' m³'], ['Lean concrete C15', f1(vLean) + ' m³'], ['Footing steel (approx.)', f0(vFoot * 70) + ' kg']],
+      order: ['Ground-beam steel DB16/DB12', 'Underground pipes: PPR 25, uPVC 100 and 50, conduit 32', 'Septic tank and materials for the underground water tank'],
+      hold: ['Engineer inspects the bottom of the excavation (firm soil, no water, correct depth)', 'Steel inspection before pouring: bar size, spacing, 50 mm cover, starters plumb and on grid'],
+      mistakes: ['Letting a footing project over the neighbour\'s boundary', 'Placing steel directly on the soil'] },
+    { t: 'Underground services, ground beams and ground slab', w: [3, 2.5],
+      what: 'This is the stage where everything hidden under the floor goes in. Lay the buried water main, the sewer, the rainwater drains and the electrical conduit, and install the underground water tank and the septic tank. Then pour the strap and ground beams, backfill and compact, lay the DPM and pour the ground slab.',
+      steps: ['Fix pipe sleeves in the beam formwork wherever a pipe will pass through', 'Pour strap beams SB1 and ground beams GB1/GB2', 'Lay the underground pipes and conduit at the drawn depths, in sand, with marker tape', 'Build the underground water tank and set the septic tank in the front yard','Backfill in 150 mm layers and compact; apply anti-termite treatment', 'Lay the 0.2 mm DPM and slab mesh, then pour slab S0 at +0.400'],
+      qty: [['Ground beams C25', f1(vGB) + ' m³'], ['Ground slab S0', f1(vS0) + ' m³'], ['Underground and under-slab pipes', f0(ugLen) + ' m'], ['Fill under the slab', f1(63.8 * 0.3 * 1.25) + ' m³']],
+      order: ['Column steel for the ground floor (4-DB16 + 4-DB12)', 'Formwork plywood and props for the first floor slab'],
+      hold: ['Water pipes pressure-tested at 10 bar for 2 hours before they are buried', 'Drains tested with water and checked for fall (min. 1:50) before backfill', 'Photograph every pipe with a tape measure before it is covered'],
+      mistakes: ['Pouring the slab first and cutting it later for pipes', 'Soft, uncompacted fill, which cracks the floor later'] },
+    { t: 'Ground floor columns, first floor beams, slab and stair', w: [5.5, 3],
+      what: 'Cast the ground floor columns, then build the formwork for the first floor beams, slab S1 and the first two stair flights, and pour them together. Electrical conduits and ceiling boxes are cast into the slab.',
+      steps: ['Cast the columns C1 and C2 up to the beam soffit', 'Build formwork and props for beams B1–B3, slab S1, the balcony set-down S2, and the stair', 'Fix the steel; place conduits and boxes; leave the stair void 1950 × 3200', 'Pour beams, slab and stair in one day; cure for 7 days'],
+      qty: [['Concrete C25', f1(vFF) + ' m³'], ['Steel (approx.)', f0(steel(vFF)) + ' kg'], ['Slab area', f1(slabA) + ' m²']],
+      order: ['Bricks and cement for the ground floor walls (can start after props are removed)', 'Steel and formwork for the roof'],
+      hold: ['Steel inspection before the pour, especially at the 5.8 m B1 beams', 'Props stay for 14 days (21 days under the 5.8 m beams)'],
+      mistakes: ['Removing props early to reuse them upstairs', 'Forgetting the conduits and cutting the slab later'] },
+    { t: 'First floor columns, roof beams, roof slab and stair', w: [8.5, 3],
+      what: 'Repeat the frame for the roof: columns, roof beams R1–R3, the 150 mm roof slab S3 and the upper stair flights. The roof slab is the terrace floor, so its steel is double-layered to control cracking.',
+      steps: ['Cast the first floor columns', 'Formwork for beams R1–R3, slab S3 and the upper stair flights', 'Fix top and bottom steel mats; leave outlets and the stair void', 'Pour, then cure for at least 7 days (keep the slab wet: this is the waterproofing base)'],
+      qty: [['Concrete C25', f1(vRF) + ' m³'], ['Steel (approx.)', f0(steel(vRF)) + ' kg']],
+      order: ['PU waterproofing membrane, roof outlets and scuppers', 'Bricks for the first floor walls and parapets'],
+      hold: ['Steel inspection before the pour: both layers, 20 mm cover', 'Slab levels checked so the screed to falls can reach the outlets'],
+      mistakes: ['Pouring the roof slab in rain', 'Letting the slab dry out in the first week, which causes cracks and leaks'] },
+    { t: 'Stair house and parapets', w: [11.5, 1.5],
+      what: 'Build the stair house on the roof (columns A2, A3, C2 and C3 continue up) and the brick parapets with their RC coping.',
+      steps: ['Cast the stair-house columns and beams SH1', 'Build the stair-house walls and the 450 mm parapets', 'Pour slab S4 and the parapet copings'],
+      qty: [['Concrete C25', f1(vSH + 0.66) + ' m³'], ['Bricks (roof level)', f0(bricks('rf')) + ' pcs']],
+      order: ['Steel railing (measure on site first)', 'Door D06 and window W10'],
+      hold: ['Parapet height and coping level checked, ready for the railing base plates'],
+      mistakes: ['Leaving no upstand for the membrane at the walls'] },
+    { t: 'Roof waterproofing and flood test', w: [13, 1],
+      what: 'Make the building watertight from the top. Screed the roof to falls toward the four outlets, apply the 2-coat PU membrane turned 300 mm up every wall, and flood test it. Leave the insulation and deck tiles until the end, so they are not damaged.',
+      steps: ['Screed to falls 1:100, minimum 40 mm at the outlets', 'Fit the outlets and overflow scuppers, then the downpipes', 'Apply the PU membrane in 2 coats, reinforced at corners', 'Flood the roof 50 mm deep for 48 hours'],
+      qty: [['Membrane area (terrace + upstands)', f0(terrace + 25) + ' m²'], ['Downpipes', '4 × 90 mm']],
+      order: ['Door and window frames for the ground floor'],
+      hold: ['Flood test passes: no damp patches on the first floor ceiling after 48 hours'],
+      mistakes: ['Walking on the membrane with steel tools', 'Skipping the flood test'] },
+    { t: 'Brick walls, lintels and stiffeners', w: [11, 4],
+      what: 'Build the infill walls, starting on the ground floor once the props are out. Add a lintel L1 over every opening and a stiffener column TC1 at free wall ends and every 3 m.',
+      steps: ['Set out the walls from the wall setting-out table', 'Build external walls (2 skins, 200 mm) and internal walls (100 mm)', 'Cast lintels and stiffeners as you go; tie walls to the columns', 'Leave the openings at the exact sizes in the door and window schedule'],
+      qty: [['Bricks, ground floor', f0(bricks('gf')) + ' pcs'], ['Bricks, first floor', f0(bricks('ff')) + ' pcs']],
+      order: ['Conduit, boxes and PPR pipes for the wall chases'],
+      hold: ['Opening sizes and positions checked against the schedule before lintels are cast'],
+      mistakes: ['Building the wall tight up to the beam in one go (leave the top course and fill it later)'] },
+    { t: 'Services rough-in: pipes and wiring in the walls', w: [14.5, 2],
+      what: 'Cut the chases and fix the water pipes, drains and electrical conduit inside the walls, exactly as on sheets P-101/P-102 and E-101/E-102. Nothing is exposed.',
+      steps: ['Chase the walls with a cutter, never with a hammer', 'Fix the cold-water risers and branches, and the heater points', 'Fix the conduits, switch and socket boxes at their heights (switch 1200, socket 300)', 'Pull the cables and set up the main board'],
+      qty: [['Cold water pipe (total)', f0(pipeLen('cw')) + ' m'], ['Conduit (total)', f0(conduit) + ' m'], ['Light points', pts('L') + pts('X')], ['Sockets', pts('S')]],
+      order: ['Plaster sand and cement', 'Waterproofing for the bathrooms and balcony'],
+      hold: ['Water pressure test at 10 bar for 2 hours before plastering', 'Electrician checks continuity and insulation before plastering'],
+      mistakes: ['Plastering over a pipe that was not tested'] },
+    { t: 'Plaster and wet-area waterproofing', w: [16, 3],
+      what: 'Plaster inside and out (15 mm, 1:4), with mesh over every concrete-to-brick joint. Waterproof the bathroom floors and showers and the balcony, then flood test.',
+      steps: ['Mesh strips on joints, then plaster the walls and render the outside', 'Waterproof wet-room floors, turned 150 mm up the walls and 1800 mm in showers', 'Flood test the wet rooms for 24 hours'],
+      qty: [['Plaster area (approx.)', f0((wallA('gf') + wallA('ff') + wallA('rf')) * 1.08) + ' m²']],
+      order: ['Gypsum ceilings, floor and wall tiles, stair granite'],
+      hold: ['Wet-room flood test passes before tiling'],
+      mistakes: ['Tiling before the membrane is tested'] },
+    { t: 'Ceilings, screeds and tiling', w: [19, 4],
+      what: 'Fix the gypsum ceilings, lay the floor screeds, then tile the floors, bathroom walls and stair. Work from the top floor down.',
+      steps: ['Gypsum ceilings on concealed grid (moisture-resistant in bathrooms)', 'Screed and tile floors: porcelain, anti-slip in wet rooms, wood-look plank upstairs', 'Wall tiles in bathrooms to 2400; kitchen splashback', 'Stair treads and risers'],
+      qty: [['Indoor floor area', f0(floorA) + ' m²']],
+      order: ['Windows, doors, cladding boards, glass balustrade'],
+      hold: ['Floor falls to the drains checked with water before the grout sets'],
+      mistakes: ['Tiling floors before the ceiling work above is finished'] },
+    { t: 'Windows, doors, cladding and railings', w: [21, 3],
+      what: 'Install the aluminium windows and sliders, the timber entry door, the internal doors, the charcoal weatherboard and timber-look battens on the facade, the balcony glass and the roof railing.',
+      steps: ['Windows and sliders sealed into the openings', 'Facade cladding on treated battens with a breathable membrane', 'Glass balustrade on the balcony, steel railing on the roof parapet', 'Entry canopy'],
+      qty: [['Openings', H.openings.length + ' no.']],
+      order: ['Paint, sanitary ware, light fittings, sockets, heaters, pump'],
+      hold: ['Railings and balustrades tested for firmness (1100 mm high, no climbable gaps)'],
+      mistakes: ['Fixing the cladding before the windows are sealed'] },
+    { t: 'Painting', w: [23.5, 2.5],
+      what: 'Skim, prime and paint the inside; seal and paint the outside render. Allow 7 days after plastering before painting.',
+      steps: ['Skim coat and sand inside', '1 primer + 2 coats inside', '1 sealer + 2 coats exterior acrylic outside'],
+      qty: [], order: [], hold: [], mistakes: ['Painting damp plaster'] },
+    { t: 'Fit-off and commissioning', w: [25.5, 2],
+      what: 'Install the fittings: toilets, basins, showers and water heaters, the kitchen, the light fittings, sockets and switches, air-conditioners and the pump. Test every system.',
+      steps: ['Sanitary ware and taps, water heaters with RCD', 'Light fittings, sockets, switches; label every circuit in the board', 'Pump and pressure tank; check pressure on the top floor', 'Earth test (10 Ω or less) and RCD trip test'],
+      qty: [['Air-conditioner points', pts('AC')], ['Water heaters', pts('H')]],
+      order: [], hold: ['Every circuit tested and labelled; every tap run for leaks'], mistakes: [] },
+    { t: 'External works and roof terrace deck', w: [25.5, 3],
+      what: 'Finish outside once the heavy work is done: paving, lawn and planting, the side-passage gravel, and the storm pits. On the roof, lay the XPS insulation, the pedestals and the deck tiles.',
+      steps: ['Path, forecourt and rear paving', 'Lawn, front garden bed, gravel passage', 'Terrace: XPS boards, pedestals and deck tiles over the tested membrane'],
+      qty: [['Terrace deck', f1(terrace) + ' m²']],
+      order: [], hold: ['The membrane is inspected once more before the deck covers it'], mistakes: ['Laying the deck before all roof work is finished'] },
+    { t: 'Cleaning, snag list and handover', w: [28, 1],
+      what: 'Clean the house, walk every room with the builder and list the defects, then get the as-built drawings and the test certificates.',
+      steps: ['Snag list: walk every room with the builder', 'Collect warranties, test results and photos of the hidden pipes', 'Keep 5% of the payment until the snags are fixed'],
+      qty: [], order: [], hold: ['All snags fixed before the final payment'], mistakes: [] }
+  ];
+
+  /* ---------- progress (per browser) ---------- */
+  const KEY = 'house7x15-guide-v1';
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+
+  const BEFORE = [
+    'Soil test done and footings confirmed by a structural engineer',
+    'Engineer has signed the structural drawings (sizes and steel)',
+    'Surveyor has marked the boundary pegs and the road level',
+    'Construction permit approved by the local land-management office',
+    'Party-wall agreement signed with the left-hand neighbour',
+    'Builder contract signed, with payments tied to these stages',
+    'Water and electricity connection applied for',
+    'Materials budget checked against the material list'
+  ];
+  $('#before').innerHTML = BEFORE.map((b, i) => `<label for="b${i}"><input type="checkbox" id="b${i}" data-k="b${i}"${done['b' + i] ? ' checked' : ''}><span>${esc(b)}</span></label>`).join('');
+
+  const total = Math.max(...STAGES.map(s => s.w[0] + s.w[1]));
+  $('#facts').innerHTML = [['16', 'Stages'], [Math.ceil(total) + ' weeks', 'Typical duration'], [f1(vFoot + vLean + vGB + vS0 + vFF + vRF + vSH) + ' m³', 'Concrete in the frame'], [STAGES.reduce((a, s) => a + s.hold.length, 0), 'Hold points']].map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+
+  function renderGantt() {
+    const W = Math.ceil(total / 4) * 4, pc = v => (v / W * 100).toFixed(3) + '%';
+    let g = '<div class="g-row g-axis"><div></div><div class="g-track">';
+    for (let w = 0; w < W; w += 4) g += `<span class="g-tick" style="left:${pc(w)}">wk ${w}</span>`;
+    g += '</div></div>';
+    STAGES.forEach((s, i) => {
+      let track = '';
+      for (let w = 4; w < W; w += 4) track += `<span class="g-grid" style="left:${pc(w)}"></span>`;
+      track += `<span class="g-rain" style="left:${pc(17)};width:${pc(Math.min(26, W - 17))}"></span>`;
+      const tip = `${i + 1}. ${s.t} · weeks ${s.w[0]}–${s.w[0] + s.w[1]} (${s.w[1]} wk)${s.hold.length ? ' · ' + s.hold.length + ' hold point' + (s.hold.length > 1 ? 's' : '') : ''}`;
+      track += `<span class="g-bar${done['s' + i] ? ' done' : ''}" tabindex="0" data-tip="${esc(tip)}" style="left:${pc(s.w[0])};width:${pc(s.w[1])}"></span>`;
+      if (s.hold.length) track += `<span class="g-hold" style="left:calc(${pc(s.w[0] + s.w[1])} - 1px)"></span>`;
+      g += `<div class="g-row"><div class="g-lab"><a href="#st${i + 1}"><span class="n">${String(i + 1).padStart(2, '0')}</span>${esc(s.t)}</a></div><div class="g-track">${track}</div></div>`;
+    });
+    $('#gantt').innerHTML = g;
+  }
+
+  const list = (arr, tag = 'ul') => arr.length ? `<${tag}>${arr.map(x => `<li>${esc(x)}</li>`).join('')}</${tag}>` : '<p style="margin:0;color:var(--ink2)">None at this stage.</p>';
+  $('#stages').innerHTML = STAGES.map((s, i) => `
+    <article class="stage${done['s' + i] ? ' is-done' : ''}" id="st${i + 1}">
+      <div class="st-head">
+        <div class="st-no">${String(i + 1).padStart(2, '0')}</div>
+        <div><h3>${esc(s.t)}</h3><p>${esc(s.what)}</p></div>
+        <div class="st-meta">weeks ${s.w[0]}–${s.w[0] + s.w[1]}<br>${s.w[1]} week${s.w[1] === 1 ? '' : 's'}<br><label for="s${i}"><input type="checkbox" id="s${i}" data-k="s${i}"${done['s' + i] ? ' checked' : ''}>Done</label></div>
+      </div>
+      <div class="st-body">
+        <section><h4>Steps, in order</h4>${list(s.steps, 'ol')}</section>
+        <section><h4>Quantities for this stage</h4>${s.qty.length ? `<div class="qty">${s.qty.map(q => `<span>${esc(q[0])}</span><b>${esc(q[1])}</b>`).join('')}</div>` : '<p style="margin:0;color:var(--ink2)">Small quantities; see the material list.</p>'}</section>
+        <section class="${s.hold.length ? 'hold' : ''}"><h4>Hold points: check before continuing</h4>${list(s.hold)}</section>
+        <section><h4>Order now for the next stage</h4>${list(s.order)}${s.mistakes.length ? `<h4 style="margin-top:12px">Common mistakes</h4>${list(s.mistakes)}` : ''}</section>
+      </div>
+    </article>`).join('');
+
+  renderGantt();
+  document.addEventListener('change', e => {
+    const k = e.target.dataset && e.target.dataset.k; if (!k) return;
+    done[k] = e.target.checked; save();
+    if (k[0] === 's') { const i = +k.slice(1); document.getElementById('st' + (i + 1)).classList.toggle('is-done', e.target.checked); renderGantt(); }
+  });
+
+  // tooltip on timeline bars
+  const tip = $('#tip');
+  const show = (el, x, y) => { tip.textContent = el.dataset.tip; tip.style.left = Math.min(x + 12, innerWidth - 300) + 'px'; tip.style.top = (y + 14) + 'px'; tip.style.opacity = 1; };
+  $('#gantt').addEventListener('pointermove', e => { const b = e.target.closest('.g-bar'); if (b) show(b, e.clientX, e.clientY); else tip.style.opacity = 0; });
+  $('#gantt').addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+  $('#gantt').addEventListener('focusin', e => { const b = e.target.closest('.g-bar'); if (b) { const r = b.getBoundingClientRect(); show(b, r.left, r.bottom); } });
+  $('#gantt').addEventListener('focusout', () => { tip.style.opacity = 0; });
+  if (location.protocol !== 'file:') $('#to3d').href = './';
+})();
+</script>
+</body>
+</html>
