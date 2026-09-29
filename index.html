@@ -386,7 +386,8 @@ body.walking #layers, body.walking #title dl { display: none; }
     box(lx, lx + W, ly + D, ly + D + 0.1, 0, 2.2, MAT.nwall, G.site);
     // septic lids, water tank, meters
     box(si.septic.x0, si.septic.x1, si.septic.y0, si.septic.y1, LV.yard, LV.yard + 0.03, MAT.conc, G.site, { cast: false });
-    const tk = new THREE.Mesh(new THREE.CylinderGeometry(si.tank.r, si.tank.r, 1.3, 20), MAT.tank); tk.position.set(si.tank.x, LV.yard + 0.65, -si.tank.y); tk.castShadow = true; G.site.add(tk);
+    const tk = si.tank; box(1.35, 1.95, -2.3, -1.8, LV.yard, LV.yard + 0.03, MAT.conc, G.site, { cast: false });   // access lid of the underground tank
+    box(si.pump.x - 0.2, si.pump.x + 0.2, si.pump.y - 0.15, si.pump.y + 0.15, LV.yard, LV.yard + 0.45, MAT.nwall, G.site); // pump box
     box(si.meterW.x - 0.15, si.meterW.x + 0.15, si.meterW.y, si.meterW.y + 0.25, LV.yard, LV.yard + 0.9, MAT.conc, G.site);
     box(si.meterE.x - 0.1, si.meterE.x + 0.3, si.meterE.y, si.meterE.y + 0.3, LV.yard, LV.yard + 1.6, MAT.conc, G.site);
   })();
@@ -438,6 +439,7 @@ body.walking #layers, body.walking #title dl { display: none; }
       box(f.x - sz / 2, f.x + sz / 2, f.y - sz / 2, f.y + sz / 2, f.z - sz / 2, f.z + sz / 2, new THREE.MeshStandardMaterial({ color: col }), SVC[sys]);
     });
     const sp = H.siteItems.septic; box(sp.x0, sp.x1, sp.y0, sp.y1, -1.6, -0.1, new THREE.MeshStandardMaterial({ color: 0x8a6a45, transparent: true, opacity: 0.35, depthWrite: false }), SVC.ww, { cast: false });
+    const tk = H.siteItems.tank; box(tk.x0, tk.x1, tk.y0, tk.y1, tk.bot, tk.top, new THREE.MeshStandardMaterial({ color: 0x2e5d8a, transparent: true, opacity: 0.35, depthWrite: false }), SVC.cw, { cast: false });
     G.svc.traverse(o => { o.castShadow = false; });
   })();
   document.querySelectorAll('#svcKey input[data-sys]').forEach(cb => {

@@ -305,7 +305,8 @@
     forecourt: { x0: 4.10, x1: 6.85, y0: -2.9, y1: -1.4 },
     bedFront: { x0: -0.15, x1: 2.60, y0: -1.1, y1: -0.1 },
     septic: { x0: 4.60, x1: 6.60, y0: -2.35, y1: -1.35 },
-    tank: { x: 6.35, y: 11.55, r: 0.48 },
+    tank: { x0: 0.6, x1: 2.6, y0: -2.6, y1: -1.5, top: -0.1, bot: -1.2 },   // underground RC water tank ~2.2 m³ under the front lawn
+    pump: { x: 2.3, y: -1.3 },
     meterW: { x: 6.55, y: -2.85 }, meterE: { x: -0.05, y: -2.85 }
   };
   const lvZ = lv => (lv === 'gf' ? LV.gf : lv === 'ff' ? LV.ff : LV.roof);
@@ -321,21 +322,22 @@
   const Zg = LV.gfCeil + 0.15;          // services void above the ground floor ceiling
   const Zw = LV.ff + 0.30;              // first floor water runs in wall chases
   const Zd = LV.gfCeil + 0.25;          // first floor drains run in the ground floor ceiling void, falling to the stack
-  // cold water: meter -> tank -> pump -> house
-  pipe('cw', 'site', 0.025, [[6.55, -2.8, 0.9], [6.55, -2.8, -0.3], [6.2, -2.8, -0.3], [6.2, 11.3, -0.3], [6.2, 11.3, 1.45], [6.35, 11.5, 1.45]]);
-  pipe('cw', 'site', 0.025, [[5.95, 11.55, 0.25], [4.75, 11.55, 0.25]]);
-  pipe('cw', 'gf', 0.025, [[4.6, 11.55, 0.3], [4.6, 11.0, 0.3], [4.6, 11.0, Zg], [4.6, 9.6, Zg], [0.25, 9.6, Zg]]);
-  pipe('cw', 'gf', 0.02, [[4.6, 10.7, Zg], [3.7, 10.7, Zg], [3.7, 10.7, LV.gf + 0.95]]);                  // kitchen sink
-  pipe('cw', 'gf', 0.02, [[0.25, 9.6, Zg], [0.25, 8.85, Zg], [0.25, 8.85, LV.gf + 0.25]]);               // WC
-  pipe('cw', 'gf', 0.02, [[0.25, 9.6, Zg], [0.25, 10.4, Zg], [0.25, 10.4, LV.gf + 1.9]]);                // shower heater
-  pipe('cw', 'gf', 0.02, [[1.95, 9.6, Zg], [1.95, 10.5, Zg], [1.95, 10.5, LV.gf + 0.55]]);               // basin
-  pipe('cw', 'gf', 0.025, [[4.6, 9.6, Zg], [5.5, 9.6, Zg], [5.5, 5.9, Zg], [5.5, 5.9, Zw]]);            // riser to first floor
-  pipe('cw', 'ff', 0.02, [[5.5, 5.9, Zw], [5.7, 5.9, Zw], [5.7, 4.4, Zw], [5.7, 4.4, LV.ff + 1.9]]);    // bath 2 WC + shower heater
-  pipe('cw', 'ff', 0.02, [[5.7, 5.9, Zw], [5.7, 6.5, Zw]]);                                              // ensuite WC
-  pipe('cw', 'ff', 0.02, [[5.5, 5.9, Zw], [3.4, 5.9, Zw], [3.4, 7.4, Zw], [3.4, 7.4, LV.ff + 0.55]]);   // ensuite basin
-  pipe('cw', 'ff', 0.02, [[4.4, 5.9, Zw], [4.4, 5.9, LV.ff + 0.55]]);                                    // bath 2 basin
-  pipe('cw', 'ff', 0.02, [[3.4, 6.45, Zw], [3.4, 6.45, LV.ff + 1.9]]);                                   // ensuite shower heater
-  pipe('cw', 'rf', 0.02, [[5.7, 5.9, Zw], [5.62, 5.9, LV.deck + 0.6]]);                                  // terrace tap
+  // cold water, all concealed: meter -> underground main -> underground tank -> pump -> under the ground slab -> up inside walls
+  const Zu = -0.4, Zs = 0.2;            // Zu: buried 550 below the yard · Zs: in the fill under the ground floor slab
+  pipe('cw', 'site', 0.025, [[6.55, -2.8, 0.9], [6.55, -2.8, Zu], [2.75, -2.8, Zu], [2.75, -2.05, Zu], [2.6, -2.05, -0.3]]);   // meter -> tank
+  pipe('cw', 'site', 0.025, [[2.3, -1.7, -0.9], [2.3, -1.7, -0.3], [2.3, -1.3, -0.3], [2.3, -1.3, 0.3]]);                        // tank -> pump
+  pipe('cw', 'gf', 0.025, [[2.3, -1.3, 0.3], [2.3, -1.3, Zu], [2.4, -1.3, Zu], [2.4, -0.1, Zs], [2.4, 9.6, Zs], [0.25, 9.6, Zs]]); // pump -> under slab
+  pipe('cw', 'gf', 0.02, [[2.4, 9.6, Zs], [3.7, 9.6, Zs], [3.7, 10.92, Zs], [3.7, 10.92, LV.gf + 0.95]]);                        // kitchen sink, up in rear wall
+  pipe('cw', 'gf', 0.02, [[0.25, 9.6, Zs], [0.14, 9.6, Zs], [0.14, 8.85, Zs], [0.14, 8.85, LV.gf + 0.25]]);                     // WC, up in party wall
+  pipe('cw', 'gf', 0.02, [[0.14, 9.6, Zs], [0.14, 10.4, Zs], [0.14, 10.4, LV.gf + 1.9]]);                                       // shower heater
+  pipe('cw', 'gf', 0.02, [[1.95, 9.6, Zs], [2.06, 9.6, Zs], [2.06, 10.5, Zs], [2.06, 10.5, LV.gf + 0.55]]);                     // basin, up in wall
+  pipe('cw', 'gf', 0.025, [[3.7, 9.6, Zs], [5.72, 9.6, Zs], [5.72, 5.9, Zs], [5.72, 5.9, Zw]]);                                  // riser inside external wall
+  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [5.72, 4.4, Zw], [5.72, 4.4, LV.ff + 1.9]]);                                          // bath 2 WC + shower heater
+  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [5.72, 6.5, Zw]]);                                                                    // ensuite WC
+  pipe('cw', 'ff', 0.02, [[5.72, 5.9, Zw], [3.35, 5.9, Zw], [3.35, 7.4, Zw], [3.35, 7.4, LV.ff + 0.55]]);                        // along bath walls to ensuite basin
+  pipe('cw', 'ff', 0.02, [[4.4, 5.9, Zw], [4.4, 5.9, LV.ff + 0.55]]);                                                            // bath 2 basin
+  pipe('cw', 'ff', 0.02, [[3.35, 6.45, Zw], [3.35, 6.45, LV.ff + 1.9]]);                                                         // ensuite shower heater
+  pipe('cw', 'rf', 0.02, [[5.72, 5.9, Zw], [5.72, 5.9, LV.deck + 0.6]]);                                                         // terrace tap, up in wall
   // hot water: instant heater -> shower mixer
   pipe('hw', 'gf', 0.02, [[0.35, 10.4, LV.gf + 1.85], [0.35, 10.4, LV.gf + 1.0]]);
   pipe('hw', 'ff', 0.02, [[5.6, 4.4, LV.ff + 1.85], [5.6, 4.4, LV.ff + 1.0]]);
@@ -368,7 +370,7 @@
   pipe('sw', 'site', 0.1, [[0.3, -0.2, LV.yard], [0.3, -0.2, -0.3], [0.3, -3.6, -0.4]]);
   pipe('sw', 'site', 0.1, [[0.3, 11.2, LV.yard], [0.3, 11.2, -0.3], [0.3, 11.85, -0.3], [6.6, 11.85, -0.3], [6.6, 10.65, -0.3]]);
   const fixtures = [
-    { k: 'pump', lv: 'site', x: 4.6, y: 11.55, z: 0.3 }, { k: 'tank', lv: 'site', x: 6.35, y: 11.55, z: 0.8 },
+    { k: 'pump', lv: 'site', x: 2.3, y: -1.3, z: 0.3 }, { k: 'tank', lv: 'site', x: 1.6, y: -2.05, z: -0.6 },
     { k: 'septic', lv: 'site', x: 5.6, y: -1.85, z: -0.6 }, { k: 'meter', lv: 'site', x: 6.55, y: -2.8, z: 0.9 },
     { k: 'heater', lv: 'gf', x: 0.3, y: 10.4, z: LV.gf + 1.9 }, { k: 'heater', lv: 'ff', x: 5.65, y: 4.4, z: LV.ff + 1.9 }, { k: 'heater', lv: 'ff', x: 3.45, y: 6.45, z: LV.ff + 1.9 },
     { k: 'fd', lv: 'gf', x: 0.6, y: 10.4, z: LV.gf }, { k: 'fd', lv: 'ff', x: 5.15, y: 4.4, z: LV.ff }, { k: 'fd', lv: 'ff', x: 3.85, y: 6.45, z: LV.ff },
@@ -427,14 +429,14 @@
     runs.push({ kind: 'home', lv, room: rm.id, cable: '2.5', pts: [[rx, ry, rz], [hub[0], ry, rz], [hub[0], hub[1], rz]] });
     pts.forEach(p => {
       p.lv = lv; p.room = rm.id; epts.push(p);
-      runs.push({ kind: 'leg', lv, room: rm.id, t: p.t, cable: cableOf[p.t], pts: [hub, [p.x, p.y, hub[2]], [p.x, p.y, p.z]] });
+      runs.push({ kind: 'leg', lv, room: rm.id, t: p.t, cable: cableOf[p.t], pts: [hub, [p.x, hub[1], hub[2]], [p.x, p.y, hub[2]], [p.x, p.y, p.z]] });
     });
   });
   // risers from the board to each level, the incoming main, and outdoor points run underground from the board
   ['gf', 'ff', 'rf'].forEach(lv => { const [rx, ry] = riserXY[lv]; runs.push({ kind: 'riser', lv, cable: '4', pts: [[rx, ry, db.z1], [rx, ry, lv === 'rf' ? voidZ.rf : voidZ[lv]]] }); });
   runs.push({ kind: 'main', lv: 'site', cable: '10', pts: [[0.05, -2.75, 1.0], [0.05, -2.75, -0.5], [0.3, -2.75, -0.5], [0.3, 3.8, -0.5], [0.3, 3.8, db.z0]] });
   [{ t: 'X', x: 1.2, y: -1.6, z: LV.yard + 0.5 }, { t: 'X', x: 5.2, y: -0.6, z: LV.yard + 0.5 }, { t: 'X', x: 3.95, y: -2.8, z: LV.yard + 1.2 },
-   { t: 'X', x: 5.95, y: 5.0, z: LV.yard + 2.5 }, { t: 'P', x: 4.6, y: 11.45, z: LV.yard + 0.6 }].forEach(p => {
+   { t: 'X', x: 5.95, y: 5.0, z: LV.yard + 2.5 }, { t: 'P', x: 2.45, y: -1.3, z: LV.yard + 0.5 }].forEach(p => {
     p.lv = 'site'; p.room = 'EXT'; epts.push(p);
     runs.push({ kind: 'leg', lv: 'site', t: p.t, cable: cableOf[p.t], pts: [[0.5, 3.8, db.z0], [0.5, 3.8, -0.3], [0.5, p.y, -0.3], [p.x, p.y, -0.3], [p.x, p.y, p.z]] });
   });

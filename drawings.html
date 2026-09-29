@@ -639,7 +639,8 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     s += Tx(1.05, 7.4, 'STAIR HOUSE', 'ra');
     s += Tx(4.3, 0.55, 'PORCH', 'ra');
     s += R(si.septic.x0, si.septic.y0, si.septic.x1, si.septic.y1, 'util') + Tx((si.septic.x0 + si.septic.x1) / 2, (si.septic.y0 + si.septic.y1) / 2 - 0.05, 'SEPTIC TANK 2.5 m³', 'ra');
-    s += Ci(si.tank.x, si.tank.y, si.tank.r, 'util') + Tx(si.tank.x - 1.35, si.tank.y + 0.2, '1000 L TANK', 'ra') + Tx(si.tank.x - 1.35, si.tank.y - 0.02, '+ PUMP', 'ra');
+    s += R(si.tank.x0, si.tank.y0, si.tank.x1, si.tank.y1, 'hid') + Tx((si.tank.x0 + si.tank.x1) / 2, si.tank.y0 + 0.62, 'UNDERGROUND', 'ra') + Tx((si.tank.x0 + si.tank.x1) / 2, si.tank.y0 + 0.4, 'WATER TANK 2.2 m³', 'ra');
+    s += R(si.pump.x - 0.2, si.pump.y - 0.15, si.pump.x + 0.2, si.pump.y + 0.15, 'util') + Tx(si.pump.x + 0.45, si.pump.y - 0.05, 'PUMP', 'ra');
     s += R(si.meterW.x - 0.15, si.meterW.y, si.meterW.x + 0.15, si.meterW.y + 0.25, 'util') + Tx(si.meterW.x - 0.1, si.meterW.y + 0.45, 'WM', 'ra');
     s += R(si.meterE.x - 0.1, si.meterE.y, si.meterE.x + 0.3, si.meterE.y + 0.25, 'util') + Tx(si.meterE.x + 0.1, si.meterE.y + 0.45, 'EM', 'ra');
     s += Pl([[6.35, 11.0], [6.35, -1.35]], 'pipe') + Pl([[5.6, 11.3], [6.35, 11.3]], 'pipe') + Pl([[1.0, 11.3], [5.6, 11.3]], 'pipe');
@@ -647,7 +648,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     s += Tx(6.62, 5.0, 'SEWER uPVC 100 @ 1:50', 'ra', `transform="rotate(-90 ${fx(6.62)} ${fx(-5.0)})"`);
     s += Tx(3.1, 11.55, 'IC', 'ra') + Ci(3.1, 11.3, 0.12, 'util');
     H.roof.downpipes.forEach(([u, v]) => { s += Ci(u, v, 0.07, 'util'); });
-    s += Tx(3.35, -2.1, 'PATH', 'ra') + Tx(5.5, -2.72, 'PAVED FORECOURT', 'ra') + Tx(1.2, -2.2, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(1.6, 11.55, 'SERVICE YARD', 'ra');
+    s += Tx(3.35, -2.1, 'PATH', 'ra') + Tx(5.5, -2.72, 'PAVED FORECOURT', 'ra') + Tx(1.2, -1.3, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(1.6, 11.55, 'SERVICE YARD', 'ra');
     s += R(lx, ly, lx + W, ly + D, 'bound');
     // dims
     s += dims('x', [lx, lx + W], ly - 2.9, null);
@@ -1007,8 +1008,8 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   const sw = (c, dash) => `<span><i class="leg-sw" style="background:${dash ? 'repeating-linear-gradient(90deg,var(' + c + ') 0 7px,transparent 7px 11px)' : 'var(' + c + ')'}"></i>`;
   const plbLegend = sw('--cw') + 'Cold water PPR 25/20</span>' + sw('--hw') + 'Hot water PPR 20 (PN20)</span>' + sw('--ww') + 'Waste 50 / soil 100 uPVC</span>' + sw('--sw') + 'Rainwater 90/100 uPVC</span>' + sw('--ww', 1) + 'Dashed = underground</span><span>● riser or drop · FD floor drain · WH water heater · P pump · T tap · IC inspection chamber</span>';
   const eleLegend = sw('--el') + 'Main supply</span>' + sw('--el', 1) + 'Conduit run from board / room hub</span><span>⊗ light · ◖ socket 300 AFF · ● switch 1200 AFF · ▲ data · AC air-con 2300 AFF · F exhaust fan · WH water heater · P pump · DB main board</span>';
-  sheet('p101', 'P-101', 'Plumbing: ground floor and site', 'Water meter to 1000 L tank, pump and house main. Ground floor supplies run in the ceiling void and drop to fixtures. Waste runs under the slab to the rear inspection chamber, then along the passage to the septic tank. Downpipes run underground to the street drain.', planSheet('gf', 'P'), { narrow: true, legendHtml: plbLegend });
-  sheet('p102', 'P-102', 'Plumbing: first floor and roof', 'Cold riser in the bathroom wall. First floor drains fall through the ground floor ceiling void to the external soil stack in the passage, which vents 600 above the parapet. Roof outlets to four downpipes; tap on the terrace.', planSheet('ff', 'P'), { narrow: true, legendHtml: plbLegend });
+  sheet('p101', 'P-101', 'Plumbing: ground floor and site', 'Water meter to the underground tank and pump under the front lawn, then a buried main into the house. All ground floor supplies run in the fill under the slab and rise to fixtures inside the walls, so no pipe is exposed. Waste runs under the slab to the rear inspection chamber, then along the passage to the septic tank. Downpipes run underground to the street drain.', planSheet('gf', 'P'), { narrow: true, legendHtml: plbLegend });
+  sheet('p102', 'P-102', 'Plumbing: first floor and roof', 'Cold riser inside the external wall at grid B; first floor supplies run in wall chases along the bathroom walls. First floor drains fall through the ground floor ceiling void to the external soil stack in the passage, which vents 600 above the parapet. Roof outlets to four downpipes; tap on the terrace.', planSheet('ff', 'P'), { narrow: true, legendHtml: plbLegend });
   sheet('e101', 'E-101', 'Electrical: ground floor and site', 'Meter at the front boundary, main cable underground to the board (DB) in the lobby. Each room is fed from a junction in the ceiling void. Outdoor lights and the pump are fed underground from the board.', planSheet('gf', 'E'), { narrow: true, legendHtml: eleLegend });
   sheet('e102', 'E-102', 'Electrical: first floor and roof', 'Risers in the lobby wall feed the first floor ceiling void and the stair house. Terrace lights and weatherproof sockets are fed through the roof screed.', planSheet('ff', 'E'), { narrow: true, legendHtml: eleLegend });
 
@@ -1071,7 +1072,8 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
           <li>The stair-house roof (S4) falls 1 : 50 to a scupper that discharges onto the terrace, with the same membrane.</li>
         </ul></section>
         <section><h3>Plumbing and drainage</h3><ul>
-          <li>Water: meter at the front boundary, then a 25 mm PPR main to the 1000 L tank, then the booster pump and pressure tank. Distribute in 25/20 mm PPR, with hot water to the 3 showers by electric heaters.</li>
+          <li>Water: meter at the front boundary, then a buried 25 mm PPR main (550 mm cover, in sand, with marker tape) to the 2.2 m³ underground concrete tank under the front lawn. The booster pump sits in a small box beside the tank. From the pump the main runs underground into the house and through the fill under the ground slab. Every branch rises to its fixture inside a wall chase, so no pipe is exposed. Hot water is supplied to the 3 showers by electric heaters.</li>
+          <li>Sleeve every pipe that passes through a footing, ground beam or slab. Pressure test all supply pipes at 10 bar for 2 hours before the chases are plastered and the slab is poured.</li>
           <li>Soil: 100 mm uPVC at 1 : 50 minimum to the 2.5 m³ two-chamber septic tank. Overflow to the public drain as the permit requires. Vent pipes rise 600 mm above the terrace deck, next to a parapet.</li>
           <li>Grey water (basins, showers, kitchen) goes in 50/75 mm uPVC with traps, to an inspection chamber and then the street drain.</li>
           <li>Put access points at every change of direction, and an inspection chamber (IC) in the rear yard.</li>
