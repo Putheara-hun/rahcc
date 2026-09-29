@@ -171,7 +171,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
     const op = sum(H.openingsOn(w).map(o => { const t = H.types[o.t]; return (o.e - o.s) * (Math.min(t.head, h) - t.sill); }));
     return Math.max(0, len(w) * h - op) * (w.t >= 0.2 ? 2 : 1);
   }));
-  const bricks = lv => wallA(lv) * 58 * 1.05;
+  const bricks = lv => wallA(lv) * 56 * 1.05;   // 75 × 75 × 180 mm 4-hole brick, 56 per m² per skin
   const terrace = H.roomArea(H.rooms.find(r => r.id === 'R-01'));
   const floorA = sum(H.rooms.filter(r => !r.out && r.lv !== 'rf').map(H.roomArea));
   const pipeLen = sys => sum(H.services.pipes.filter(p => p.sys === sys).map(p => H.services.polyLen(p.pts)));

@@ -133,8 +133,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       <li>Concrete is the net volume of each element from the structure data. Beam volumes exclude the part inside the slab. The stair is measured as waist, steps and landing.</li>
       <li>Site-mixed C25 is 1 : 1.5 : 3, which uses about 7.5 bags of cement, 0.45 m³ of sand and 0.85 m³ of gravel per m³. Lean C15 is 1 : 3 : 6. If you buy ready-mix instead, drop the cement, sand and gravel for concrete and price the m³ from the concrete table.</li>
       <li>Reinforcement uses typical kg/m³ ratios for each element, split by bar size, plus 5% laps and waste. Bars are 12 m long.</li>
-      <li>Brickwork is the net wall area (length × height between slab and beam, minus openings). It assumes 80 × 80 × 180 mm hollow clay bricks at 58 per m² per skin, plus 5% waste.</li>
-      <li>Plaster covers both faces of every wall plus 8% for columns and beams, with 15 mm of 1 : 4 mortar at 0.018 m³ per m². Brick mortar is 0.022 m³ per m² per skin.</li>
+      <li>Brickwork is the net wall area (length × height between slab and beam, minus openings). It uses the supplier's figures for 4-hole clay bricks 75 × 75 × 180 mm: 56 per m² per skin (their range is 55–57), plus 5% waste, at 100 riel each (4,000 riel = $1).</li>
+      <li>Plaster covers both faces of every wall plus 8% for columns and beams, with 15 mm of 1 : 4 mortar at 0.018 m³ per m². Brick mortar is 0.017 m³ per m² per skin, which is 6.5 kg of cement and 0.0181 m³ of sand (supplier's figures).</li>
       <li>Tiles include 7% waste, or 10% for small tiles and planks. Roof waterproofing covers the terrace, the stair-house roof and 300 mm upstands, plus 10% for laps.</li>
     </ul>
   </section>
@@ -182,6 +182,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const steelKg = sum(conc.map(c => c.vol * c.ratio)) * 1.05;
 
   /* ================= MASONRY / PLASTER ================= */
+  // Brick supplier data (4-hole clay brick 75 × 75 × 180 mm): 55–57 bricks per m², mortar 0.017 m³ per m² = 6.5 kg cement + 0.0181 m³ sand
+  const BRICKS_PER_M2 = 56, BRICK_CEMENT_KG = 6.5, BRICK_SAND_M3 = 0.0181, RIEL_PER_USD = 4000, BRICK_RIEL = 100;
   const hOf = w => (w.low ? w.low : w.lv === 'gf' ? 2.9 : w.lv === 'ff' ? 2.85 : (w.top - LV.ring - (w.top > LV.shSlab ? 0.3 : 0.1)));
   let skinArea = 0, faceArea = 0, bricks = 0, extRender = 0, cladA = 0, timberA = 0, wallNetTot = 0;
   H.walls.forEach(w => {
@@ -189,14 +191,14 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     const opA = sum(ops.map(o => { const ty = H.types[o.t]; return (o.e - o.s) * (Math.min(ty.head, hOf(w)) - ty.sill); }));
     const net = Math.max(0, len(w) * hOf(w) - opA);
     const skins = w.t >= 0.2 ? 2 : 1;
-    skinArea += net * skins; faceArea += net * 2; bricks += net * 58 * skins; wallNetTot += net;
+    skinArea += net * skins; faceArea += net * 2; bricks += net * BRICKS_PER_M2 * skins; wallNetTot += net;
     if (w.out) { if (w.fin === 'clad') cladA += net; else if (w.fin === 'timber') timberA += net; else extRender += net; }
   });
   // inner faces of parapets are rendered and painted too
   extRender += sum(H.walls.filter(w => w.lv === 'rf').map(w => len(w) * hOf(w)));
   bricks *= 1.05;
   const plasterA = faceArea * 1.08;
-  const mortarBrick = skinArea * 0.022, mortarPlaster = plasterA * 0.018;
+  const mortarBrick = skinArea * 0.017, mortarPlaster = plasterA * 0.018;
 
   /* ================= FLOORS / FINISHES ================= */
   const areaBy = code => sum(H.rooms.filter(r => r.fl === code && !r.stair).map(H.roomArea));
@@ -249,13 +251,13 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const cementBags = {
     'Concrete C25 (7.5 bags/m³)': c25 * 7.5 * 1.05,
     'Lean concrete C15 (4.5 bags/m³)': c15 * 4.5 * 1.05,
-    'Brick mortar 1:4 (7.4 bags/m³)': mortarBrick * 7.4,
+    'Brick mortar (6.5 kg cement per m² of wall)': skinArea * BRICK_CEMENT_KG / 50,
     'Plaster 1:4 (7.4 bags/m³)': mortarPlaster * 7.4,
     'Floor screed 1:3 (9 bags/m³)': screed * 9 * 1.05,
     'Roof screed to falls, avg 70 mm (9 bags/m³)': roofScreed * 9 * 1.05
   };
   const cementTot = sum(Object.values(cementBags));
-  const sandTot = c25 * 0.45 * 1.05 + c15 * 0.5 + (mortarBrick + mortarPlaster) * 1.15 + (screed + roofScreed) * 1.1;
+  const sandTot = c25 * 0.45 * 1.05 + c15 * 0.5 + skinArea * BRICK_SAND_M3 * 1.1 + mortarPlaster * 1.15 + (screed + roofScreed) * 1.1;
   const gravelTot = c25 * 0.85 * 1.05 + c15 * 0.9;
   const barSplit = [['DB16', 0.33, 1.578], ['DB12', 0.30, 0.888], ['DB10', 0.25, 0.617], ['RB6', 0.12, 0.222]];
   const formwork = sum(S.footings.map(x => 2 * ((x.x1 - x.x0) + (x.y1 - x.y0)) * x.th)) + sum(S.groundBeams.map(b => 2 * b.d * len(b))) +
@@ -272,17 +274,18 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Polythene DPM', '0.2 mm, lapped 300 and taped', 'm²', 64.4 * 1.15, 0.6]
     ] },
     { id: 'conc', name: 'Concrete and reinforcement', items: [
-      ['Cement', 'Portland cement, 50 kg bags; all uses (see cement table)', 'bag', ceil(cementTot), 5.8],
+      ['Cement', 'Camel brand, 50 kg bags, $4.80–5.20 per bag; all uses (see cement table). For concrete (footings, columns, beams, slabs) the bag must say Portland Type I / CEM I 42.5', 'bag', ceil(cementTot), 5.0],
       ['Sand', 'Washed river sand for concrete, mortar, plaster, screed', 'm³', ceil(sandTot, 0.5), 14],
       ['Gravel', 'Crushed stone 10–20 mm for concrete', 'm³', ceil(gravelTot, 0.5), 20],
-      ...barSplit.map(([d, p, kgm]) => [d + ' bars', `${d === 'RB6' ? 'Round SR24' : 'Deformed SD40'}; ${f(steelKg * p, 0)} kg ≈ ${Math.ceil(steelKg * p / (kgm * 12))} bars × 12 m`, 'kg', ceil(steelKg * p, 10), d === 'RB6' ? 0.9 : 0.85]),
+      // V Steel (owner's choice). Rate is an estimate ($450–600/t wholesale + dealer margin); replace with the dealer's quote.
+      ...barSplit.map(([d, p, kgm]) => [d + ' bars', `V Steel ${d === 'RB6' ? 'round SR24' : 'deformed SD40'}; ${f(steelKg * p, 0)} kg ≈ ${Math.ceil(steelKg * p / (kgm * 12))} bars × 12 m (${f(kgm * 12, 1)} kg per bar). If quoted per bar: rate per kg = bar price ÷ ${f(kgm * 12, 1)}`, 'kg', ceil(steelKg * p, 10), d === 'RB6' ? 0.8 : 0.75]),
       ['Tie wire', 'Annealed binding wire, 1.5% of steel', 'kg', ceil(steelKg * 0.015), 1.5],
       ['Plywood formwork', '12 mm, 1220 × 2440, 4 uses', 'sheet', ceil(formwork / 2.98 / 4 * 1.1), 14],
       ['Formwork timber', '50 × 100 soldiers, bearers and props', 'm', ceil(formwork * 2.2, 10), 1.2],
       ['Concrete spacers', 'Cover blocks 20/30/40/50 mm', 'pc', ceil(steelKg / 4, 50), 0.08]
     ] },
     { id: 'mas', name: 'Masonry and plaster', items: [
-      ['Clay bricks', '80 × 80 × 180 hollow, 4-hole; ' + f(wallNetTot, 0) + ' m² of wall', 'pc', ceil(bricks, 100), 0.055],
+      ['Clay bricks', '75 × 75 × 180 mm, 4-hole, ' + BRICKS_PER_M2 + ' per m² per skin + 5% waste; ' + f(wallNetTot, 0) + ' m² of wall. Price ' + BRICK_RIEL + ' riel each (≈ $' + (BRICK_RIEL / RIEL_PER_USD).toFixed(3) + ' at ' + RIEL_PER_USD.toLocaleString('en-US') + ' riel/$)', 'pc', ceil(bricks, 100), BRICK_RIEL / RIEL_PER_USD],
       ['Wall ties and mesh', 'Column ties every 3rd course; mesh strip at concrete/brick joints', 'm', ceil(wallLenTot * 2.4 + 60, 10), 0.5],
       ['Skim coat', 'Interior skim, 0.8 kg/m², 25 kg bags', 'bag', ceil(intPaint * 0.8 / 25), 8]
     ] },
