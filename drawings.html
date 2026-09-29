@@ -654,10 +654,14 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
     s += R(si.pump.x - 0.2, si.pump.y - 0.15, si.pump.x + 0.2, si.pump.y + 0.15, 'util') + Tx(si.pump.x + 0.5, si.pump.y - 0.05, 'PUMP', 'ra');
     s += R(si.meterW.x - 0.15, si.meterW.y, si.meterW.x + 0.15, si.meterW.y + 0.25, 'util') + Tx(si.meterW.x, si.meterW.y + 0.45, 'WM', 'ra');
     s += R(si.meterE.x - 0.1, si.meterE.y, si.meterE.x + 0.3, si.meterE.y + 0.25, 'util') + Tx(si.meterE.x + 0.1, si.meterE.y + 0.45, 'EM', 'ra');
+    const mg = si.mango;
+    s += `<circle cx="${fx(mg.x)}" cy="${fx(-mg.y)}" r="${fx(mg.canopy)}" class="plant" style="fill-opacity:.45"/>` + Ci(mg.x, mg.y, 0.18, 'col');
+    s += Ln(mg.barrier.x, mg.barrier.y0, mg.barrier.x, mg.barrier.y1, 'glh') + Tx(mg.barrier.x + 0.12, mg.barrier.y0 - 0.25, 'ROOT BARRIER 600 DEEP', 'ra', 'text-anchor="start"');
+    s += Tx(mg.x, mg.y + 0.45, 'MANGO TREE', 'rn') + Tx(mg.x, mg.y - 0.5, 'grafted dwarf, pruned to 4.5 m', 'ra');
     s += plumbingOverlay(['site']);
     H.roof.downpipes.forEach(([u, v]) => { s += Ci(u, v, 0.07, 'util'); });
     s += Ln(si.carGate.x0, ly + 0.05, si.carGate.x1, ly + 0.05, 'glh') + Tx((si.carGate.x0 + si.carGate.x1) / 2, ly + 0.25, 'SLIDING GATE 3500', 'ra');
-    s += Tx((si.walkGate.x0 + si.walkGate.x1) / 2, ly + 0.25, 'GATE', 'ra') + Tx(3.35, -3.0, 'PATH', 'ra') + Tx(4.9, -2.0, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(8.0, 6.0, 'SIDE YARD (LAWN)', 'ra') + Tx(1.6, 13.6, 'SERVICE YARD', 'ra');
+    s += Tx((si.walkGate.x0 + si.walkGate.x1) / 2, ly + 0.25, 'GATE', 'ra') + Tx(3.35, -3.0, 'PATH', 'ra') + Tx(4.9, -2.0, 'LAWN', 'ra') + Tx(6.4, 9.8, 'GRAVEL', 'ra') + Tx(8.35, 9.3, 'SIDE YARD (LAWN)', 'ra') + Tx(1.6, 13.6, 'SERVICE YARD', 'ra');
     s += R(lx, ly, lx + W, ly + D, 'bound');
     s += dims('x', [lx, lx + W], ly - 2.9, null);
     s += dims('x', [lx, -0.1, 5.9, lx + W], ly + D + 0.7, ly + D + 0.1);
@@ -1005,7 +1009,7 @@ svg.dwg * { vector-effect: non-scaling-stroke; }
   const sheets = [];
   const sheet = (id, no, title, desc, svg, opts = {}) => sheets.push({ id, no, title, desc, svg, ...opts });
 
-  sheet('a101', 'A-101', 'Site plan', 'Lot 10.00 × 20.00 m. Front yard 5900 with the car park and carport on the right and the koi fish pond on the left. Rear yard 2900, right side yard 3950, party wall on the left boundary. Services from the plumbing sheets.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['road', 'Car park slab'], ['fp', 'Building footprint']] });
+  sheet('a101', 'A-101', 'Site plan', 'Lot 10.00 × 20.00 m. Front yard 5900 with the car park and carport on the right and the koi fish pond on the left. Rear yard 2900, right side yard 3950 with a mango tree, party wall on the left boundary. Services from the plumbing sheets.', siteSheet(), { narrow: true, legend: [['pave', 'Paving'], ['grass', 'Lawn'], ['gravel', 'Gravel'], ['road', 'Car park slab'], ['fp', 'Building footprint']] });
   sheet('a102', 'A-102', 'Ground floor plan', 'FFL ' + lvl(LV.gf) + '. Guest bedroom, open living, dining and kitchen, bathroom, stair with store under. Tags on openings refer to the door and window schedule.', planSheet('gf'), { narrow: true });
   sheet('a103', 'A-103', 'First floor plan', 'FFL ' + lvl(LV.ff) + '. Family lounge opening to the front balcony, bedroom 2, and a master suite: bedroom, walk-in wardrobe and a private bathroom reached through the wardrobe.', planSheet('ff'), { narrow: true });
   sheet('a104', 'A-104', 'Roof terrace plan', 'Flat roof terrace at deck ' + lvl(LV.deck) + ', parapet and steel railing, stair house with door D06, falls 1:100 to four roof outlets (RO) and 90 mm downpipes.', planSheet('rf'), { narrow: true });

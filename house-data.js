@@ -329,7 +329,8 @@
     septic: { x0: 4.20, x1: 6.00, y0: -4.60, y1: -3.60 },
     tank: { x0: 2.6, x1: 4.6, y0: 12.0, y1: 13.1, top: -0.1, bot: -1.2 },    // underground RC water tank ~2.2 m³ under the rear yard
     pump: { x: 4.95, y: 12.5 },
-    meterW: { x: 5.95, y: -5.85 }, meterE: { x: -0.05, y: -5.85 }
+    meterW: { x: 5.95, y: -5.85 }, meterE: { x: -0.05, y: -5.85 },
+    mango: { x: 8.35, y: 5.0, canopy: 2.0, height: 4.5, barrier: { x: 7.0, y0: 2.5, y1: 7.5 } }   // grafted dwarf mango, pruned to ~4.5 m
   };
   const lvZ = lv => (lv === 'gf' ? LV.gf : lv === 'ff' ? LV.ff : LV.roof);
   const rectArea = r => (r[2] - r[0]) * (r[3] - r[1]);
