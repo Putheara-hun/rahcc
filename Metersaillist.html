@@ -165,7 +165,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
 
   /* ================= PHASE ================= */
   // Phase 1 (build now): foundations, all underground services, ground floor finished, first floor slab as a temporary roof,
-  // column starter bars left for later, stair flights 1–2. Phase 2 (later): first floor, roof terrace, stair house, carport, pond, fence.
+  // column starter bars left for later, stair to the first floor. Phase 2 (later): first floor, roof terrace, stair house, carport, pond, fence.
   const PH1 = location.hash === '#phase1';
   const inPh = lv => !PH1 || lv === 'gf' || lv === 'site';
   const WALLS = H.walls.filter(w => inPh(w.lv)), OPEN = H.openings.filter(o => inPh(o.lv)), ROOMS = H.rooms.filter(r => inPh(r.lv));
@@ -181,13 +181,14 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   add('Strap and ground beams', 'C25', sum(S.groundBeams.map(b => len(b) * b.b * b.d)), 120);
   add(PH1 ? 'Columns C1, C2 to first floor (starter bars left above slab)' : 'Columns C1, C2, C3', 'C25', sum(S.columns.map(c => c.b * c.d * Math.max(0, (PH1 ? Math.min(c.z1, LV.ffSlabTop) : c.z1) - c.z0))), PH1 ? 230 : 180);
   const s0 = S.slabs.gf; add('Ground slab S0', 'C25', (s0.x1 - s0.x0) * (s0.y1 - s0.y0) * s0.th, 40);
-  add('First floor beams B1–B3, LB1', 'C25', sum(S.floorBeams.map(b => len(b) * b.b * (b.m === 'LB1' ? b.d : b.d - 0.12))), 150);
+  add('First floor beams B1–B3', 'C25', sum(S.floorBeams.map(b => len(b) * b.b * (b.d - 0.12))), 150);
   const sv = H.stair.void, s1Area = 5.8 * 11.0 - (sv.x1 - sv.x0) * (sv.y1 - sv.y0);
   add('First floor slab S1/S2', 'C25', s1Area * 0.12, 90);
-  const incl = Math.hypot(2.25, 1.65), nFl = PH1 ? 2 : 4, stairV = nFl * (0.15 * 0.95 * incl + 9 * 0.5 * 0.25 * 0.165 * 0.95) + (nFl / 2) * 1.95 * 0.95 * 0.15;
-  add('Stair ST1, ' + nFl + ' flights + ' + nFl / 2 + ' landing' + (PH1 ? '' : 's'), 'C25', stairV, 110);
+  // concrete U-stair with winders: one storey in Phase 1, two for the full house
+  const nSt = PH1 ? 1 : 2, stairV = nSt * H.stair.volPerStorey;
+  add('Stair ST1, ' + nSt + ' storey' + (nSt > 1 ? 's' : '') + ' (flights and winders)', 'C25', stairV, 110);
   if (!PH1) {
-  add('Roof beams R1–R3, LB2', 'C25', sum(S.roofBeams.map(b => len(b) * b.b * (b.m === 'LB2' ? b.d : b.d - 0.15))), 150);
+  add('Roof beams R1–R3', 'C25', sum(S.roofBeams.map(b => len(b) * b.b * (b.d - 0.15))), 150);
   add('Roof slab S3 (150)', 'C25', s1Area * 0.15, 95);
   }
   const sh = S.slabs.sh, shA = (sh.x1 - sh.x0) * (sh.y1 - sh.y0);
@@ -231,7 +232,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   const perim = rm => sum(rm.r.map(r => 2 * ((r[2] - r[0]) + (r[3] - r[1]))));
   const wallTile = sum(wet.map(r => perim(r) * 2.4 - 0.7 * 2.1)) + sum(FURN.filter(x => x.k === 'counter').map(x => Math.max(x.r[2] - x.r[0], x.r[3] - x.r[1]) * 0.6));
   const skirting = sum(ROOMS.filter(r => (r.fl === 'F1' || r.fl === 'F4')).map(perim)) * 0.85;
-  const stairFin = nFl * 10 * 0.95 * (0.3 + 0.165) + (nFl / 2) * 1.95 * 0.95 + (nFl / 2) * 1.95 * 0.9;
+  const stairFin = nSt * (H.stair.planArea + H.stair.risers * H.stair.rise * 0.95);
   const floorAll = areaBy('F1') + areaBy('F2') + areaBy('F3') + areaBy('F4') + stairFin;
   const screed = floorAll * 0.04;
   const c1 = sum(ROOMS.filter(r => r.cl === 'C1').map(H.roomArea));
@@ -342,7 +343,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['F2 anti-slip 300 × 300', 'Bathrooms, laid to falls', 'm²', ceil(areaBy('F2') * 1.10), 8],
       PH1 ? ['F3 anti-slip ceramic (economy)', 'Porch', 'm²', ceil(areaBy('F3') * 1.07 + 1.5), 8] : ['F3 outdoor porcelain', 'Porch and balcony, R11', 'm²', ceil(areaBy('F3') * 1.07 + 1.5), 12],
       ['F4 wood-look plank 200 × 1200', 'Bedrooms, lounge, hall', 'm²', ceil(areaBy('F4') * 1.10), 14],
-      ['F5 stair finish', '40 treads + risers + 4 landings; granite or porcelain', 'm²', ceil(stairFin * 1.1), 25],
+      ['F5 stair finish', nSt * 17 + ' treads and risers, granite or porcelain with anti-slip nosing', 'm²', ceil(stairFin * 1.1), 25],
       ['Skirting', '100 mm tile skirting to dry rooms', 'm', ceil(skirting), 2],
       ['W2 wall tiles 300 × 600', 'Bathrooms to 2400 + kitchen splashback', 'm²', ceil(wallTile * 1.10), 9],
       ['Tile adhesive', '25 kg bags, wall tiles and outdoor tiles', 'bag', ceil((wallTile + areaBy('F3')) / 4), 6],
@@ -354,11 +355,11 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
       ['Exterior paint', 'Acrylic, 2 coats at 9 m²/L; ' + f(extPaint, 0) + ' m²', 'L', ceil(extPaint * 2 / 9), 6],
       ['Primer and sealer', '1 coat, all painted surfaces, 12 m²/L', 'L', ceil((intPaint + ceilPaint + extPaint) / 12), 4]
     ] },
-    { id: 'fac', name: 'Facade and balustrades', items: [
+    { id: 'fac', name: 'Stair, facade and balustrades', items: [
+      ['Stair glass screen and handrail', '10 mm toughened glass between the flights, hardwood rail, steel newel; per storey', 'storey', nSt, 260],
       ...(PH1 ? [] : [['Fibre-cement weatherboard', 'Charcoal, 150 exposure, on treated battens and wrap; ' + f(cladA, 1) + ' m² net', 'm²', ceil(cladA * 1.12), 16]]),
       ...(PH1 ? [] : [['Timber-look WPC battens', (PH1 ? 'Porch side wall + porch column' : 'Lounge front wall + porch column') + '; ' + f(timberA + 3.4, 1) + ' m² net', 'm²', ceil((timberA + 3.4) * 1.1), 30]]),
-      ...(PH1 ? [] : [['Glass balustrade', '12 mm toughened, stainless clamps; balcony 2.5 m + stair void 0.9 m', 'm', 3.4, 160]]),
-      ['Stair handrail', 'Hardwood on steel brackets' + (PH1 ? '' : ' + half-wall cap'), 'm', ceil((nFl / 2) * incl + (PH1 ? 1 : 3.3 + 1)), 18]
+      ...(PH1 ? [] : [['Glass balustrade', '12 mm toughened, stainless clamps; balcony 2.5 m + stair void 0.9 m', 'm', 3.4, 160]])
     ] },
     { id: 'plb', name: 'Plumbing and sanitary', items: [
       ['WC', 'Close-coupled, dual flush, soft-close seat', 'no.', count('wc'), 110],
@@ -493,6 +494,8 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
     if (!isNaN(v) && v >= 0) { saved[rid(c, +t.dataset.i)] = v; try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (err) {} }
     recalc();
   });
+  // Phase 1 assumes a labour-only contract: the owner buys all materials and the builder is paid for labour (about 25% of materials)
+  if (PH1) document.getElementById('labour').value = 25;
   ['labour', 'cont'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
   document.getElementById('reset').addEventListener('click', () => {
     saved = {}; try { localStorage.removeItem(KEY); } catch (e) {}
@@ -515,7 +518,7 @@ textarea#csvOut { width: 100%; height: 140px; font: 12px var(--f-mono); margin-t
   recalc();
   document.getElementById(PH1 ? 'ph1' : 'phf').setAttribute('aria-current', 'true');
   document.getElementById('phnote').textContent = PH1
-    ? 'Phase 1 (economy finishes): foundations, all underground pipes and tanks, the complete ground floor (guest bedroom used as the main bedroom, living, dining, kitchen with laundry, bathroom), the first floor slab as a temporary waterproofed roof with column starter bars for later, and the lower stair with a covered hatch. Left for Phase 2: the first floor, roof terrace and stair house, carport, fish pond, fence and gates.'
+    ? 'Phase 1 (economy finishes, labour-only builder: you buy the materials, labour about 25%): foundations, all underground pipes and tanks, the complete ground floor (guest bedroom used as the main bedroom, living, dining, kitchen with laundry, bathroom), the first floor slab as a temporary waterproofed roof with column starter bars for later, and the lower stair with a covered hatch. Left for Phase 2: the first floor, roof terrace and stair house, carport, fish pond, fence and gates.'
     : 'Full house: everything in Phase 1 plus the first floor, roof terrace, stair house, carport, fish pond, fence and gates.';
   window.addEventListener('hashchange', () => location.reload());
 

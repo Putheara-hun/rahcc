@@ -305,7 +305,8 @@ body.walking #layers, body.walking #title dl { display: none; }
 
   /* ---------- slabs, floors, beams ---------- */
   // Slab edges stop 10 mm inside the outer wall faces: two surfaces in the same plane "z-fight" and flicker.
-  const slabWithVoid = (top, th, mat, grp) => [[-0.09, 5.89, -0.09, 4.75], [-0.09, 5.89, 7.95, 11.09], [-0.09, 0.1, 4.75, 7.95], [2.05, 5.89, 4.75, 7.95]]
+  const SV_ = H.stair.void;
+  const slabWithVoid = (top, th, mat, grp) => [[-0.09, 5.89, -0.09, SV_.y0], [-0.09, 5.89, SV_.y1, 11.09], [-0.09, SV_.x0, SV_.y0, SV_.y1], [SV_.x1, 5.89, SV_.y0, SV_.y1]]
     .forEach(r => box(r[0], r[1], r[2], r[3], top - th, top, mat, grp));
   box(-0.09, 5.89, -0.09, 11.09, 0, LV.gf - 0.005, MAT.plinth, G.gf);
   slabWithVoid(LV.ff - 0.005, 0.17, MAT.render, G.ffslab);
@@ -315,7 +316,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     const grp = grpOf(rm.lv);
     const z = rm.id === 'R-01' ? LV.deck : H.lvZ(rm.lv) - (rm.id === 'F-01' ? 0.05 : 0);
     rm.r.forEach(r => {
-      if (rm.stair && rm.lv !== 'gf') { box(r[0], r[2], r[1], 4.75, z - (rm.lv === 'rf' ? 0.05 : 0.005), z + 0.004, MAT.F5, grp, { cast: false }); return; }
+      if (rm.stair && rm.lv !== 'gf') { box(r[0], r[2], r[1], H.stair.void.y0, z - (rm.lv === 'rf' ? 0.05 : 0.005), z + 0.004, MAT.F5, grp, { cast: false }); return; }
       box(r[0], r[2], r[1], r[3], rm.id === 'R-01' ? LV.ring : z - 0.005, z + 0.004, MAT[rm.fl], grp, { tile: 1.2, cast: false });
     });
   });
@@ -340,10 +341,6 @@ body.walking #layers, body.walking #title dl { display: none; }
   // balcony glass
   box(0.1, 2.6, -0.02, 0.02, LV.ff - 0.05, LV.ff + 1.05, MAT.glass, G.ff, { cast: false });
   box(0.1, 2.6, -0.025, 0.025, LV.ff + 1.05, LV.ff + 1.08, MAT.frame, G.ff);
-  // stair void guards at roof level (over flight 3) and along the spine
-  box(0.1, 1.0, 4.73, 4.77, LV.roof, LV.roof + 1.0, MAT.glass, G.roof, { cast: false });
-  box(0.1, 1.0, 4.72, 4.78, LV.roof + 1.0, LV.roof + 1.04, MAT.timber, G.roof);
-  box(1.03, 1.07, 4.75, 7.0, LV.ring, LV.roof + 1.0, MAT.glass, G.roof, { cast: false });
 
   /* ---------- Phase 1: starter bars and the temporary stair cover ---------- */
   (function () {
@@ -358,24 +355,40 @@ body.walking #layers, body.walking #title dl { display: none; }
     box(v.x0, v.x1, v.y1 - 0.04, v.y1, LV.ff, LV.ff + 2.0, sheet, G.ph1);
   })();
 
-  /* ---------- stair: GF -> FF -> roof ---------- */
-  (function () {
+  /* ---------- stair: steel spiral, GF -> FF -> roof ---------- */
+  // one solid concrete tread per plan outline (flight 1 on the ground floor is built solid down to the floor)
+  function treadMesh(p, zb, zt, mat, grp) {
+    const sh = new THREE.Shape(); p.forEach(([x, y], i) => (i ? sh.lineTo(x, y) : sh.moveTo(x, y)));
+    const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: zt - zb, bevelEnabled: false }), mat);
+    m.rotation.x = -Math.PI / 2; m.position.y = zb; m.castShadow = true; m.receiveShadow = true; grp.add(m);
+  }
+  function buildStair(grpFor, mat, finish) {
     const s = H.stair;
-    const up = (f, grp, solid) => { for (let i = 1; i <= 9; i++) { const top = f.z0 + i * s.rise; box(f.x0, f.x1, f.yStart + (i - 1) * s.going, f.yStart + i * s.going, solid ? f.z0 : top - 0.32, top, MAT.F5, grp); } };
-    const down = (f, grp) => { for (let i = 1; i <= 9; i++) { const top = f.z0 + i * s.rise; box(f.x0, f.x1, f.yStart - i * s.going, f.yStart - (i - 1) * s.going, top - 0.32, top, MAT.F5, grp); } };
-    up(s.f1, G.gf, true);
-    box(s.landing.x0, s.landing.x1, s.landing.y0, s.landing.y1, s.landing.z - 0.15, s.landing.z, MAT.F5, G.gf);
-    down(s.f2, G.gf);
-    up(s.f3, G.ff, false);
-    box(s.landing2.x0, s.landing2.x1, s.landing2.y0, s.landing2.y1, s.landing2.z - 0.15, s.landing2.z, MAT.F5, G.ff);
-    down(s.f4, G.ff);
-  })();
+    [LV.gf, LV.ff].forEach((base, k) => {
+      const grp = grpFor(k);
+      s.treads.forEach(t => { const zt = base + t.z; treadMesh(t.p, k === 0 && t.flight === 1 ? base : zt - 0.3, zt, mat, grp); });
+      if (!finish) return;
+      // clear glass screen between the two flights, timber handrail on top, slim steel newel at the turn
+      const top = k === 0 ? LV.ff + 0.95 : LV.roof + 1.0;
+      const gy = s.screenY0[k === 0 ? 'gf' : 'ff'];
+      box(1.035, 1.065, gy, s.yTurn, base, top, MAT.glass, grp, { cast: false });
+      box(1.02, 1.08, gy, s.yTurn, top, top + 0.04, MAT.timber, grp);
+      box(s.newel[0] - 0.04, s.newel[0] + 0.04, s.newel[1] - 0.04, s.newel[1] + 0.04, base, top + 0.04, MAT.frame, grp);
+    });
+    if (finish) { // roof level: guard across the open end of the upper flight
+      box(s.outer.x0, s.outer.x1, s.void.y0 - 0.02, s.void.y0 + 0.02, LV.roof, LV.roof + 1.0, MAT.glass, G.roof, { cast: false });
+      box(s.outer.x0, s.outer.x1, s.void.y0 - 0.03, s.void.y0 + 0.03, LV.roof + 1.0, LV.roof + 1.04, MAT.timber, G.roof);
+    }
+  }
+  buildStair(k => (k === 0 ? G.gf : G.ff), std({ color: 0x8e9194, roughness: 0.35 }), true);   // grey granite treads
 
   /* ---------- kitchen fit-out, laundry corner and TV ---------- */
   G.kitchen = group('kitchen');
   (function () {
     const K = G.kitchen, z0 = LV.gf, wood = std({ map: T.wood, roughness: 0.5 }), white = std({ color: 0xf4f2ee, roughness: 0.35 });
     const stone = std({ color: 0xe9e6df, roughness: 0.25 }), black = std({ color: 0x15181b, roughness: 0.3, metalness: 0.2 }), steel = std({ color: 0xc9cdd1, roughness: 0.3, metalness: 0.7 });
+    const linen = std({ color: 0xf3f0ea, roughness: 0.9 }), duvet = std({ color: 0x8a9a82, roughness: 0.9 }), throwMat = std({ color: 0xc8a57a, roughness: 0.9 }), rugMat = std({ color: 0xcbbfa9, roughness: 1 });
+    const curtainMat = std({ color: 0xf4efe4, roughness: 0.9, transparent: true, opacity: 0.85 }), shade = std({ color: 0xfff4dc, emissive: 0x6a5530, side: THREE.DoubleSide });
     const screen = std({ color: 0x0c1a2a, roughness: 0.15, emissive: 0x0a2a4a }), splash = std({ map: T.wet, roughness: 0.2 });
     H.furniture.filter(f => f.lv === 'gf').forEach(f => {
       const K = ['island', 'stool', 'pendant', 'upper', 'hood'].includes(f.k) ? G.kitchenUp : G.kitchen;
@@ -402,6 +415,29 @@ body.walking #layers, body.walking #title dl { display: none; }
           { const d = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.02, 24), black); d.rotation.z = Math.PI / 2; d.position.set(x1 + 0.005, (zb + zt) / 2, -(y0 + y1) / 2); K.add(d); }
           break;
         case 'tvwall': box(x0, x1, y0, y1, zb, zt, screen, K); box(x0 - 0.01, x0 + 0.005, y0 - 0.02, y1 + 0.02, zb - 0.02, zt + 0.02, black, K); break;
+        // guest bedroom
+        case 'headboard': box(x0, x1, y0, y1, zb, zt, wood, K); break;
+        case 'bed': {
+          box(x0, x1, y0, y1, zb, zb + 0.28, wood, K);                                        // frame
+          box(x0 + 0.03, x1 - 0.03, y0 + 0.03, y1 - 0.03, zb + 0.28, zb + 0.5, linen, K);       // mattress
+          box(x0 + 0.62, x1 + 0.01, y0 + 0.01, y1 - 0.01, zb + 0.5, zb + 0.54, duvet, K);       // duvet folded back
+          box(x1 - 0.38, x1 + 0.015, y0 + 0.005, y1 - 0.005, zb + 0.54, zb + 0.56, throwMat, K); // throw at the foot
+          [[y0 + 0.1, (y0 + y1) / 2 - 0.04], [(y0 + y1) / 2 + 0.04, y1 - 0.1]].forEach(([a, b]) => box(x0 + 0.1, x0 + 0.5, a, b, zb + 0.5, zb + 0.64, linen, K)); // pillows
+          break;
+        }
+        case 'nightstand': box(x0, x1, y0, y1, zb + 0.08, zt, wood, K); box(x0 + 0.03, x1 - 0.03, y0 + 0.03, y1 - 0.03, zb, zb + 0.08, black, K); break;
+        case 'lamp': { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+          box(cx - 0.06, cx + 0.06, cy - 0.06, cy + 0.06, zb, zb + 0.02, black, K); box(cx - 0.008, cx + 0.008, cy - 0.008, cy + 0.008, zb, zt - 0.15, black, K);
+          const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 0.17, 20, 1, true), shade); sh.position.set(cx, zt - 0.085, -cy); K.add(sh); break; }
+        case 'rug': box(x0, x1, y0, y1, zb, zt, rugMat, K, { cast: false }); break;
+        case 'wardrobe': box(x0, x1, y0, y1, zb, zt, white, K); box(x0 + 0.02, x1 - 0.02, y0 - 0.005, y0, zb + 0.9, zb + 1.3, wood, K); box((x0 + x1) / 2 - 0.004, (x0 + x1) / 2 + 0.004, y0 - 0.006, y0, zb + 0.05, zt - 0.05, black, K); break;
+        case 'desk': box(x0, x1, y0, y1, zt - 0.035, zt, wood, K); [[x0 + 0.03, x0 + 0.06], [x1 - 0.06, x1 - 0.03]].forEach(([a, b]) => box(a, b, y0 + 0.03, y1 - 0.03, zb, zt - 0.035, black, K)); break;
+        case 'chair': box(x0, x1, y0, y1, zb + 0.42, zb + 0.46, wood, K); box(x0, x1, y1 - 0.04, y1, zb + 0.46, zt, wood, K);
+          [[x0, y0], [x1 - 0.03, y0], [x0, y1 - 0.03], [x1 - 0.03, y1 - 0.03]].forEach(([a, b]) => box(a, a + 0.03, b, b + 0.03, zb, zb + 0.42, black, K)); break;
+        case 'curtain': box(x0, x1, y0, y1, zb + 0.05, zt, curtainMat, K, { cast: false }); box(x0 - 0.05, x1 + 0.05, y0 + 0.01, y0 + 0.03, zt, zt + 0.02, black, K); break;
+        case 'plant': { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, r = (x1 - x0) / 2;
+          const pot = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.6, r * 0.45, 0.35, 16), stone); pot.position.set(cx, zb + 0.175, -cy); K.add(pot);
+          const lf = new THREE.Mesh(new THREE.SphereGeometry(r, 14, 12), MAT.plant); lf.scale.set(1, 1.7, 1); lf.position.set(cx, zb + 0.35 + r * 1.5, -cy); K.add(lf); break; }
       }
     });
     box(2.9, 4.55, 10.9, 10.935, z0 + 0.9, z0 + 1.5, splash, K);        // tiled splashback behind the sink
@@ -489,15 +525,10 @@ body.walking #layers, body.walking #title dl { display: none; }
       else box(b.c - b.b / 2, b.c + b.b / 2, b.s, b.e, b.top - b.d, b.top, MAT.s_beam, G.struct);
     });
     const s0 = H.S.slabs.gf; box(s0.x0, s0.x1, s0.y0, s0.y1, LV.gfSlabTop - s0.th, LV.gfSlabTop, MAT.s_slab, G.struct, { cast: false });
-    [[0, 5.8, 0, 4.75], [0, 5.8, 7.95, 11], [0, 0.1, 4.75, 7.95], [2.05, 5.8, 4.75, 7.95]].forEach(r => { box(r[0], r[1], r[2], r[3], LV.ffSlabTop - 0.12, LV.ffSlabTop, MAT.s_slab, G.struct, { cast: false }); box(r[0], r[1], r[2], r[3], LV.ring - 0.15, LV.ring, MAT.s_slab, G.struct, { cast: false }); });
+    [[0, 5.8, 0, H.stair.void.y0], [0, 5.8, H.stair.void.y1, 11], [0, H.stair.void.x0, H.stair.void.y0, H.stair.void.y1], [H.stair.void.x1, 5.8, H.stair.void.y0, H.stair.void.y1]].forEach(r => { box(r[0], r[1], r[2], r[3], LV.ffSlabTop - 0.12, LV.ffSlabTop, MAT.s_slab, G.struct, { cast: false }); box(r[0], r[1], r[2], r[3], LV.ring - 0.15, LV.ring, MAT.s_slab, G.struct, { cast: false }); });
     const s4 = H.S.slabs.sh; box(s4.x0, s4.x1, s4.y0, s4.y1, LV.shSlab - s4.th, LV.shSlab, MAT.s_slab, G.struct, { cast: false });
     const s = H.stair;
-    for (let i = 1; i <= 9; i++) box(s.f1.x0, s.f1.x1, s.f1.yStart + (i - 1) * s.going, s.f1.yStart + i * s.going, LV.gf + i * s.rise - 0.3, LV.gf + i * s.rise, MAT.s_beam, G.struct);
-    for (let i = 1; i <= 9; i++) { const top = s.landing.z + i * s.rise; box(s.f2.x0, s.f2.x1, s.f2.yStart - i * s.going, s.f2.yStart - (i - 1) * s.going, top - 0.3, top, MAT.s_beam, G.struct); }
-    box(s.landing.x0, s.landing.x1, s.landing.y0, s.landing.y1, s.landing.z - 0.15, s.landing.z, MAT.s_beam, G.struct);
-    for (let i = 1; i <= 9; i++) box(s.f3.x0, s.f3.x1, s.f3.yStart + (i - 1) * s.going, s.f3.yStart + i * s.going, LV.ff + i * s.rise - 0.3, LV.ff + i * s.rise, MAT.s_beam, G.struct);
-    for (let i = 1; i <= 9; i++) { const top = s.landing2.z + i * s.rise; box(s.f4.x0, s.f4.x1, s.f4.yStart - i * s.going, s.f4.yStart - (i - 1) * s.going, top - 0.3, top, MAT.s_beam, G.struct); }
-    box(s.landing2.x0, s.landing2.x1, s.landing2.y0, s.landing2.y1, s.landing2.z - 0.15, s.landing2.z, MAT.s_beam, G.struct);
+    buildStair(() => G.struct, MAT.s_beam, false);
     box(-1, 7, -3, 12, -1.6, -1.58, std({ color: 0x8b7a60, transparent: true, opacity: 0.25, depthWrite: false }), G.struct, { cast: false });
   })();
 
@@ -597,7 +628,7 @@ body.walking #layers, body.walking #title dl { display: none; }
   const lvAt = z => (z < 3.0 ? 'gf' : z < 6.3 ? 'ff' : 'rf');
   const addB = (lv, x0, x1, y0, y1) => blocks[lv].push([Math.min(x0, x1), Math.max(x0, x1), Math.min(y0, y1), Math.max(y0, y1)]);
   H.walls.forEach(w => {
-    const lvs = w.id === 'F14' ? ['ff', 'rf'] : [w.lv], segs = [];
+    const lvs = [w.lv], segs = [];
     let a = w.s - w.t / 2;
     H.openingsOn(w).sort((p, q) => p.s - q.s).forEach(o => {
       const k = H.types[o.t].kind;
@@ -611,21 +642,33 @@ body.walking #layers, body.walking #title dl { display: none; }
   });
   addB('gf', 5.66, 5.94, -0.14, 0.14);                       // porch column
   { const si = H.siteItems; addB('gf', si.pond.x0 - 0.25, si.pond.x1 + 0.25, si.pond.y0 - 0.25, si.pond.y1 + 0.25); addB('gf', si.car.x0, si.car.x1, si.car.y0, si.car.y1); si.carport.posts.forEach(([x, y]) => addB('gf', x - 0.06, x + 0.06, y - 0.06, y + 0.06)); addB('gf', si.mango.x - 0.2, si.mango.x + 0.2, si.mango.y - 0.2, si.mango.y + 0.2); }
-  H.furniture.filter(f => f.lv === 'gf' && ['counter', 'fridge', 'island', 'washer'].includes(f.k)).forEach(f => addB('gf', f.r[0], f.r[2], f.r[1], f.r[3]));
-  addB('rf', 0.1, 1.0, 4.72, 4.78);                          // roof-level balustrade over flight 3
+  H.furniture.filter(f => f.lv === 'gf' && ['counter', 'fridge', 'island', 'washer', 'bed', 'nightstand', 'wardrobe', 'desk'].includes(f.k)).forEach(f => addB('gf', f.r[0], f.r[2], f.r[1], f.r[3]));
   addB('ff', 0.05, 2.65, -0.06, 0.03);                       // balcony glass
+  ['gf', 'ff'].forEach(lv => addB(lv, 1.035, 1.065, H.stair.screenY0[lv], H.stair.yTurn));   // glass between the flights
+  addB('rf', H.stair.outer.x0, H.stair.outer.x1, H.stair.void.y0 - 0.02, H.stair.void.y0 + 0.02);
   const lot = { x0: -H.site.ox + RAD, x1: -H.site.ox + H.site.w - RAD, y0: -H.site.oy - 1.2, y1: -H.site.oy + H.site.d - RAD };
 
   function hit(x, y, z) {
-    if (z < 1.5 && x + RAD > 1.1 && x - RAD < 2.05 && y + RAD > 4.75 && y - RAD < 7.95) return true; // store under the stair
+    if (stairBlocked(x, y, z)) return true;
     return blocks[lvAt(z)].some(b => x + RAD > b[0] && x - RAD < b[1] && y + RAD > b[2] && y - RAD < b[3]);
   }
+  // height of the stair tread under a point, taking the storey closest to where the walker already is (null = no reachable tread)
+  function stairZ(x, y, z) {
+    const t = H.stair.at(x, y); if (!t) return null;
+    const c = [LV.gf + t.z, LV.ff + t.z].reduce((a, b) => (Math.abs(b - z) < Math.abs(a - z) ? b : a));
+    return Math.abs(c - z) < 0.6 ? c : null;
+  }
+  // inside the stair box: blocked over the slab opening, or where the flight above is too low to walk under
+  function stairBlocked(x, y, z) {
+    const s = H.stair;
+    if (!(x > s.void.x0 && x < s.void.x1 && y > s.y0 && y < s.void.y1) || stairZ(x, y, z) !== null) return false;
+    if (lvAt(z) !== 'gf') return y > s.void.y0;
+    const t = s.at(x, y); if (!t) return false;
+    return [LV.gf, LV.ff].some(base => { const top = base + t.z, soffit = t.flight === 1 && base === LV.gf ? base : top - 0.3; return top > z + 0.6 && soffit < z + 2.0; });
+  }
   function floorAt(x, y, z) {
-    const outer = x > 0.1 && x < 1.0 && y > 4.75 && y < 7.0, inner = x > 1.1 && x < 2.05 && y > 4.75 && y < 7.0;
-    if (outer) return (z < 2.9 ? LV.gf : LV.ff) + (y - 4.75) / 2.25 * 1.65;                                  // flights 1 and 3
-    if (inner && z > 4.5) return LV.landing2 + (7.0 - y) / 2.25 * 1.65;                                      // flight 4
-    if (inner && z > 1.5) return LV.landing + (7.0 - y) / 2.25 * 1.65;                                       // flight 2
-    if (x > 0.1 && x < 2.05 && y >= 7.0 && y < 7.95 && z > 1.0) return z < 3.8 ? LV.landing : LV.landing2;  // half landings
+    const sz = stairZ(x, y, z);
+    if (sz !== null) return sz;                                                                              // on the stair
     if (x > -0.1 && x < 5.9 && y > -0.1 && y < 11.1) {
       if (z > 6.3) { const sh = H.roof.stairHouse; return x > sh.x0 && x < sh.x1 && y > sh.y0 && y < sh.y1 ? LV.roof : LV.deck; }
       return z > 2.9 ? (x < 2.7 && y < 1.2 ? LV.ff - 0.05 : LV.ff) : LV.gf;
@@ -635,7 +678,7 @@ body.walking #layers, body.walking #title dl { display: none; }
     return LV.yard;
   }
   function whereAmI(x, y, z) {
-    if (x > 0.1 && x < 2.05 && y > 4.75 && y < 7.95) return 'Stair';
+    if (H.stair.at(x, y) && (z > LV.gf + 0.3 || H.stair.at(x, y).flight === 1)) return 'Stair';
     const lv = lvAt(z + 0.2);
     const rm = H.rooms.find(r => r.lv === lv && r.r.some(q => x >= q[0] && x <= q[2] && y >= q[1] && y <= q[3]));
     if (rm) return rm.name + ({ gf: ' · ground floor', ff: ' · first floor', rf: ' · roof' })[lv];

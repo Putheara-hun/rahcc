@@ -129,7 +129,7 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
   <section class="panel">
     <h2>Two phases<small>So the house can be paid for in two steps</small></h2>
     <div class="note">
-      <p style="margin-top:0"><b>Phase 1 (now, about $26,000 with economy finishes):</b> stages 1–4, then the ground floor parts of stages 8–16. You get the complete ground floor to live in: guest bedroom used as the main bedroom, living room, dining, kitchen with laundry, and bathroom. The first floor slab is the roof for now: it is waterproofed, drains through four downpipes, and the column steel is left sticking up so the first floor can be added later. The stair goes up to a lockable metal cover.</p>
+      <p style="margin-top:0"><b>Phase 1 (now, about $24,100 with economy finishes and a labour-only builder):</b> stages 1–4, then the ground floor parts of stages 8–16. You get the complete ground floor to live in: guest bedroom used as the main bedroom, living room, dining, kitchen with laundry, and bathroom. The first floor slab is the roof for now: it is waterproofed, drains through four downpipes, and the column steel is left sticking up so the first floor can be added later. The stair goes up to a lockable metal cover.</p>
       <p style="margin-bottom:0"><b>Phase 2 (later, when you have the money):</b> stages 5–7 and the first floor parts of stages 8–15: the first floor rooms, roof terrace and stair house, then the carport, fish pond, fence and gates, and the upgrades (ceilings, porcelain, cladding, timber door, kitchen cabinets). See the <a href="Metersaillist.html#phase1">Phase 1 material list</a>.</p>
     </div>
   </section>
@@ -171,9 +171,9 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
   const s0 = S.slabs.gf, vS0 = (s0.x1 - s0.x0) * (s0.y1 - s0.y0) * s0.th;
   const colV = (z0, z1) => sum(S.columns.map(c => c.b * c.d * Math.max(0, Math.min(c.z1, z1) - Math.max(c.z0, z0))));
   const sv = H.stair.void, slabA = 5.8 * 11 - (sv.x1 - sv.x0) * (sv.y1 - sv.y0);
-  const flight = 0.15 * 0.95 * Math.hypot(2.25, 1.65) + 9 * 0.5 * 0.25 * 0.165 * 0.95, landing = 1.95 * 0.95 * 0.15;
-  const vFF = colV(LV.footTop, LV.ffSlabTop) + sum(S.floorBeams.map(b => len(b) * b.b * (b.m === 'LB1' ? b.d : b.d - 0.12))) + slabA * 0.12 + 2 * flight + landing;
-  const vRF = colV(LV.ffSlabTop, LV.ring) + sum(S.roofBeams.map(b => len(b) * b.b * (b.m === 'LB2' ? b.d : b.d - 0.15))) + slabA * 0.15 + 2 * flight + landing;
+  const flight = H.stair.volPerStorey / 2, landing = 0;   // two halves of one storey of stair
+  const vFF = colV(LV.footTop, LV.ffSlabTop) + sum(S.floorBeams.map(b => len(b) * b.b * (b.d - 0.12))) + slabA * 0.12 + 2 * flight + landing;
+  const vRF = colV(LV.ffSlabTop, LV.ring) + sum(S.roofBeams.map(b => len(b) * b.b * (b.d - 0.15))) + slabA * 0.15 + 2 * flight + landing;
   const sh = S.slabs.sh, vSH = colV(LV.ring, LV.shSlab) + (sh.x1 - sh.x0) * (sh.y1 - sh.y0) * sh.th + sum(S.shBeams.map(b => len(b) * b.b * (b.d - sh.th)));
   const wallA = lv => sum(H.walls.filter(w => w.lv === lv).map(w => {
     const h = w.lv === 'gf' ? 2.9 : w.lv === 'ff' ? 2.85 : (w.top - LV.ring - 0.1);
@@ -213,15 +213,15 @@ footer { color: var(--ink2); font-size: 13px; padding-block: 0 40px; }
       hold: ['Water pipes pressure-tested at 10 bar for 2 hours before they are buried', 'Drains tested with water and checked for fall (min. 1:50) before backfill', 'Photograph every pipe with a tape measure before it is covered'],
       mistakes: ['Pouring the slab first and cutting it later for pipes', 'Soft, uncompacted fill, which cracks the floor later'] },
     { t: 'Ground floor columns, first floor beams, slab and stair', w: [5.5, 3],
-      what: 'Cast the ground floor columns, then build the formwork for the first floor beams, slab S1 and the first two stair flights, and pour them together. Electrical conduits and ceiling boxes are cast into the slab.',
-      steps: ['Cast the columns C1 and C2 up to the beam soffit', 'Build formwork and props for beams B1–B3, slab S1, the balcony set-down S2, and the stair', 'Fix the steel; place conduits and boxes; leave the stair void 1950 × 3200', 'Pour beams, slab and stair in one day; cure for 7 days', 'Phase 1 only: leave the column starter bars 900 mm above the slab, coat and cap them; screed the slab to four outlets and waterproof it; fit downpipes and a lockable metal cover over the stair opening'],
+      what: 'Cast the ground floor columns, then build the formwork for the first floor beams, slab S1 and the first storey of stair, and pour them together. Electrical conduits and ceiling boxes are cast into the slab.',
+      steps: ['Cast the columns C1 and C2 up to the beam soffit', 'Build formwork and props for beams B1–B3, slab S1, the balcony set-down S2, and the stair', 'Fix the steel; place conduits and boxes; leave the stair opening 1950 × 2250', 'Pour beams, slab and stair in one day; cure for 7 days', 'Phase 1 only: leave the column starter bars 900 mm above the slab, coat and cap them; screed the slab to four outlets and waterproof it; fit downpipes and a lockable metal cover over the stair opening'],
       qty: [['Concrete C25', f1(vFF) + ' m³'], ['Steel (approx.)', f0(steel(vFF)) + ' kg'], ['Slab area', f1(slabA) + ' m²']],
       order: ['Bricks and cement for the ground floor walls (can start after props are removed)', 'Steel and formwork for the roof'],
       hold: ['Steel inspection before the pour, especially at the 5.8 m B1 beams', 'Props stay for 14 days (21 days under the 5.8 m beams)'],
       mistakes: ['Removing props early to reuse them upstairs', 'Forgetting the conduits and cutting the slab later'] },
     { t: 'First floor columns, roof beams, roof slab and stair', w: [8.5, 3],
-      what: 'Repeat the frame for the roof: columns, roof beams R1–R3, the 150 mm roof slab S3 and the upper stair flights. The roof slab is the terrace floor, so its steel is double-layered to control cracking.',
-      steps: ['Cast the first floor columns', 'Formwork for beams R1–R3, slab S3 and the upper stair flights', 'Fix top and bottom steel mats; leave outlets and the stair void', 'Pour, then cure for at least 7 days (keep the slab wet: this is the waterproofing base)'],
+      what: 'Repeat the frame for the roof: columns, roof beams R1–R3, the 150 mm roof slab S3 and the upper stair. The roof slab is the terrace floor, so its steel is double-layered to control cracking.',
+      steps: ['Cast the first floor columns', 'Formwork for beams R1–R3, slab S3 and the upper stair', 'Fix top and bottom steel mats; leave outlets and the stair void', 'Pour, then cure for at least 7 days (keep the slab wet: this is the waterproofing base)'],
       qty: [['Concrete C25', f1(vRF) + ' m³'], ['Steel (approx.)', f0(steel(vRF)) + ' kg']],
       order: ['PU waterproofing membrane, roof outlets and scuppers', 'Bricks for the first floor walls and parapets'],
       hold: ['Steel inspection before the pour: both layers, 20 mm cover', 'Slab levels checked so the screed to falls can reach the outlets'],

@@ -57,11 +57,10 @@
     { id: 'G4', lv: 'gf', o: 'v', c: 0.0, s: 0.0, e: 11.0, t: 0.2, out: '-x', fin: 'render' },
     { id: 'G5', lv: 'gf', o: 'v', c: 5.8, s: 1.2, e: 11.0, t: 0.2, out: '+x', fin: 'render' },
     { id: 'G6', lv: 'gf', o: 'h', c: 11.0, s: 0.0, e: 5.8, t: 0.2, out: '+y', fin: 'render' },
-    { id: 'G7', lv: 'gf', o: 'v', c: 2.7, s: 1.2, e: 3.8, t: 0.1 },
-    { id: 'G8', lv: 'gf', o: 'h', c: 3.8, s: 0.0, e: 2.7, t: 0.1 },
-    { id: 'G9', lv: 'gf', o: 'v', c: 2.1, s: 4.75, e: 11.0, t: 0.1 },
+    { id: 'G7', lv: 'gf', o: 'v', c: 2.7, s: 1.2, e: 5.2, t: 0.1 },
+    { id: 'G8', lv: 'gf', o: 'h', c: 5.2, s: 0.0, e: 2.7, t: 0.1 },
+    { id: 'G9', lv: 'gf', o: 'v', c: 2.1, s: 6.1, e: 11.0, t: 0.1 },
     { id: 'G10', lv: 'gf', o: 'h', c: 8.0, s: 0.0, e: 2.1, t: 0.1 },
-    { id: 'G11', lv: 'gf', o: 'v', c: 1.05, s: 4.75, e: 7.0, t: 0.1, note: 'stair spine wall' },
     // ---------- FIRST FLOOR ----------
     { id: 'F1', lv: 'ff', o: 'h', c: 0.0, s: 2.7, e: 5.8, t: 0.2, out: '-y', fin: 'clad' },
     { id: 'F2', lv: 'ff', o: 'v', c: 2.7, s: 0.0, e: 1.2, t: 0.2, out: '-x', fin: 'clad' },
@@ -75,8 +74,7 @@
     { id: 'F10', lv: 'ff', o: 'v', c: 3.3, s: 3.8, e: 8.0, t: 0.1 },
     { id: 'F11', lv: 'ff', o: 'h', c: 5.9, s: 3.3, e: 5.8, t: 0.1 },
     { id: 'F12', lv: 'ff', o: 'h', c: 8.0, s: 0.0, e: 5.8, t: 0.1 },
-    { id: 'F13', lv: 'ff', o: 'v', c: 2.1, s: 4.75, e: 8.0, t: 0.1, note: 'stair enclosure wall' },
-    { id: 'F14', lv: 'ff', o: 'v', c: 1.05, s: 4.75, e: 7.0, t: 0.1, note: 'stair spine wall' },
+    { id: 'F13', lv: 'ff', o: 'v', c: 2.1, s: 6.1, e: 8.0, t: 0.1, note: 'stair enclosure wall' },
     // ---------- ROOF TERRACE (walls stand on the roof slab at +7.000) ----------
     { id: 'R1', lv: 'rf', o: 'h', c: 0.0, s: 0.0, e: 5.8, t: 0.2, out: '-y', fin: 'render', top: LV.parapet, note: 'parapet + railing' },
     { id: 'R2', lv: 'rf', o: 'v', c: 5.8, s: 0.0, e: 11.0, t: 0.2, out: '+x', fin: 'render', top: LV.parapet, note: 'parapet + railing' },
@@ -116,7 +114,7 @@
     { t: 'W01', lv: 'gf', o: 'h', c: 0.0, s: 0.40, e: 2.30 },
     { t: 'D01', lv: 'gf', o: 'h', c: 1.2, s: 2.85, e: 3.85, swing: '+y', hinge: 's' },
     { t: 'SD01', lv: 'gf', o: 'h', c: 1.2, s: 4.05, e: 5.65 },
-    { t: 'D02', lv: 'gf', o: 'h', c: 3.8, s: 1.10, e: 1.90, swing: '-y', hinge: 'e' },
+    { t: 'D02', lv: 'gf', o: 'h', c: 5.2, s: 1.10, e: 1.90, swing: '-y', hinge: 'e' },
     { t: 'D03', lv: 'gf', o: 'v', c: 2.1, s: 8.25, e: 8.95, swing: '-x', hinge: 'e' },
     { t: 'W04', lv: 'gf', o: 'v', c: 5.8, s: 5.60, e: 7.20 },
     { t: 'W03', lv: 'gf', o: 'h', c: 11.0, s: 0.70, e: 1.40 },
@@ -137,7 +135,7 @@
     { t: 'W09', lv: 'ff', o: 'h', c: 11.0, s: 1.60, e: 3.80 },
 
     { t: 'D06', lv: 'rf', o: 'v', c: 2.1, s: 3.95, e: 4.75, swing: '+x', hinge: 's' },
-    { t: 'W10', lv: 'rf', o: 'v', c: 2.1, s: 5.90, e: 7.10 }
+    { t: 'W10', lv: 'rf', o: 'v', c: 2.1, s: 6.50, e: 7.70 }
   ];
 
   /* Finish codes */
@@ -164,25 +162,25 @@
 
   /* Rooms: rectangles to wall centreline. elec = lights / sockets / AC / exhaust fan / water heater / data */
   const rooms = [
-    { id: 'G-01', lv: 'gf', name: 'Guest Bedroom', r: [[0, 0, 2.7, 3.8]], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 2, S: 4, AC: 1 } },
+    { id: 'G-01', lv: 'gf', name: 'Guest Bedroom', r: [[0, 0, 2.7, 5.2]], lab: [1.8, 4.1], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 2, S: 4, AC: 1 } },
     { id: 'G-02', lv: 'gf', name: 'Porch', r: [[2.7, 0, 5.8, 1.2]], lab: [3.55, 0.42], compact: true, fl: 'F3', wl: 'W3', cl: 'C3', out: true, elec: { L: 2, S: 1 } },
-    { id: 'G-03', lv: 'gf', name: 'Living', r: [[2.7, 1.2, 5.8, 3.8], [2.1, 3.8, 5.8, 5.2]], lab: [4.25, 2.5], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 4, S: 6, AC: 1, D: 1 } },
+    { id: 'G-03', lv: 'gf', name: 'Living', r: [[2.7, 1.2, 5.8, 5.2]], lab: [4.25, 2.9], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 4, S: 6, AC: 1, D: 1 } },
     { id: 'G-04', lv: 'gf', name: 'Dining', r: [[2.1, 5.2, 5.8, 7.8]], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 2, S: 2 } },
     { id: 'G-05', lv: 'gf', name: 'Kitchen', r: [[2.1, 7.8, 5.8, 11.0]], lab: [3.7, 9.2], fl: 'F1', wl: 'W1', cl: 'C1', elec: { L: 3, S: 6 } },
     { id: 'G-06', lv: 'gf', name: 'Bathroom', r: [[0, 8.0, 2.1, 11.0]], lab: [1.05, 9.6], fl: 'F2', wl: 'W2', cl: 'C2', wet: true, elec: { L: 1, S: 0, F: 1, H: 1 } },
-    { id: 'G-07', lv: 'gf', name: 'Stair', r: [[0, 3.8, 2.1, 8.0]], lab: [0.55, 4.35], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 2, S: 1 } },
+    { id: 'G-07', lv: 'gf', name: 'Stair', r: [[0, 5.2, 2.1, 8.0]], lab: [1.58, 6.05], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 2, S: 1 } },
 
     { id: 'F-01', lv: 'ff', name: 'Balcony', r: [[0, 0, 2.7, 1.2]], lab: [1.35, 0.52], compact: true, fl: 'F3', wl: 'W3', cl: 'C3', out: true, elec: { L: 1, S: 1 } },
-    { id: 'F-02', lv: 'ff', name: 'Family Lounge', r: [[0, 1.2, 2.7, 3.8]], lab: [1.55, 2.5], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 3, D: 1 } },
+    { id: 'F-02', lv: 'ff', name: 'Family Lounge', r: [[0, 1.2, 2.7, 3.8], [0, 3.8, 2.1, 5.2]], lab: [1.3, 3.0], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 3, D: 1 } },
     { id: 'F-03', lv: 'ff', name: 'Bedroom 2', r: [[2.7, 0, 5.8, 3.8]], lab: [4.4, 0.95], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 4, AC: 1 } },
-    { id: 'F-04', lv: 'ff', name: 'Landing', r: [[0, 3.8, 2.1, 8.0]], lab: [0.55, 4.35], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 1, S: 0 } },
+    { id: 'F-04', lv: 'ff', name: 'Landing', r: [[0, 5.2, 2.1, 8.0]], lab: [1.58, 6.05], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 1, S: 0 } },
     { id: 'F-05', lv: 'ff', name: 'Hall', r: [[2.1, 3.8, 3.3, 8.0]], lab: [2.7, 6.9], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 2, S: 1 } },
     { id: 'F-06', lv: 'ff', name: 'Master Bathroom', r: [[3.3, 3.8, 5.8, 5.9]], fl: 'F2', wl: 'W2', cl: 'C2', wet: true, elec: { L: 1, S: 0, F: 1, H: 1 } },
     { id: 'F-07', lv: 'ff', name: 'Walk-in Wardrobe', r: [[3.3, 5.9, 5.8, 8.0]], lab: [4.55, 7.35], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 1, S: 1 } },
     { id: 'F-08', lv: 'ff', name: 'Master Bedroom', r: [[0, 8.0, 5.8, 11.0]], lab: [3.9, 9.35], fl: 'F4', wl: 'W1', cl: 'C1', elec: { L: 3, S: 5, AC: 1, D: 1 } },
 
     { id: 'R-01', lv: 'rf', name: 'Roof Terrace', r: [[2.1, 0, 5.8, 11.0], [0, 0, 2.1, 3.8], [0, 8.0, 2.1, 11.0]], lab: [3.95, 5.6], fl: 'F6', wl: 'W3', cl: '—', out: true, elec: { L: 4, S: 2 } },
-    { id: 'R-02', lv: 'rf', name: 'Stair House', r: [[0, 3.8, 2.1, 8.0]], lab: [0.55, 4.35], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 1, S: 0 } }
+    { id: 'R-02', lv: 'rf', name: 'Stair House', r: [[0, 3.8, 2.1, 8.0]], lab: [0.6, 4.35], fl: 'F5', wl: 'W1', cl: 'C1', stair: true, elec: { L: 1, S: 0 } }
   ];
 
   /* Built-in fittings only (shown on plans for plumbing setting-out; not modelled in 3D). k = kind */
@@ -207,6 +205,19 @@
     { lv: 'gf', k: 'dryer', r: [2.15, 10.25, 2.80, 10.90], z: 0.85, h: 0.85 },
     { lv: 'gf', k: 'upper', r: [2.15, 10.30, 2.80, 10.90], z: 1.85, h: 0.6 },
     { lv: 'gf', k: 'tvwall', r: [2.15, 9.15, 2.20, 10.15], z: 1.25, h: 0.58 },
+    // guest bedroom: queen bed against the party wall, desk under the window, wardrobe beside the door
+    { lv: 'gf', k: 'headboard', r: [0.10, 1.45, 0.16, 3.65], h: 1.25 },
+    { lv: 'gf', k: 'bed', r: [0.16, 1.75, 2.15, 3.35], h: 0.56 },
+    { lv: 'gf', k: 'nightstand', r: [0.12, 1.22, 0.57, 1.67], h: 0.5 },
+    { lv: 'gf', k: 'nightstand', r: [0.12, 3.43, 0.57, 3.88], h: 0.5 },
+    { lv: 'gf', k: 'lamp', r: [0.24, 1.34, 0.44, 1.54], z: 0.5, h: 0.4 },
+    { lv: 'gf', k: 'lamp', r: [0.24, 3.55, 0.44, 3.75], z: 0.5, h: 0.4 },
+    { lv: 'gf', k: 'rug', r: [1.30, 1.45, 2.55, 3.65], h: 0.012 },
+    { lv: 'gf', k: 'wardrobe', r: [0.10, 4.55, 1.00, 5.15], h: 2.2 },
+    { lv: 'gf', k: 'desk', r: [1.25, 0.12, 2.45, 0.62], h: 0.75 },
+    { lv: 'gf', k: 'chair', r: [1.60, 0.72, 2.05, 1.17], h: 0.85 },
+    { lv: 'gf', k: 'curtain', r: [0.35, 0.11, 2.60, 0.15], h: 2.55 },
+    { lv: 'gf', k: 'plant', r: [2.20, 4.62, 2.60, 5.02], h: 1.1 },
     { lv: 'ff', k: 'shower', r: [4.55, 3.85, 5.75, 4.95], h: 0.05 },
     { lv: 'ff', k: 'wc', r: [5.05, 5.10, 5.75, 5.50], h: 0.8 },
     { lv: 'ff', k: 'basin', r: [4.10, 5.40, 4.70, 5.85], h: 0.85 },
@@ -215,18 +226,38 @@
     { lv: 'ff', k: 'wardrobe', r: [3.35, 6.60, 3.95, 7.95], h: 2.2 }
   ];
 
-  /* U-stair, GF -> FF -> roof. Each storey: 20 risers x 165 = 3300, going 250, clear width ~900–950 */
+  /* Concrete U-stair with winders, GF -> FF -> roof, in the same 2.1 × 2.8 m box as before.
+     Per storey 18 risers × 183 = 3300, going 250. Flight 1 (outer lane, against the party wall) climbs towards the rear,
+     5 winders turn round a steel newel, flight 2 (inner lane) comes back and lands at the front of the box. */
   const stair = {
-    risers: 20, rise: 0.165, going: 0.25,
-    f1: { x0: 0.10, x1: 1.00, yStart: 4.75, dir: +1, n: 10, z0: LV.gf },            // GF -> half landing
-    landing: { x0: 0.10, x1: 2.05, y0: 7.00, y1: 7.95, z: LV.landing },
-    f2: { x0: 1.10, x1: 2.05, yStart: 7.00, dir: -1, n: 10, z0: LV.landing },       // half landing -> FF
-    f3: { x0: 0.10, x1: 1.00, yStart: 4.75, dir: +1, n: 10, z0: LV.ff },            // FF -> upper half landing
-    landing2: { x0: 0.10, x1: 2.05, y0: 7.00, y1: 7.95, z: LV.landing2 },
-    f4: { x0: 1.10, x1: 2.05, yStart: 7.00, dir: -1, n: 10, z0: LV.landing2 },      // upper half landing -> roof
-    topLanding: { x0: 0.10, x1: 2.05, y0: 3.85, y1: 4.75 },
-    void: { x0: 0.10, x1: 2.05, y0: 4.75, y1: 7.95 }
+    type: 'winder', risers: 18, rise: 3.3 / 18, going: 0.25,
+    y0: 5.2, yTurn: 6.95, y1: 7.95, newel: [1.075, 6.95],
+    outer: { x0: 0.10, x1: 1.00 }, inner: { x0: 1.10, x1: 2.05 },
+    void: { x0: 0.10, x1: 2.05, y0: 5.70, y1: 7.95 },           // opening in the first floor and roof slabs
+    screenY0: { gf: 6.2, ff: 5.7 }                              // glass screen between the flights starts here (GF leaves a 1 m entry)
   };
+  // tread outlines in plan (k = tread number, z = top of tread above the storey floor)
+  stair.treads = (() => {
+    const s = stair, T = [], [nx, ny] = s.newel, X0 = s.outer.x0, X1 = s.inner.x1;
+    for (let k = 1; k <= 7; k++) { const a = s.y0 + (k - 1) * s.going, b = a + s.going; T.push({ k, p: [[X0, a], [s.outer.x1, a], [s.outer.x1, b], [X0, b]] }); }
+    const hit = a => { const c = Math.cos(a), n = Math.sin(a); let t = Infinity;
+      if (c < -1e-9) t = Math.min(t, (X0 - nx) / c); if (c > 1e-9) t = Math.min(t, (X1 - nx) / c); if (n > 1e-9) t = Math.min(t, (s.y1 - ny) / n);
+      return [nx + t * c, ny + t * n]; };
+    const corners = [[X1, s.y1], [X0, s.y1]].map(p => ({ p, a: Math.atan2(p[1] - ny, p[0] - nx) }));
+    for (let i = 0; i < 5; i++) {
+      const a1 = Math.PI * (1 - i / 5), a2 = Math.PI * (1 - (i + 1) / 5), p = [[nx, ny], hit(a1)];
+      corners.filter(c => c.a < a1 && c.a > a2).sort((u, v) => v.a - u.a).forEach(c => p.push(c.p));
+      p.push(hit(a2)); T.push({ k: 8 + i, p });
+    }
+    for (let k = 13; k <= 17; k++) { const b = s.yTurn - (k - 13) * s.going, a = b - s.going; T.push({ k, p: [[s.inner.x0, a], [X1, a], [X1, b], [s.inner.x0, b]] }); }
+    T.forEach(t => { t.z = t.k * s.rise; t.flight = t.k <= 7 ? 1 : t.k <= 12 ? 'w' : 2; });
+    return T;
+  })();
+  stair.at = (x, y) => stair.treads.find(t => { let c = false; const p = t.p;
+    for (let i = 0, j = p.length - 1; i < p.length; j = i++) if ((p[i][1] > y) !== (p[j][1] > y) && x < (p[j][0] - p[i][0]) * (y - p[i][1]) / (p[j][1] - p[i][1]) + p[i][0]) c = !c;
+    return c; }) || null;
+  stair.planArea = stair.treads.reduce((a, t) => a + Math.abs(t.p.reduce((s, q, i) => { const r = t.p[(i + 1) % t.p.length]; return s + q[0] * r[1] - r[0] * q[1]; }, 0)) / 2, 0);
+  stair.volPerStorey = stair.planArea * (0.15 * 1.25 + stair.rise / 2);      // waist + steps, m³
 
   /* ---------------- STRUCTURE (reinforced concrete frame) ---------------- */
   const S = {};
@@ -247,10 +278,10 @@
     ...[0, 3.8, 8.0, 11.0].map(y => beam('SB1', 'h', y, 0, 5.8, 0.25, 0.50, LV.gfSlabTop)),
     beam('GB1', 'v', 0, 0, 11, 0.20, 0.40, LV.gfSlabTop),
     beam('GB1', 'v', 5.8, 0, 11, 0.20, 0.40, LV.gfSlabTop),
-    beam('GB2', 'v', 2.7, 0, 3.8, 0.20, 0.30, LV.gfSlabTop),
+    beam('GB2', 'v', 2.7, 0, 5.2, 0.20, 0.30, LV.gfSlabTop),
     beam('GB2', 'h', 1.2, 2.7, 5.8, 0.20, 0.30, LV.gfSlabTop),
     beam('GB2', 'v', 2.1, 3.8, 11, 0.20, 0.30, LV.gfSlabTop),
-    beam('GB2', 'v', 1.05, 3.8, 8.0, 0.20, 0.30, LV.gfSlabTop)
+    beam('GB2', 'h', 5.2, 0, 2.7, 0.20, 0.30, LV.gfSlabTop)
   ];
   S.floorBeams = [
     ...[0, 3.8, 8.0, 11.0].map(y => beam('B1', 'h', y, 0, 5.8, 0.25, 0.50, LV.ffSlabTop)),
@@ -259,10 +290,9 @@
     beam('B3', 'v', 2.7, 0, 3.8, 0.20, 0.35, LV.ffSlabTop),
     beam('B3', 'h', 1.2, 0, 2.7, 0.20, 0.35, LV.ffSlabTop),
     beam('B3', 'v', 2.1, 3.8, 8.0, 0.20, 0.35, LV.ffSlabTop),
-    beam('B3', 'h', 4.75, 0, 2.1, 0.20, 0.35, LV.ffSlabTop),
+    beam('B3', 'h', 5.7, 0, 2.1, 0.20, 0.35, LV.ffSlabTop),
     beam('B3', 'v', 3.3, 3.8, 8.0, 0.20, 0.35, LV.ffSlabTop),
-    beam('B3', 'h', 5.9, 3.3, 5.8, 0.20, 0.35, LV.ffSlabTop),
-    beam('LB1', 'h', 7.95, 0, 2.1, 0.20, 0.30, LV.landing - 0.05)
+    beam('B3', 'h', 5.9, 3.3, 5.8, 0.20, 0.35, LV.ffSlabTop)
   ];
   S.roofBeams = [
     ...[0, 3.8, 8.0, 11.0].map(y => beam('R1', 'h', y, 0, 5.8, 0.25, 0.50, LV.ring)),
@@ -271,9 +301,8 @@
     beam('R3', 'v', 2.7, 0, 3.8, 0.20, 0.35, LV.ring),
     beam('R3', 'h', 1.2, 0, 2.7, 0.20, 0.35, LV.ring),
     beam('R3', 'v', 2.1, 3.8, 8.0, 0.20, 0.35, LV.ring),
-    beam('R3', 'h', 4.75, 0, 2.1, 0.20, 0.35, LV.ring),
-    beam('R3', 'v', 3.3, 3.8, 8.0, 0.20, 0.35, LV.ring),
-    beam('LB2', 'h', 7.95, 0, 2.1, 0.20, 0.30, LV.landing2 - 0.05)
+    beam('R3', 'h', 5.7, 0, 2.1, 0.20, 0.35, LV.ring),
+    beam('R3', 'v', 3.3, 3.8, 8.0, 0.20, 0.35, LV.ring)
   ];
   S.shBeams = [
     beam('SH1', 'h', 3.8, 0, 2.1, 0.20, 0.30, LV.shSlab), beam('SH1', 'h', 8.0, 0, 2.1, 0.20, 0.30, LV.shSlab),
@@ -299,18 +328,16 @@
     { m: 'B1', size: '250 × 500', rebar: 'T 2-DB16 + 2-DB16 extra at supports (L/3), B 3-DB16, links RB6 @ 100/150', note: 'Primary beams, span 5.8 m, grids 1–4' },
     { m: 'B2', size: '200 × 400', rebar: 'T 2-DB16, B 3-DB16, links RB6 @ 150', note: 'Edge beams grids A and B' },
     { m: 'B3', size: '200 × 350', rebar: 'T 2-DB12, B 2-DB16, links RB6 @ 150', note: 'Secondary beams under first floor walls and stair trimmers' },
-    { m: 'LB1', size: '200 × 300', rebar: 'T 2-DB12, B 3-DB12, links RB6 @ 150', note: 'Lower stair landing beam A3–C2' },
     { m: 'R1', size: '250 × 500', rebar: 'T 2-DB16 + 2-DB16 extra at supports (L/3), B 3-DB16, links RB6 @ 100/150', note: 'Roof primary beams, span 5.8 m, grids 1–4' },
     { m: 'R2', size: '200 × 400', rebar: 'T 2-DB16, B 3-DB16, links RB6 @ 150', note: 'Roof edge beams grids A and B' },
     { m: 'R3', size: '200 × 350', rebar: 'T 2-DB12, B 2-DB16, links RB6 @ 150', note: 'Roof secondary beams and stair trimmers' },
-    { m: 'LB2', size: '200 × 300', rebar: 'T 2-DB12, B 3-DB12, links RB6 @ 150', note: 'Upper stair landing beam A3–C2' },
     { m: 'SH1', size: '200 × 300', rebar: 'T 2-DB12, B 2-DB12, links RB6 @ 200', note: 'Stair-house roof beams' },
     { m: 'S0', size: '100 slab on grade', rebar: 'DB10 @ 250 both ways, mid-depth', note: 'On 0.2 mm polythene DPM, 50 sand blinding, compacted fill (95% MDD)' },
-    { m: 'S1', size: '120 suspended slab', rebar: 'B DB10 @ 200 both ways; T DB10 @ 200 over beams for L/4', note: 'First floor. Stair void 1950 × 3200' },
+    { m: 'S1', size: '120 suspended slab', rebar: 'B DB10 @ 200 both ways; T DB10 @ 200 over beams for L/4', note: 'First floor. Stair opening 1950 × 2250' },
     { m: 'S2', size: '120 slab, set down 50', rebar: 'As S1', note: 'Balcony: falls 1:100 to outlet, waterproof membrane' },
-    { m: 'S3', size: '150 roof slab', rebar: 'B DB10 @ 150 both ways; T DB10 @ 200 both ways (full, crack control)', note: 'Roof terrace. Live load 2.0 kPa + finishes 2.0 kPa. Stair void 1950 × 3200' },
+    { m: 'S3', size: '150 roof slab', rebar: 'B DB10 @ 150 both ways; T DB10 @ 200 both ways (full, crack control)', note: 'Roof terrace. Live load 2.0 kPa + finishes 2.0 kPa. Stair opening 1950 × 2250' },
     { m: 'S4', size: '100 slab', rebar: 'DB10 @ 200 both ways', note: 'Stair-house roof, falls 1:50, PU membrane' },
-    { m: 'ST1', size: '150 waist, 20R × 165 / 250 going per storey', rebar: 'Main DB12 @ 150, distribution DB10 @ 200, top & bottom at landings', note: 'U-stair GF → FF → roof, brick spine wall' },
+    { m: 'ST1', size: '150 waist, 18R × 183 / 250 going per storey', rebar: 'Main DB12 @ 150, distribution DB10 @ 200, winders DB12 @ 150 fanned from the newel', note: 'Concrete U-stair with 5 winders, GF → FF → roof; flights bear on the party wall, wall G10 and beams B3/R3; glass screen between the flights' },
     { m: 'PP1', size: '200 brick parapet, 450 high', rebar: 'RC coping 200 × 100 with 2-DB10; stiffeners TC1 @ 2.0 m', note: 'Roof edge, railing base plates fixed to coping' },
     { m: 'L1', size: '100/200 × 150 lintel', rebar: '2-DB10 bottom, RB6 @ 200', note: 'Over every opening not under a beam, 200 bearing each side' },
     { m: 'TC1', size: '100/200 × 150 stiffener', rebar: '4-DB10, RB6 @ 200', note: 'At free wall ends, door jambs, and max 3.0 m along brick walls' }
@@ -399,8 +426,8 @@
   const floorZ = rm => (rm.id === 'R-01' ? LV.deck : lvZ(rm.lv));
   const ceilZ = { gf: LV.gfCeil, ff: LV.ffCeil, rf: LV.shSlab - 0.25 };
   const voidZ = { gf: LV.gfCeil + 0.2, ff: LV.ffCeil + 0.12, rf: LV.shSlab - 0.2 };
-  const riserXY = { gf: [0.45, 3.8], ff: [0.6, 3.8], rf: [0.75, 3.8] };
-  const db = { x0: 0.2, x1: 0.75, y0: 3.85, y1: 3.95, z0: LV.gf + 1.2, z1: LV.gf + 1.9 };
+  const riserXY = { gf: [0.0, 5.35], ff: [0.0, 5.5], rf: [0.0, 5.65] };
+  const db = { x0: 0.1, x1: 0.2, y0: 5.3, y1: 5.85, z0: LV.gf + 1.2, z1: LV.gf + 1.9 };
   const epts = [], runs = [];
   const cableOf = { L: '1.5', X: '1.5', F: '1.5', SW: '1.5', S: '2.5', D: 'data', AC: '4', H: '4', P: '4' };
   const onEdge = (o, r) => {
@@ -413,7 +440,7 @@
     const e = rm.elec || {}, fz = floorZ(rm), lv = rm.lv, cz = ceilZ[lv], ins = 0.14, pts = [];
     // lights
     if (rm.id === 'R-01') [[2.27, 5.3], [2.27, 7.7], [1.0, 3.63], [1.0, 8.17]].slice(0, e.L || 0).forEach(([x, y]) => pts.push({ t: 'L', x, y, z: fz + 2.1 }));
-    else if (rm.stair) for (let i = 0; i < (e.L || 0); i++) pts.push({ t: 'L', x: 0.14, y: 4.3 + i * 2.2, z: fz + 2.2 });
+    else if (rm.stair) for (let i = 0; i < (e.L || 0); i++) pts.push({ t: 'L', x: 0.14, y: 6.3 + i * 1.2, z: fz + 2.2 });
     else for (let i = 0; i < (e.L || 0); i++) { const f = (i + 0.5) / e.L; pts.push(w >= d ? { t: 'L', x: x0 + w * f, y: cy, z: cz } : { t: 'L', x: cx, y: y0 + d * f, z: cz }); }
     // sockets around the perimeter
     const E = [[x0 + ins, y0 + ins, x1 - ins, y0 + ins], [x1 - ins, y0 + ins, x1 - ins, y1 - ins], [x1 - ins, y1 - ins, x0 + ins, y1 - ins], [x0 + ins, y1 - ins, x0 + ins, y0 + ins]];
@@ -452,12 +479,12 @@
   });
   // risers from the board to each level, the incoming main, and outdoor points run underground from the board
   ['gf', 'ff', 'rf'].forEach(lv => { const [rx, ry] = riserXY[lv]; runs.push({ kind: 'riser', lv, cable: '4', pts: [[rx, ry, db.z1], [rx, ry, lv === 'rf' ? voidZ.rf : voidZ[lv]]] }); });
-  runs.push({ kind: 'main', lv: 'site', cable: '10', pts: [[0.05, -5.75, 1.0], [0.05, -5.75, -0.5], [0.3, -5.75, -0.5], [0.3, 3.8, -0.5], [0.3, 3.8, db.z0]] });
+  runs.push({ kind: 'main', lv: 'site', cable: '10', pts: [[0.05, -5.75, 1.0], [0.05, -5.75, -0.5], [0.3, -5.75, -0.5], [0.3, 5.55, -0.5], [0.15, 5.55, -0.5], [0.15, 5.55, db.z0]] });
   [{ t: 'X', x: 2.75, y: -1.4, z: LV.yard + 0.5 }, { t: 'X', x: 5.2, y: -0.6, z: LV.yard + 0.5 }, { t: 'X', x: 3.95, y: -5.85, z: LV.yard + 1.2 },
    { t: 'X', x: 5.95, y: 5.0, z: LV.yard + 2.5 }, { t: 'X', x: 7.95, y: -4.2, z: 2.6 }, { t: 'X', x: 7.95, y: -1.6, z: 2.6 },
    { t: 'S', x: 9.6, y: -5.3, z: LV.yard + 0.9 }, { t: 'P', x: 4.95, y: 12.4, z: LV.yard + 0.6 }, { t: 'P', x: 2.65, y: -3.3, z: LV.yard + 0.4 }].forEach(p => {
     p.lv = 'site'; p.room = 'EXT'; epts.push(p);
-    runs.push({ kind: 'leg', lv: 'site', t: p.t, cable: cableOf[p.t], pts: [[0.5, 3.8, db.z0], [0.5, 3.8, -0.3], [0.5, p.y, -0.3], [p.x, p.y, -0.3], [p.x, p.y, p.z]] });
+    runs.push({ kind: 'leg', lv: 'site', t: p.t, cable: cableOf[p.t], pts: [[0.15, 5.55, db.z0], [0.15, 5.55, -0.3], [0.15, p.y, -0.3], [p.x, p.y, -0.3], [p.x, p.y, p.z]] });
   });
   const polyLen = pts => pts.reduce((a, p, i) => (i ? a + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1], p[2] - pts[i - 1][2]) : 0), 0);
   const services = { pipes, fixtures, elec: { db, points: epts, runs }, polyLen };
